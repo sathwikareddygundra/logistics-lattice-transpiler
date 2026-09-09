@@ -1,6 +1,9 @@
 import logging
 import sys
+import time
 import uuid
+from contextlib import contextmanager
+
 import structlog
 
 
@@ -26,10 +29,6 @@ log = structlog.get_logger()
 
 def new_trace_id() -> str:
     return str(uuid.uuid4())
-
-
-import time
-from contextlib import contextmanager
 
 
 @contextmanager
