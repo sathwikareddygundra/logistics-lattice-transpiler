@@ -1,0 +1,16 @@
+{
+  "source": "turnaround_time",
+  "file": "Turn_Around_Time_Data.csv",
+  "row_count": 10000,
+  "primary_key": "Invoice_Number",
+  "columns": [
+    {"name": "Invoice_Number", "dtype": "string", "nullable": false, "unique": 10000, "notes": "Foreign key to dispatch.Invoice_Number."},
+    {"name": "Dispatch_Date", "dtype": "datetime", "nullable": false, "unique": 9997, "notes": "Duplicate of dispatch.Dispatch_Date."},
+    {"name": "Promised_Delivery_Date", "dtype": "datetime", "nullable": false, "unique": 9995},
+    {"name": "Actual_Delivery_Date", "dtype": "datetime", "nullable": false, "unique": 9994},
+    {"name": "Loading_Time_Mins", "dtype": "int", "nullable": false, "unique": 151},
+    {"name": "Unloading_Time_Mins", "dtype": "int", "nullable": false, "unique": 131},
+    {"name": "Total_TAT_Hours", "dtype": "float", "nullable": false, "unique": 22, "notes": "Only 22 distinct values across 10k rows — looks bucketed/rounded rather than continuously measured."},
+    {"name": "SLA_Status", "dtype": "enum", "nullable": false, "unique": 2, "values": ["On Time", "Delayed"], "notes": "Likely derived from Actual_Delivery_Date vs Promised_Delivery_Date — worth confirming the exact rule."}
+  ]
+}
