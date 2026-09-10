@@ -36,3 +36,14 @@ jobs:
           enable-cache: true
       - run: uv sync --all-extras --dev
       - run: uv run pytest -v
+
+
+  secrets-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: trufflesecurity/trufflehog@main
+        with:
+          extra_args: --only-verified
