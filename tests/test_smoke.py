@@ -2,14 +2,14 @@ import pytest
 
 
 def test_all_nine_packages_import():
-    import ast_
-    import cag
-    import codegen
-    import confirm
-    import dag
-    import graph_eng
-    import ir
-    import nlu
+    import ast_  # noqa: F401
+    import cag  # noqa: F401
+    import codegen  # noqa: F401
+    import confirm  # noqa: F401
+    import dag  # noqa: F401
+    import graph_eng  # noqa: F401
+    import ir  # noqa: F401
+    import nlu  # noqa: F401
     import sandbox  # noqa: F401
 
 
