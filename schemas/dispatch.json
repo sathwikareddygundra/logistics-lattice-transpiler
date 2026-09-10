@@ -1,0 +1,15 @@
+{
+  "source": "dispatch",
+  "file": "Dispatch_Data.csv",
+  "row_count": 10000,
+  "primary_key": "Invoice_Number",
+  "columns": [
+    {"name": "Invoice_Number", "dtype": "string", "nullable": false, "unique": 10000, "notes": "Format INV-YYYY-NNNNN. Shared key across dispatch, tracking, and turnaround sources."},
+    {"name": "Dispatch_Date", "dtype": "datetime", "nullable": false, "unique": 9997, "notes": "Duplicated verbatim in turnaround_time.Dispatch_Date — pick one as source of truth."},
+    {"name": "Origin_Warehouse", "dtype": "enum", "nullable": false, "unique": 5, "values": ["Chicago_WH", "Columbus_WH", "LA_WH", "Atlanta_WH", "Dallas_WH"]},
+    {"name": "Destination_City", "dtype": "enum", "nullable": false, "unique": 7, "values": ["New York", "Phoenix", "Boston", "Denver", "Houston"]},
+    {"name": "Carrier", "dtype": "enum", "nullable": false, "unique": 5, "values": ["DHL", "JB Hunt", "FedEx", "XPO Logistics", "UPS"]},
+    {"name": "Shipment_Weight_KG", "dtype": "float", "nullable": false, "unique": 9894},
+    {"name": "Freight_Cost_USD", "dtype": "float", "nullable": false, "unique": 9906}
+  ]
+}

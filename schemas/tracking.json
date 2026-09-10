@@ -1,0 +1,13 @@
+{
+  "source": "tracking",
+  "file": "Tracking_Data.csv",
+  "row_count": 10000,
+  "primary_key": "Invoice_Number",
+  "columns": [
+    {"name": "Invoice_Number", "dtype": "string", "nullable": false, "unique": 10000, "notes": "Foreign key to dispatch.Invoice_Number."},
+    {"name": "Checkpoint_Timestamp", "dtype": "datetime", "nullable": false, "unique": 9995},
+    {"name": "Current_Status", "dtype": "enum", "nullable": false, "unique": 5, "values": ["In Transit", "Delivered", "Customs Hold", "Delayed", "Out for Delivery"]},
+    {"name": "Last_Known_Location", "dtype": "string", "nullable": false, "unique": 907, "notes": "MIXED FORMAT: contains both hub codes (e.g. Hub_323) and plain city names (e.g. Phoenix). Needs normalization before downstream use."},
+    {"name": "Driver_ID", "dtype": "string", "nullable": false, "unique": 6041, "notes": "Not 1:1 with invoices — one driver can appear on multiple shipments. No separate driver dimension table provided."}
+  ]
+}
