@@ -1,0 +1,10 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "9d4e7a10-0c3b-4e51-9a0d-2f6b1c8e4a33",
+  "raw_query": "What's the weather like at YCW today?",
+  "intent_type": "out_of_scope",
+  "entities": [],
+  "confidence": {
+    "overall": 0.99
+  }
+}

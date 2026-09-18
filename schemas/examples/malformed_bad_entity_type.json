@@ -1,0 +1,14 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "5c2f8b91-1a4d-4f6e-9d3c-7e0a2b5c9f44",
+  "raw_query": "Show me all dispatches from MCW on 3rd September 2026.",
+  "intent_type": "filter",
+  "entities": [
+    { "entity_type": "plant", "value": "MCW", "normalized_value": "MCW", "confidence": 0.98 },
+    { "entity_type": "date", "value": "3rd September 2026", "normalized_value": "2026-09-03", "confidence": 0.92 }
+  ],
+  "confidence": {
+    "overall": 0.95,
+    "per_entity": [0.98, 0.92]
+  }
+}

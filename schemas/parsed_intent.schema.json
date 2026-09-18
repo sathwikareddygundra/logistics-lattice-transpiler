@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logistics-lattice-transpiler.local/schemas/parsed_intent.schema.json",
+  "title": "ParsedIntent",
+  "description": "T-12: the contract for 'what a parsed intent looks like', shared between the NLU stage (Phase 3, produces this) and the confirm-intent stage (Phase 4, consumes this). intent_type values must exactly match nlu.taxonomy.IntentType (T-17) -- see tests/test_parsed_intent_schema.py::test_intent_enum_matches_taxonomy.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "trace_id",
+    "raw_query",
+    "intent_type",
+    "entities",
+    "confidence"
+  ],
+  "properties": {
+    "schema_version": {
+      "description": "Contract version for this document shape. Bump policy is formalized in T-16.",
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "trace_id": {
+      "description": "The T-6 trace_id this query is carrying end to end.",
+      "type": "string",
+      "format": "uuid"
+    },
+    "raw_query": {
+      "description": "The original natural-language query, verbatim.",
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_type": {
+      "description": "One bucket from the T-17 taxonomy, including out_of_scope.",
+      "type": "string",
+      "enum": [
+        "aggregation",
+        "join",
+        "filter",
+        "forecast",
+        "comparison",
+        "trend",
+        "rank",
+        "out_of_scope"
+      ]
+    },
+    "entities": {
+      "description": "Typed spans extracted from the query (T-19). May be empty, e.g. for out_of_scope.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/entity" }
+    },
+    "confidence": { "$ref": "#/$defs/confidence" }
+  },
+  "$defs": {
+    "entity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["entity_type", "value", "confidence"],
+      "properties": {
+        "entity_type": {
+          "type": "string",
+          "enum": [
+            "table",
+            "column",
+            "plant",
+            "date_range",
+            "filter_value",
+            "aggregation_op",
+            "vehicle_type"
+          ]
+        },
+        "value": {
+          "description": "The raw extracted span from the query, e.g. 'last month'.",
+          "type": "string",
+          "minLength": 1
+        },
+        "normalized_value": {
+          "description": "The normalized form (T-19), e.g. an ISO date range or resolved plant code. Type varies by entity_type, so left unconstrained here.",
+          "type": ["string", "number", "boolean", "object", "array", "null"]
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "confidence": {
+      "description": "T-21 confidence scoring output: one overall score plus optional per-entity scores.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["overall"],
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "per_entity": {
+          "type": "array",
+          "items": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          }
+        }
+      }
+    }
+  }
+}
