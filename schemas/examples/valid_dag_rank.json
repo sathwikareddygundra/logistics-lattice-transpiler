@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "c3c3c3c3-3333-4333-8333-333333333333",
+  "nodes": [
+    { "id": "n1", "node_type": "source", "params": { "source": "dispatch" } },
+    {
+      "id": "n2",
+      "node_type": "aggregate",
+      "params": { "group_by": ["destination_city"], "metric": "shipment_weight_kg", "op": "sum" }
+    },
+    { "id": "n3", "node_type": "sort", "params": { "by": "shipment_weight_kg", "direction": "desc" } },
+    { "id": "n4", "node_type": "limit", "params": { "count": 5 } },
+    { "id": "n5", "node_type": "output", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "n3" },
+    { "from_node": "n3", "to_node": "n4" },
+    { "from_node": "n4", "to_node": "n5" }
+  ]
+}

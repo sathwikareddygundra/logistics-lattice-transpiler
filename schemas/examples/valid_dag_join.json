@@ -1,0 +1,15 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "b2b2b2b2-2222-4222-8222-222222222222",
+  "nodes": [
+    { "id": "src_dispatch", "node_type": "source", "params": { "source": "dispatch" } },
+    { "id": "src_tracking", "node_type": "source", "params": { "source": "tracking" } },
+    { "id": "j1", "node_type": "join", "params": { "on": "invoice_number", "how": "inner" } },
+    { "id": "out", "node_type": "output", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "src_dispatch", "to_node": "j1", "role": "left" },
+    { "from_node": "src_tracking", "to_node": "j1", "role": "right" },
+    { "from_node": "j1", "to_node": "out" }
+  ]
+}
