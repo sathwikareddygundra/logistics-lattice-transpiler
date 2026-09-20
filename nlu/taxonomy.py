@@ -19,10 +19,10 @@ Downstream consumers:
 from __future__ import annotations
 
 from dataclasses import dataclass
-from enum import Enum
+from enum import StrEnum
 
 
-class IntentType(str, Enum):
+class IntentType(StrEnum):
     """Every value here must have a matching entry in TAXONOMY below."""
 
     AGGREGATION = "aggregation"
