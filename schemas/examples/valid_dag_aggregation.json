@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "a1a1a1a1-1111-4111-8111-111111111111",
+  "nodes": [
+    { "id": "n1", "node_type": "source", "params": { "source": "dispatch" } },
+    {
+      "id": "n2",
+      "node_type": "filter",
+      "params": { "column": "origin_warehouse", "operator": "eq", "value": "MCW" }
+    },
+    {
+      "id": "n3",
+      "node_type": "aggregate",
+      "params": { "group_by": [], "metric": "freight_cost_usd", "op": "sum" }
+    },
+    { "id": "n4", "node_type": "output", "params": { "columns": ["total_freight_cost"] } }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "n3" },
+    { "from_node": "n3", "to_node": "n4" }
+  ]
+}
