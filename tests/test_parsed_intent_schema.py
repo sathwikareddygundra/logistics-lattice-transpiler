@@ -5,8 +5,13 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from nlu.taxonomy import allowed_intent_values
-from schemas.validate_parsed_intent import load_schema, validate, validate_or_raise, SchemaValidationError
+from nlu.taxonomy import allowed_intent_values  # noqa: E402
+from schemas.validate_parsed_intent import (  # noqa: E402
+    SchemaValidationError,
+    load_schema,
+    validate,
+    validate_or_raise,
+)
 
 EXAMPLES_DIR = Path(__file__).parent.parent / "schemas" / "examples"
 

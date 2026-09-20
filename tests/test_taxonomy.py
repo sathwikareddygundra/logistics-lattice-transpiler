@@ -4,7 +4,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
-from nlu.taxonomy import TAXONOMY, IntentType, allowed_intent_values, is_out_of_scope
+from nlu.taxonomy import TAXONOMY, IntentType, allowed_intent_values, is_out_of_scope  # noqa: E402
 
 
 class TestTaxonomy(unittest.TestCase):
