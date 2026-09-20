@@ -1,0 +1,37 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "b2b2b2b2-2222-4222-8222-222222222222",
+  "nodes": [
+    {
+      "id": "src_dispatch",
+      "op": "select",
+      "params": {
+        "table": "dispatch",
+        "columns": [{ "table": "dispatch", "column": "invoice_number", "type": "string" }]
+      }
+    },
+    {
+      "id": "src_tracking",
+      "op": "select",
+      "params": {
+        "table": "tracking",
+        "columns": [{ "table": "tracking", "column": "invoice_number", "type": "string" }]
+      }
+    },
+    {
+      "id": "j1",
+      "op": "join",
+      "params": {
+        "left_key": { "table": "dispatch", "column": "invoice_number", "type": "string" },
+        "right_key": { "table": "tracking", "column": "invoice_number", "type": "string" },
+        "how": "inner"
+      }
+    },
+    { "id": "out", "op": "output", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "src_dispatch", "to_node": "j1", "role": "left" },
+    { "from_node": "src_tracking", "to_node": "j1", "role": "right" },
+    { "from_node": "j1", "to_node": "out" }
+  ]
+}
