@@ -1,0 +1,41 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "b3b3b3b3-3333-4333-8333-333333333333",
+  "target": "sql",
+  "nodes": [
+    {
+      "id": "src_dispatch",
+      "op": "select",
+      "var": "dispatch_cte",
+      "params": {
+        "table": "dispatch",
+        "columns": [{ "table": "dispatch", "column": "invoice_number", "type": "string" }]
+      }
+    },
+    {
+      "id": "src_tracking",
+      "op": "select",
+      "var": "tracking_cte",
+      "params": {
+        "table": "tracking",
+        "columns": [{ "table": "tracking", "column": "invoice_number", "type": "string" }]
+      }
+    },
+    {
+      "id": "j1",
+      "op": "join",
+      "var": "joined_cte",
+      "params": {
+        "left_key": { "table": "dispatch", "column": "invoice_number", "type": "string" },
+        "right_key": { "table": "tracking", "column": "invoice_number", "type": "string" },
+        "how": "inner"
+      }
+    },
+    { "id": "out", "op": "output", "var": "result", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "src_dispatch", "to_node": "j1", "role": "left" },
+    { "from_node": "src_tracking", "to_node": "j1", "role": "right" },
+    { "from_node": "j1", "to_node": "out" }
+  ]
+}
