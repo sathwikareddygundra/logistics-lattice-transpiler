@@ -27,7 +27,7 @@ from pathlib import Path
 SCHEMA_PATH = Path(__file__).parent / "parsed_intent.schema.json"
 
 try:
-    import jsonschema  # type: ignore
+    import jsonschema
 
     _HAVE_JSONSCHEMA = True
 except ImportError:
