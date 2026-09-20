@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "b3b9e2f0-6e2b-4c2b-9b1a-8e2a0e6f2b11",
+  "raw_query": "What was the total dispatch tonnage from MCW last month?",
+  "intent_type": "aggregation",
+  "entities": [
+    { "entity_type": "table", "value": "dispatch", "normalized_value": "dispatch_records", "confidence": 0.97 },
+    { "entity_type": "plant", "value": "MCW", "normalized_value": "MCW", "confidence": 0.99 },
+    { "entity_type": "date_range", "value": "last month", "normalized_value": { "start": "2026-08-01", "end": "2026-08-31" }, "confidence": 0.9 },
+    { "entity_type": "aggregation_op", "value": "total", "normalized_value": "sum", "confidence": 0.95 }
+  ],
+  "confidence": {
+    "overall": 0.94,
+    "per_entity": [0.97, 0.99, 0.9, 0.95]
+  }
+}
