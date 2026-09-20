@@ -1,0 +1,43 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "c3c3c3c3-3333-4333-8333-333333333333",
+  "nodes": [
+    {
+      "id": "n1",
+      "op": "select",
+      "params": {
+        "table": "dispatch",
+        "columns": [
+          { "table": "dispatch", "column": "destination_city", "type": "string" },
+          { "table": "dispatch", "column": "shipment_weight_kg", "type": "float" }
+        ]
+      }
+    },
+    {
+      "id": "n2",
+      "op": "aggregate",
+      "params": {
+        "group_by": [{ "table": "dispatch", "column": "destination_city", "type": "string" }],
+        "metric": { "table": "dispatch", "column": "shipment_weight_kg", "type": "float" },
+        "op": "sum",
+        "result_type": "float"
+      }
+    },
+    {
+      "id": "n3",
+      "op": "sort",
+      "params": {
+        "by": { "table": "dispatch", "column": "shipment_weight_kg", "type": "float" },
+        "direction": "desc"
+      }
+    },
+    { "id": "n4", "op": "limit", "params": { "count": 5 } },
+    { "id": "n5", "op": "output", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "n3" },
+    { "from_node": "n3", "to_node": "n4" },
+    { "from_node": "n4", "to_node": "n5" }
+  ]
+}
