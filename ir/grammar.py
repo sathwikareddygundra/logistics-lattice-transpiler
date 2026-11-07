@@ -40,6 +40,8 @@ from typing import Literal as TypingLiteral
 
 from pydantic import BaseModel, Field, model_validator
 
+from graph_eng.cycles import find_cycle
+
 
 class IrOp(StrEnum):
     SELECT = "select"
@@ -309,8 +311,10 @@ def structural_errors(nodes: list[Node], edges: list[Edge]) -> list[str]:
     if len(output_nodes) != 1:
         errors.append(f"ir document must have exactly one output node, found {len(output_nodes)}")
 
-    if not errors and _has_cycle(nodes_by_id, outgoing):
-        errors.append("ir document contains a cycle")
+    if not errors:
+        cycle = find_cycle({k: [e.to_node for e in v] for k, v in outgoing.items()})
+        if cycle:
+            errors.append("ir document contains a cycle: " + " -> ".join(cycle))
 
     return errors
 

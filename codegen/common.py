@@ -1,37 +1,37 @@
 from __future__ import annotations
 
-from ast_.nodes import AstDocument, AstOp, Node
+from dataclasses import dataclass, field
+
+from ast_.nodes import AstDocument, Node
+from graph_eng.toposort import toposort
 
 
 class UnsupportedAstError(ValueError):
-    """AST shape or op that the current codegen does not handle. Raised
-    loudly rather than approximated."""
+    """AST shape or op that a generator does not handle. Raised loudly,
+    never approximated."""
 
 
-def linear_nodes(doc: AstDocument) -> list[Node]:
-    """Nodes in execution order. Only single-chain ASTs are supported so far."""
+@dataclass(frozen=True)
+class CodegenHints:
+    """Knobs a retry can turn when the first attempt failed (T-90)."""
+
+    quote_all_identifiers: bool = False
+
+
+@dataclass
+class GeneratedCode:
+    text: str
+    target: str
+    dialect: str
+    provenance: list[tuple[str, str, int]] = field(default_factory=list)  # node, template, version
+    columns: list[str] = field(default_factory=list)  # output column names
+
+
+def ordered_nodes(doc: AstDocument) -> list[Node]:
     by_id = {n.id: n for n in doc.nodes}
-    nxt: dict[str, str] = {}
-    for e in doc.edges:
-        if e.from_node in nxt:
-            raise UnsupportedAstError(f"branching at node {e.from_node!r} is not supported yet")
-        nxt[e.from_node] = e.to_node
-    start = [n for n in doc.nodes if n.op is AstOp.SELECT]
-    if len(start) != 1:
-        raise UnsupportedAstError(f"expected exactly one select node, found {len(start)}")
-    ordered, cur = [start[0]], start[0].id
-    while cur in nxt:
-        cur = nxt[cur]
-        ordered.append(by_id[cur])
-    if len(ordered) != len(doc.nodes):
-        raise UnsupportedAstError("AST is not a single linear chain")
-    return ordered
-
-
-def result_alias(node: Node) -> str:
-    return f"{node.params['op']}_{node.params['metric']['column']}"
+    order = toposort([n.id for n in doc.nodes], [(e.from_node, e.to_node) for e in doc.edges])
+    return [by_id[i] for i in order]
 
 
 def header_comment(query: str, prefix: str) -> str:
-    one_line = " ".join(query.split())
-    return f"{prefix} Query: {one_line}"
+    return f"{prefix} Query: {' '.join(query.split())}"

@@ -56,7 +56,9 @@ TITLES = """1 Monorepo|2 Dependency manager|3 Branching and PR rules|4 NLU compu
 81 Sandbox environment|82 Static validation|83 Timeout and row limits|84 Error diagnostics|85 Result schema check|
 86 Cost sanity check|87 Execution traces|88 Sandbox tests|89 Failure taxonomy|90 Route to codegen|
 91 Route to confirm|92 Shared retry budget|93 Log failures|94 End-to-end suite|95 Load testing|
-96 Staging + drift alert|97 Rollout plan|98 Dashboards|99 Alert thresholds|100 On-call runbook""".replace("\n", "").split("|")
+96 Staging + drift alert|97 Rollout plan|98 Dashboards|99 Alert thresholds|100 On-call runbook""".replace(
+    "\n", ""
+).split("|")
 
 
 def initial_state() -> dict:
@@ -68,11 +70,16 @@ def initial_state() -> dict:
     partial = {
         "T-3": "branch protection is a GitHub setting, not verified",
         "T-17": "taxonomy merged from older branch, being extended",
-        "T-19": "rule-based entities in slice", "T-27": "basic paraphrase in slice",
-        "T-29": "threshold routing in slice", "T-35": "linear templates in slice",
-        "T-57": "linear lowering in slice", "T-64": "linear lowering in slice",
-        "T-70": "pandas generator in slice", "T-76": "SQLite generator in slice",
-        "T-81": "read-only connection in slice", "T-83": "timeout/row cap in slice",
+        "T-19": "rule-based entities in slice",
+        "T-27": "basic paraphrase in slice",
+        "T-29": "threshold routing in slice",
+        "T-35": "linear templates in slice",
+        "T-57": "linear lowering in slice",
+        "T-64": "linear lowering in slice",
+        "T-70": "pandas generator in slice",
+        "T-76": "SQLite generator in slice",
+        "T-81": "read-only connection in slice",
+        "T-83": "timeout/row cap in slice",
     }
     for t in done:
         tasks[t]["state"] = "done"

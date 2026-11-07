@@ -30,6 +30,7 @@ from typing import Literal as TypingLiteral
 from pydantic import BaseModel, Field, model_validator
 from pydantic import ValidationError as PydanticValidationError
 
+from graph_eng.cycles import find_cycle
 from ir.grammar import AggregateParams as AggregateParams
 from ir.grammar import ColumnRef as ColumnRef
 from ir.grammar import Edge, EdgeRole
@@ -164,8 +165,10 @@ def structural_errors(nodes: list[Node], edges: list[Edge]) -> list[str]:
     for var in sorted(var_dupes):
         errors.append(f"duplicate var binding: {var!r}")
 
-    if not errors and _has_cycle(nodes_by_id, outgoing):
-        errors.append("ast document contains a cycle")
+    if not errors:
+        cycle = find_cycle({k: [e.to_node for e in v] for k, v in outgoing.items()})
+        if cycle:
+            errors.append("ast document contains a cycle: " + " -> ".join(cycle))
 
     return errors
 

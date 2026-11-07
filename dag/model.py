@@ -33,6 +33,8 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 from pydantic import ValidationError as PydanticValidationError
 
+from graph_eng.cycles import find_cycle
+
 
 class NodeType(StrEnum):
     SOURCE = "source"
@@ -238,8 +240,10 @@ def structural_errors(nodes: list[Node], edges: list[Edge]) -> list[str]:
     if len(output_nodes) != 1:
         errors.append(f"dag must have exactly one output node, found {len(output_nodes)}")
 
-    if not errors and _has_cycle(nodes_by_id, outgoing):
-        errors.append("dag contains a cycle")
+    if not errors:
+        cycle = find_cycle({k: [e.to_node for e in v] for k, v in outgoing.items()})
+        if cycle:
+            errors.append("dag contains a cycle: " + " -> ".join(cycle))
 
     return errors
 

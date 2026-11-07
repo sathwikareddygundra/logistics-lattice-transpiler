@@ -126,10 +126,7 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
     ),
     IntentType.RANK: IntentDefinition(
         intent_type=IntentType.RANK,
-        description=(
-            "Orders entities by a metric and typically returns a "
-            "top/bottom N slice."
-        ),
+        description=("Orders entities by a metric and typically returns a top/bottom N slice."),
         example_queries=(
             "Which vehicle type had the highest dispatch tonnage at MCW last month?",
             "Top 5 destinations by dispatch volume for YCW this year.",

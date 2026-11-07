@@ -1,10 +1,13 @@
-"""DAG -> IR (T-57): total mapping, with column types from the catalog."""
+"""DAG + CAG context -> IR (T-57). Total: every node type maps or raises."""
 
 from __future__ import annotations
 
-from dag.model import Dag, NodeType
+from cag.context import needed_columns
+from dag.dependencies import window_alias
+from dag.model import Dag, EdgeRole, NodeType
 from ir.grammar import AggregateOp, ColumnRef, Edge, Ir, IrOp, IrType, Node
-from plantdb.catalog import column_type, get_table
+from ir.grammar import EdgeRole as IrEdgeRole
+from plantdb.catalog import JOIN_KEY, column_type, owner_table
 
 
 class UnmappedNodeTypeError(ValueError):
@@ -14,61 +17,115 @@ class UnmappedNodeTypeError(ValueError):
 _OP_FOR_NODE_TYPE = {
     NodeType.SOURCE: IrOp.SELECT,
     NodeType.FILTER: IrOp.FILTER,
+    NodeType.JOIN: IrOp.JOIN,
     NodeType.AGGREGATE: IrOp.AGGREGATE,
+    NodeType.WINDOW: IrOp.WINDOW,
     NodeType.SORT: IrOp.SORT,
     NodeType.LIMIT: IrOp.LIMIT,
+    NodeType.FORECAST: IrOp.FORECAST,
     NodeType.OUTPUT: IrOp.OUTPUT,
 }
 
 
-def _ref(table: str, column: str) -> dict:
-    return ColumnRef(table=table, column=column, type=column_type(table, column)).model_dump(
-        mode="json"
-    )
-
-
 def dag_to_ir(dag: Dag) -> Ir:
-    table = next(n.params["source"] for n in dag.nodes if n.node_type is NodeType.SOURCE)
-    nodes: list[Node] = []
+    slices = needed_columns(dag)  # CAG: only the schema each source needs
+    sources = [n for n in dag.nodes if n.node_type is NodeType.SOURCE]
+    hub = sources[0].params["source"]
+    derived: dict[str, str] = {}  # derived column -> table of its base column
+    for n in dag.nodes:
+        if n.node_type is NodeType.WINDOW:
+            col = n.params["column"]
+            derived[window_alias(col, n.params["granularity"])] = owner_table(col)
+
+    def ref(column: str) -> dict:
+        if column in derived:
+            r = ColumnRef(table=derived[column], column=column, type=IrType.STRING)
+        else:
+            table = hub if column == JOIN_KEY else owner_table(column)
+            r = ColumnRef(table=table, column=column, type=column_type(table, column))
+        return r.model_dump(mode="json")
+
+    ir_nodes: list[Node] = []
     for node in dag.nodes:
         if node.node_type not in _OP_FOR_NODE_TYPE:
             raise UnmappedNodeTypeError(
-                f"DAG node type {node.node_type.value!r} has no IR lowering yet (node {node.id!r})"
+                f"DAG node type {node.node_type.value!r} has no IR lowering (node {node.id!r})"
             )
         p = node.params
         match node.node_type:
             case NodeType.SOURCE:
-                cols = [_ref(table, c) for c in get_table(table).columns]
-                params: dict = {"table": table, "columns": cols}
+                table = p["source"]
+                params: dict = {
+                    "table": table,
+                    "columns": [
+                        ColumnRef(table=table, column=c, type=column_type(table, c)).model_dump(
+                            mode="json"
+                        )
+                        for c in slices[table]
+                    ],
+                }
             case NodeType.FILTER:
-                col_type = column_type(table, p["column"])
+                col = ref(p["column"])
                 params = {
-                    "column": _ref(table, p["column"]),
+                    "column": col,
                     "operator": p["operator"],
-                    "value": {"value": p["value"], "type": col_type.value},
+                    "value": {"value": p["value"], "type": col["type"]},
+                }
+            case NodeType.JOIN:
+                by_id = {n.id: n for n in dag.nodes}
+                right_edge = next(
+                    e for e in dag.edges if e.to_node == node.id and e.role is EdgeRole.RIGHT
+                )
+                right_node = by_id[right_edge.from_node]
+                if right_node.node_type is not NodeType.SOURCE:
+                    raise UnmappedNodeTypeError(
+                        f"join {node.id!r}: right input must be a source (left-deep joins only)"
+                    )
+                right_table = right_node.params["source"]
+                params = {
+                    "left_key": ref(p["on"]),
+                    "right_key": ColumnRef(
+                        table=right_table, column=p["on"], type=column_type(right_table, p["on"])
+                    ).model_dump(mode="json"),
+                    "how": p["how"],
                 }
             case NodeType.AGGREGATE:
-                metric_type = column_type(table, p["metric"])
+                metric = ref(p["metric"])
                 op = AggregateOp(p["op"])
                 if op is AggregateOp.COUNT:
                     result = IrType.INTEGER
                 elif op in (AggregateOp.SUM, AggregateOp.AVG):
                     result = IrType.FLOAT
                 else:
-                    result = metric_type
+                    result = IrType(metric["type"])
                 params = {
-                    "group_by": [_ref(table, c) for c in p["group_by"]],
-                    "metric": _ref(table, p["metric"]),
+                    "group_by": [ref(c) for c in p["group_by"]],
+                    "metric": metric,
                     "op": op.value,
                     "result_type": result.value,
                 }
+            case NodeType.WINDOW:
+                params = {"column": ref(p["column"]), "granularity": p["granularity"]}
             case NodeType.SORT:
-                params = {"by": _ref(table, p["by"]), "direction": p["direction"]}
+                params = {"by": ref(p["by"]), "direction": p["direction"]}
             case NodeType.LIMIT:
                 params = {"count": p["count"]}
+            case NodeType.FORECAST:
+                params = {
+                    "metric": ref(p["metric"]),
+                    "horizon": p["horizon"],
+                    "method": p["method"],
+                }
             case _:  # OUTPUT
-                params = {"columns": [_ref(table, c) for c in p["columns"]]}
-        nodes.append(Node(id=node.id, op=_OP_FOR_NODE_TYPE[node.node_type], params=params))
+                params = {"columns": [ref(c) for c in p["columns"]]}
+        ir_nodes.append(Node(id=node.id, op=_OP_FOR_NODE_TYPE[node.node_type], params=params))
 
-    edges = [Edge(from_node=e.from_node, to_node=e.to_node) for e in dag.edges]
-    return Ir(trace_id=dag.trace_id, nodes=nodes, edges=edges)
+    edges = [
+        Edge(
+            from_node=e.from_node,
+            to_node=e.to_node,
+            role=IrEdgeRole(e.role.value) if e.role else None,
+        )
+        for e in dag.edges
+    ]
+    return Ir(trace_id=dag.trace_id, nodes=ir_nodes, edges=edges)
