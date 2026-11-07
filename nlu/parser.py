@@ -19,10 +19,16 @@ from nlu.intent import IntentFilter, IntentType, ParsedIntent
 from plantdb.catalog import JOIN_KEY, tables_for_columns
 
 LISTING_LIMIT = 20
+AVG_BY_DEFAULT = {"total_tat_hours", "loading_time_mins", "unloading_time_mins"}
 DEFAULT_HORIZON = 3
 DEFAULT_LISTING_COLUMNS = [
     "invoice_number", "dispatch_date", "origin_warehouse", "destination_city", "carrier",
 ]  # fmt: skip
+LISTING_COLUMN_WORDS = {
+    "sla": "sla_status", "driver": "driver_id", "status": "current_status",
+    "location": "last_known_location", "tat": "total_tat_hours",
+    "turnaround": "total_tat_hours",
+}  # fmt: skip
 _OUT_OF_SCOPE = re.compile(
     r"\b(optimi[sz]e|optimi[sz]ation|route plan|routing|simulate|simulation|hsn|duty|gst|"
     r"e-?way|weather|eoq|reorder point|safety stock|vrp|bin packing|monte carlo|gps)\b"
@@ -102,7 +108,9 @@ def parse(query: str, today: date | None = None) -> ParsedIntent:
         metric = JOIN_KEY  # "how many shipments" never counts a measure column
     agg_conf = EXACT
     if agg is None and metric is not None:
-        agg, agg_conf = ("count" if metric == JOIN_KEY else "sum"), DEFAULTED + 0.2
+        # durations are averaged by default, quantities and money are summed
+        default = "count" if metric == JOIN_KEY else "avg" if metric in AVG_BY_DEFAULT else "sum"
+        agg, agg_conf = default, DEFAULTED + 0.2
     # rank words like "highest" pick direction there, not the aggregate
     if rank and agg in ("max", "min") and not re.search(r"\b(maximum|minimum)\b", t):
         agg = "sum" if metric != JOIN_KEY else "count"
@@ -140,8 +148,9 @@ def parse(query: str, today: date | None = None) -> ParsedIntent:
             for extra in [f.column for f in filters] + group_by + ([metric] if metric else []):
                 if extra not in cols and extra != JOIN_KEY:
                     cols.append(extra)
-            if "driver_id" in re.findall(r"[a-z_]+", t.replace(" ", "_")) or "driver" in t:
-                cols.append("driver_id") if "driver_id" not in cols else None
+            for word, col in LISTING_COLUMN_WORDS.items():
+                if re.search(rf"\b{word}\b", t) and col not in cols:
+                    cols.append(col)
             select_columns = cols
             limit = ent.top_n or LISTING_LIMIT
             kind = (

@@ -182,11 +182,12 @@ def _match_values(text: str, column: str, aliases: dict[str, str]) -> list[tuple
             found[value] = EXACT
     if not found:  # tolerate typos on single/short vocabulary words
         words = norm.split()
-        for value in column_values()[column]:
-            vw = _norm(value).split()
-            if len(vw) == 1 and len(vw[0]) >= 5:
-                hit = difflib.get_close_matches(vw[0], words, n=1, cutoff=0.82)
-                if hit:
+        targets = {_norm(v): v for v in column_values()[column]} | {
+            a: c for a, c in aliases.items() if " " not in a
+        }
+        for key, value in targets.items():
+            if " " not in key and len(key) >= 5:
+                if difflib.get_close_matches(key, words, n=1, cutoff=0.82):
                     found[value] = FUZZY
     return list(found.items())
 
@@ -207,7 +208,7 @@ def extract(query: str, today: date) -> Entities:
 
     dim_re = "|".join(DIMENSION_WORDS)
     for m in re.finditer(
-        rf"\b(?:by|per|each|every|across|wise|for each|which|top \d+|bottom \d+)"
+        rf"\b(?:by|per|each|every|across|wise|for each|which|compare|top \d+|bottom \d+)"
         rf"\s+(?:the\s+)?({dim_re})\b",
         t,
     ):

@@ -97,8 +97,8 @@
   },
   "T-20": {
    "title": "Slot filling",
-   "state": "active",
-   "note": "slot filling"
+   "state": "done",
+   "note": "one question per missing slot; answer re-parsed with original"
   },
   "T-21": {
    "title": "Confidence scoring",
@@ -117,13 +117,13 @@
   },
   "T-24": {
    "title": "Out-of-scope fallback",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "decline + suggestions + jsonl log"
   },
   "T-25": {
    "title": "Labeled dataset + gate",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "133 labeled rows; CI gate next"
   },
   "T-26": {
    "title": "Latency benchmark + SLA",
@@ -545,6 +545,34 @@
   {
    "t": 1794085129.852869,
    "msg": "Full pipeline answers all 7 intents across 3 plants on your real CSVs"
+  },
+  {
+   "t": 1794085277.801125,
+   "msg": "T-20 -> done"
+  },
+  {
+   "t": 1794085277.822183,
+   "msg": "T-24 -> done"
+  },
+  {
+   "t": 1794085277.843806,
+   "msg": "T-25 -> active"
+  },
+  {
+   "t": 1794085277.865759,
+   "msg": "Committed core rewrite (121 tests green). Building labeled set + gates."
+  },
+  {
+   "t": 1794085326.3732648,
+   "msg": "NLU scores 100% on my own labeled set (117 rows) - optimistic, I wrote both; adding held-out Groq check next"
+  },
+  {
+   "t": 1794085452.99208,
+   "msg": "T-25 -> done"
+  },
+  {
+   "t": 1794085453.014963,
+   "msg": "Groq prototype hit free-tier 429s with a big prompt; rerunning with smaller prompt"
   }
  ],
  "next": [
@@ -553,5 +581,5 @@
   "Federation across 3 plants, sandbox for DuckDB+SQLite"
  ],
  "started": 1794084381.329406,
- "updated": 1794085129.85287
+ "updated": 1794085453.0149639
 }

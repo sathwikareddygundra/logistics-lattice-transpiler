@@ -1,0 +1,1405 @@
+{
+ "aggregation": [
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.97,
+    "filters": [
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-07-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-08-01"
+     }
+    ],
+    "intent_type": "aggregation",
+    "metric": "freight_cost_usd"
+   },
+   "query": "What is the total freight cost in July 2026?"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.97,
+    "filters": [
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-08-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-09-01"
+     }
+    ],
+    "intent_type": "aggregation",
+    "metric": "shipment_weight_kg"
+   },
+   "query": "Total shipment weight for August 2026"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "aggregation",
+    "metric": "total_tat_hours"
+   },
+   "query": "average turnaround time by carrier"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.97,
+    "filters": [
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-06-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-07-01"
+     }
+    ],
+    "intent_type": "aggregation",
+    "metric": "invoice_number"
+   },
+   "query": "How many shipments were dispatched in June 2026?"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.98,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "aggregation",
+    "metric": "freight_cost_usd"
+   },
+   "query": "total freight cost by carrier"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "intent_type": "aggregation",
+    "metric": "loading_time_mins"
+   },
+   "query": "What's the average loading time?"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "group_by": [
+     "origin_warehouse"
+    ],
+    "intent_type": "aggregation",
+    "metric": "unloading_time_mins"
+   },
+   "query": "average unloading time by origin warehouse"
+  },
+  {
+   "output": {
+    "agg": "max",
+    "confidence": 0.98,
+    "group_by": [
+     "destination_city"
+    ],
+    "intent_type": "aggregation",
+    "metric": "freight_cost_usd"
+   },
+   "query": "maximum freight cost by destination city"
+  },
+  {
+   "output": {
+    "agg": "min",
+    "confidence": 0.98,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "aggregation",
+    "metric": "shipment_weight_kg"
+   },
+   "query": "minimum shipment weight by carrier"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Delayed"
+     }
+    ],
+    "intent_type": "aggregation",
+    "metric": "invoice_number"
+   },
+   "query": "how many delayed shipments are there"
+  }
+ ],
+ "comparison": [
+  {
+   "output": {
+    "agg": "sum",
+    "compare_by_plant": true,
+    "confidence": 0.877,
+    "intent_type": "comparison",
+    "metric": "freight_cost_usd",
+    "plants": [
+     "MCW",
+     "YCW"
+    ]
+   },
+   "query": "compare MCW and YCW freight cost"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "compare_by_plant": true,
+    "confidence": 0.84,
+    "intent_type": "comparison",
+    "metric": "freight_cost_usd"
+   },
+   "query": "compare freight cost across plants"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.91,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "comparison",
+    "keep_values": {
+     "carrier": [
+      "DHL",
+      "FedEx"
+     ]
+    },
+    "metric": "freight_cost_usd"
+   },
+   "query": "compare DHL and FedEx freight cost"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "compare_by_plant": true,
+    "confidence": 0.97,
+    "intent_type": "comparison",
+    "metric": "total_tat_hours",
+    "plants": [
+     "MCW",
+     "VGU"
+    ]
+   },
+   "query": "compare average TAT between MCW and VGU"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "comparison",
+    "keep_values": {
+     "carrier": [
+      "DHL",
+      "UPS"
+     ]
+    },
+    "metric": "invoice_number"
+   },
+   "query": "DHL versus UPS shipments"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.895,
+    "group_by": [
+     "origin_warehouse"
+    ],
+    "intent_type": "comparison",
+    "keep_values": {
+     "origin_warehouse": [
+      "Chicago_WH",
+      "Dallas_WH"
+     ]
+    },
+    "metric": "shipment_weight_kg"
+   },
+   "query": "compare Chicago and Dallas weight"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "comparison",
+    "metric": "freight_cost_usd"
+   },
+   "query": "compare carriers by freight cost"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "compare_by_plant": true,
+    "confidence": 0.97,
+    "intent_type": "comparison",
+    "metric": "shipment_weight_kg",
+    "plants": [
+     "MCW",
+     "YCW",
+     "VGU"
+    ]
+   },
+   "query": "compare MCW, YCW and VGU total weight"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.91,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "comparison",
+    "keep_values": {
+     "carrier": [
+      "DHL",
+      "UPS"
+     ]
+    },
+    "metric": "freight_cost_usd"
+   },
+   "query": "compare UPS and DHL freight cost"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "compare_by_plant": true,
+    "confidence": 0.877,
+    "intent_type": "comparison",
+    "metric": "shipment_weight_kg",
+    "plants": [
+     "MCW",
+     "YCW"
+    ]
+   },
+   "query": "compare weight between MCW and YCW"
+  }
+ ],
+ "filter": [
+  {
+   "output": {
+    "confidence": 0.95,
+    "filters": [
+     {
+      "column": "origin_warehouse",
+      "operator": "eq",
+      "value": "Chicago_WH"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-07-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-08-01"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "list shipments from Chicago in July 2026"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "FedEx"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-08-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-09-01"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "show FedEx shipments in August"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "origin_warehouse",
+      "operator": "eq",
+      "value": "Dallas_WH"
+     },
+     {
+      "column": "destination_city",
+      "operator": "eq",
+      "value": "Miami"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "display shipments from Dallas to Miami"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "UPS"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-06-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-07-01"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "show me shipments handled by UPS in June"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "DHL"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "plants": [
+     "MCW"
+    ],
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "show DHL shipments for MCW"
+  },
+  {
+   "output": {
+    "confidence": 0.95,
+    "filters": [
+     {
+      "column": "origin_warehouse",
+      "operator": "eq",
+      "value": "Atlanta_WH"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "list shipments from Atlanta"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "destination_city",
+      "operator": "eq",
+      "value": "Seattle"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-08-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-09-01"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "show shipments to Seattle in August"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "UPS"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-07-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-08-01"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "list UPS shipments in July"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "origin_warehouse",
+      "operator": "eq",
+      "value": "Dallas_WH"
+     },
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "JB Hunt"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "show JB Hunt shipments from Dallas"
+  },
+  {
+   "output": {
+    "confidence": 0.95,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "XPO Logistics"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-06-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-07-01"
+     }
+    ],
+    "intent_type": "filter",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier"
+    ]
+   },
+   "query": "display XPO shipments in June 2026"
+  }
+ ],
+ "forecast": [
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "month",
+    "horizon": 3,
+    "intent_type": "forecast",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "forecast freight cost for the next 3 months"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "month",
+    "horizon": 2,
+    "intent_type": "forecast",
+    "metric": "shipment_weight_kg",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "predict shipment weight next 2 months"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "granularity": "month",
+    "horizon": 3,
+    "intent_type": "forecast",
+    "metric": "invoice_number",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "forecast number of shipments next 3 months"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.887,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "DHL"
+     }
+    ],
+    "granularity": "month",
+    "horizon": 2,
+    "intent_type": "forecast",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "forecast freight cost for DHL next 2 months"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "month",
+    "horizon": 6,
+    "intent_type": "forecast",
+    "metric": "shipment_weight_kg",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "projected weight for the next 6 months"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "granularity": "month",
+    "horizon": 3,
+    "intent_type": "forecast",
+    "metric": "total_tat_hours",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "forecast average TAT next 3 months"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.877,
+    "granularity": "month",
+    "horizon": 3,
+    "intent_type": "forecast",
+    "metric": "freight_cost_usd",
+    "plants": [
+     "MCW"
+    ],
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "forecast freight cost for MCW"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "granularity": "month",
+    "horizon": 4,
+    "intent_type": "forecast",
+    "metric": "invoice_number",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "predict shipments for the next 4 months"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.84,
+    "granularity": "month",
+    "horizon": 3,
+    "intent_type": "forecast",
+    "metric": "loading_time_mins",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "forecast loading time next 3 months"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.887,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "UPS"
+     }
+    ],
+    "granularity": "month",
+    "horizon": 3,
+    "intent_type": "forecast",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "predict freight cost for UPS next 3 months"
+  }
+ ],
+ "join": [
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Delayed"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "show delayed shipments"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "destination_city",
+      "operator": "eq",
+      "value": "Boston"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "driver_id"
+    ]
+   },
+   "query": "show shipments to Boston with driver id"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "DHL"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "sla_status",
+     "current_status"
+    ]
+   },
+   "query": "list DHL shipments with their sla status"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Customs Hold"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "show customs hold shipments"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Delayed"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "list late shipments"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "origin_warehouse",
+      "operator": "eq",
+      "value": "Atlanta_WH"
+     },
+     {
+      "column": "sla_status",
+      "operator": "eq",
+      "value": "On Time"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "sla_status"
+    ]
+   },
+   "query": "show on time shipments from Atlanta"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "In Transit"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "list shipments in transit"
+  },
+  {
+   "output": {
+    "confidence": 0.965,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Delayed"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-08-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-09-01"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "show shipments delayed in August"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Out for Delivery"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "list out for delivery shipments"
+  },
+  {
+   "output": {
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "DHL"
+     },
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "In Transit"
+     }
+    ],
+    "intent_type": "join",
+    "limit": 20,
+    "select_columns": [
+     "invoice_number",
+     "dispatch_date",
+     "origin_warehouse",
+     "destination_city",
+     "carrier",
+     "current_status"
+    ]
+   },
+   "query": "show DHL shipments in transit"
+  }
+ ],
+ "out_of_scope": [
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "optimise my delivery routes"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "what is the HSN code for ball bearings"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "calculate customs duty for 8482"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "simulate a 7 day port shutdown"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "what's the weather in Pune"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "calculate EOQ for SKU ABC"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "generate an eway bill"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "how do I make cement"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "tell me a joke"
+  },
+  {
+   "output": {
+    "confidence": 0.0,
+    "intent_type": "out_of_scope"
+   },
+   "query": "who is the CEO"
+  }
+ ],
+ "rank": [
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "rank",
+    "limit": 5,
+    "metric": "freight_cost_usd",
+    "sort_direction": "desc"
+   },
+   "query": "top 5 carriers by freight cost"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "group_by": [
+     "destination_city"
+    ],
+    "intent_type": "rank",
+    "limit": 3,
+    "metric": "shipment_weight_kg",
+    "sort_direction": "desc"
+   },
+   "query": "top 3 destination cities by shipment weight"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Delayed"
+     }
+    ],
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "rank",
+    "limit": 1,
+    "metric": "invoice_number",
+    "sort_direction": "desc"
+   },
+   "query": "which carrier has the most delayed shipments"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "group_by": [
+     "origin_warehouse"
+    ],
+    "intent_type": "rank",
+    "limit": 2,
+    "metric": "total_tat_hours",
+    "sort_direction": "asc"
+   },
+   "query": "bottom 2 warehouses by average TAT"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "group_by": [
+     "destination_city"
+    ],
+    "intent_type": "rank",
+    "limit": 3,
+    "metric": "invoice_number",
+    "sort_direction": "desc"
+   },
+   "query": "top 3 cities by number of shipments"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.98,
+    "group_by": [
+     "origin_warehouse"
+    ],
+    "intent_type": "rank",
+    "limit": 1,
+    "metric": "freight_cost_usd",
+    "sort_direction": "desc"
+   },
+   "query": "which warehouse has the highest freight cost"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "rank",
+    "limit": 1,
+    "metric": "total_tat_hours",
+    "sort_direction": "asc"
+   },
+   "query": "which carrier has the lowest average TAT"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.97,
+    "filters": [
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-08-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-09-01"
+     }
+    ],
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "rank",
+    "limit": 3,
+    "metric": "shipment_weight_kg",
+    "sort_direction": "desc"
+   },
+   "query": "top 3 carriers by total weight in August"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.877,
+    "filters": [
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-07-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-08-01"
+     }
+    ],
+    "group_by": [
+     "destination_city"
+    ],
+    "intent_type": "rank",
+    "limit": 10,
+    "metric": "freight_cost_usd",
+    "sort_direction": "desc"
+   },
+   "query": "top 10 destinations by freight cost in July 2026"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "group_by": [
+     "destination_city"
+    ],
+    "intent_type": "rank",
+    "limit": 1,
+    "metric": "invoice_number",
+    "sort_direction": "desc"
+   },
+   "query": "which destination city has the most shipments"
+  }
+ ],
+ "trend": [
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "month",
+    "intent_type": "trend",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "monthly freight cost trend"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "month",
+    "intent_type": "trend",
+    "metric": "shipment_weight_kg",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "weight trend over time"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.97,
+    "filters": [
+     {
+      "column": "dispatch_date",
+      "operator": "gte",
+      "value": "2026-08-01"
+     },
+     {
+      "column": "dispatch_date",
+      "operator": "lt",
+      "value": "2026-09-01"
+     }
+    ],
+    "granularity": "day",
+    "intent_type": "trend",
+    "metric": "invoice_number",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "daily shipments in August 2026"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.887,
+    "filters": [
+     {
+      "column": "carrier",
+      "operator": "eq",
+      "value": "DHL"
+     }
+    ],
+    "granularity": "week",
+    "intent_type": "trend",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "weekly freight cost for DHL"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "granularity": "month",
+    "intent_type": "trend",
+    "metric": "total_tat_hours",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "month over month average TAT"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "quarter",
+    "intent_type": "trend",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "quarterly freight cost"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.84,
+    "granularity": "month",
+    "group_by": [
+     "carrier"
+    ],
+    "intent_type": "trend",
+    "metric": "freight_cost_usd",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "freight cost per month by carrier"
+  },
+  {
+   "output": {
+    "agg": "count",
+    "confidence": 0.98,
+    "filters": [
+     {
+      "column": "current_status",
+      "operator": "eq",
+      "value": "Delayed"
+     }
+    ],
+    "granularity": "month",
+    "intent_type": "trend",
+    "metric": "invoice_number",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "monthly number of delayed shipments"
+  },
+  {
+   "output": {
+    "agg": "avg",
+    "confidence": 0.98,
+    "granularity": "month",
+    "intent_type": "trend",
+    "metric": "loading_time_mins",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "trend of average loading time by month"
+  },
+  {
+   "output": {
+    "agg": "sum",
+    "confidence": 0.877,
+    "filters": [
+     {
+      "column": "origin_warehouse",
+      "operator": "eq",
+      "value": "Chicago_WH"
+     }
+    ],
+    "granularity": "month",
+    "intent_type": "trend",
+    "metric": "shipment_weight_kg",
+    "sort_direction": "asc",
+    "time_column": "dispatch_date"
+   },
+   "query": "monthly weight for Chicago"
+  }
+ ]
+}
