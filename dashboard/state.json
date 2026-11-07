@@ -342,68 +342,68 @@
   },
   "T-69": {
    "title": "Python templates",
-   "state": "active",
-   "note": "Python codegen + formatting"
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-70": {
    "title": "AST to Python",
-   "state": "partial",
-   "note": "pandas generator in slice"
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-71": {
    "title": "Import injection",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-72": {
    "title": "Auto-format Python",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-73": {
    "title": "Query comments (py)",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-74": {
    "title": "Python golden outputs",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-75": {
    "title": "SQL dialects",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-76": {
    "title": "AST to SQL",
-   "state": "partial",
-   "note": "SQLite generator in slice"
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-77": {
    "title": "Dialect quirks",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-78": {
    "title": "Format SQL",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-79": {
    "title": "Query comments (sql)",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-80": {
    "title": "SQL golden outputs",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_codegen.py + test_postgres.py"
   },
   "T-81": {
    "title": "Sandbox environment",
-   "state": "partial",
-   "note": "read-only connection in slice"
+   "state": "active",
+   "note": "sandbox hardening + diagnostics"
   },
   "T-82": {
    "title": "Static validation",
@@ -503,74 +503,6 @@
  },
  "log": [
   {
-   "t": 1794085780.479672,
-   "msg": "T-42 -> done"
-  },
-  {
-   "t": 1794085780.498704,
-   "msg": "T-43 -> done"
-  },
-  {
-   "t": 1794085780.517558,
-   "msg": "T-44 -> done"
-  },
-  {
-   "t": 1794085780.536066,
-   "msg": "T-45 -> done"
-  },
-  {
-   "t": 1794085780.554945,
-   "msg": "T-46 -> done"
-  },
-  {
-   "t": 1794085780.573798,
-   "msg": "T-47 -> done"
-  },
-  {
-   "t": 1794085780.592563,
-   "msg": "Phases 5-6 done: optimizer, cost model, equivalence+mutation checks, 158 golden files. 329 tests green."
-  },
-  {
-   "t": 1794085780.61182,
-   "msg": "T-48 -> active"
-  },
-  {
-   "t": 1794085870.015079,
-   "msg": "T-18 -> done"
-  },
-  {
-   "t": 1794085870.036608,
-   "msg": "T-22 -> done"
-  },
-  {
-   "t": 1794085870.057282,
-   "msg": "T-23 -> done"
-  },
-  {
-   "t": 1794085870.077986,
-   "msg": "T-48 -> done"
-  },
-  {
-   "t": 1794085870.1312919,
-   "msg": "T-49 -> done"
-  },
-  {
-   "t": 1794085870.15152,
-   "msg": "T-50 -> done"
-  },
-  {
-   "t": 1794085870.1717849,
-   "msg": "T-51 -> done"
-  },
-  {
-   "t": 1794085870.1927612,
-   "msg": "T-52 -> done"
-  },
-  {
-   "t": 1794085870.213459,
-   "msg": "T-53 -> done"
-  },
-  {
    "t": 1794085870.234066,
    "msg": "T-54 -> done"
   },
@@ -661,6 +593,74 @@
   {
    "t": 1794086053.429993,
    "msg": "T-69 -> active"
+  },
+  {
+   "t": 1794086145.856643,
+   "msg": "PostgreSQL 16 running locally (port 5433); making VGU a real Postgres plant (opt-in via env)"
+  },
+  {
+   "t": 1794086204.446283,
+   "msg": "VGU now runs on REAL PostgreSQL in tests: totals match across 3 engines, 5 time-bucket granularities agree, read-only role + timeout verified"
+  },
+  {
+   "t": 1794086204.4674602,
+   "msg": "T-75 -> done"
+  },
+  {
+   "t": 1794086293.832905,
+   "msg": "T-69 -> done"
+  },
+  {
+   "t": 1794086293.852376,
+   "msg": "T-70 -> done"
+  },
+  {
+   "t": 1794086293.873128,
+   "msg": "T-71 -> done"
+  },
+  {
+   "t": 1794086293.894055,
+   "msg": "T-72 -> done"
+  },
+  {
+   "t": 1794086293.914389,
+   "msg": "T-73 -> done"
+  },
+  {
+   "t": 1794086293.934415,
+   "msg": "T-74 -> done"
+  },
+  {
+   "t": 1794086293.954041,
+   "msg": "T-75 -> done"
+  },
+  {
+   "t": 1794086293.973611,
+   "msg": "T-76 -> done"
+  },
+  {
+   "t": 1794086293.993611,
+   "msg": "T-77 -> done"
+  },
+  {
+   "t": 1794086294.013464,
+   "msg": "T-78 -> done"
+  },
+  {
+   "t": 1794086294.033254,
+   "msg": "T-79 -> done"
+  },
+  {
+   "t": 1794086294.052863,
+   "msg": "T-80 -> done"
+  },
+  {
+   "t": 1794086294.072716,
+   "msg": "Phases 10-11 done: Python+SQL codegen verified on SQLite, DuckDB and real PostgreSQL (563 tests)"
+  },
+  {
+   "t": 1794086294.096361,
+   "msg": "T-81 -> active"
   }
  ],
  "next": [
@@ -669,5 +669,5 @@
   "Federation across 3 plants, sandbox for DuckDB+SQLite"
  ],
  "started": 1794084381.329406,
- "updated": 1794086053.4299939
+ "updated": 1794086294.0963619
 }

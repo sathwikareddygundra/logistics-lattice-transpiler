@@ -8,10 +8,12 @@ that from every later stage.
 
 from __future__ import annotations
 
+import os
 import sqlite3
 from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
+from urllib.parse import urlparse, urlunparse
 
 import duckdb
 import pandas as pd
@@ -61,13 +63,56 @@ PROFILES: dict[Plant, PlantProfile] = {
 }
 
 
+def vgu_on_postgres() -> bool:
+    """VGU runs on a real PostgreSQL server when LATTICE_VGU_ENGINE=postgres (needs
+    LATTICE_PG_DSN; see scripts/local_postgres.sh). Default is SQLite: no server needed."""
+    return os.environ.get("LATTICE_VGU_ENGINE") == "postgres"
+
+
 def get_profile(plant: Plant | str) -> PlantProfile:
     try:
-        return PROFILES[Plant(plant)]
+        p = Plant(plant)
     except ValueError:
         raise UnknownPlantError(
-            f"unknown plant {plant!r}; known plants: {[p.value for p in Plant]}"
+            f"unknown plant {plant!r}; known plants: {[x.value for x in Plant]}"
         ) from None
+    if p is Plant.VGU and vgu_on_postgres():
+        base = PROFILES[Plant.VGU]
+        return PlantProfile(Plant.VGU, "postgres", "postgres", base.table_names)
+    return PROFILES[p]
+
+
+def readonly_dsn(owner_dsn: str) -> str:
+    """Same server, the SELECT-only role used by the sandbox."""
+    u = urlparse(owner_dsn)
+    host = u.netloc.rsplit("@", 1)[-1]
+    return urlunparse(u._replace(netloc=f"{PG_RO_ROLE}@{host}"))
+
+
+PG_RO_ROLE = "lattice_ro"
+_PG_TYPES = {"integer": "BIGINT", "float": "DOUBLE PRECISION", "string": "TEXT", "date": "DATE",
+             "datetime": "TIMESTAMP", "boolean": "BOOLEAN"}  # fmt: skip
+
+
+def _build_postgres(frames: dict[str, pd.DataFrame], physical: dict[str, str], dsn: str) -> str:
+    import psycopg
+
+    with psycopg.connect(dsn, autocommit=True) as conn:
+        for table, df in frames.items():
+            name = physical[table]
+            cols = ", ".join(f"{c} {_PG_TYPES[t.value]}" for c, t in TABLES[table].columns.items())
+            conn.execute(f"DROP TABLE IF EXISTS {name}")
+            conn.execute(f"CREATE TABLE {name} ({cols})")
+            with conn.cursor() as cur, cur.copy(f"COPY {name} FROM STDIN") as cp:
+                for row in df.itertuples(index=False):
+                    cp.write_row(row)
+        conn.execute(
+            f"DO $$ BEGIN IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname='{PG_RO_ROLE}') "
+            f"THEN CREATE ROLE {PG_RO_ROLE} LOGIN; END IF; END $$"
+        )
+        conn.execute(f"GRANT SELECT ON ALL TABLES IN SCHEMA public TO {PG_RO_ROLE}")
+        conn.execute(f"ALTER ROLE {PG_RO_ROLE} SET default_transaction_read_only = on")
+    return readonly_dsn(dsn)
 
 
 def db_path(out_dir: Path | str, plant: Plant | str) -> Path:
@@ -92,12 +137,21 @@ def _load_source(source_dir: Path) -> dict[str, pd.DataFrame]:
 
 def build_plant_databases(
     out_dir: Path | str, source_dir: Path | str = DEFAULT_SOURCE_DIR
-) -> dict[Plant, Path]:
+) -> dict[Plant, Path | str]:
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
     frames = _load_source(Path(source_dir))
-    paths: dict[Plant, Path] = {}
-    for plant, profile in PROFILES.items():
+    paths: dict[Plant, Path | str] = {}
+    for plant in PROFILES:
+        profile = get_profile(plant)
+        if profile.engine == "postgres":
+            owner = os.environ["LATTICE_PG_DSN"]
+            by_table = {
+                t: df[df["invoice_number"].map(plant_for_invoice) == plant]
+                for t, df in frames.items()
+            }
+            paths[plant] = _build_postgres(by_table, profile.table_names, owner)
+            continue
         path = db_path(out_dir, plant)
         path.unlink(missing_ok=True)
         for table, df in frames.items():

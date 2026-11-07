@@ -78,6 +78,16 @@ def validate_python(code: str) -> None:
 
 
 # --- connections -------------------------------------------------------------
+def _decimals_to_float(df: pd.DataFrame) -> pd.DataFrame:
+    """PostgreSQL returns SUM(bigint) as Decimal; make it a plain float column."""
+    from decimal import Decimal
+
+    for c in df.columns:
+        if df[c].dtype == object and len(df) and df[c].map(lambda v: isinstance(v, Decimal)).all():
+            df[c] = df[c].astype(float)
+    return df
+
+
 class _Conn:
     """Read-only connection with a deadline, exposing read_sql(sql) -> DataFrame."""
 
@@ -110,7 +120,7 @@ class _Conn:
             with self.raw.cursor() as cur:
                 cur.execute(sql)
                 cols = [d.name for d in cur.description]
-                return pd.DataFrame(cur.fetchall(), columns=cols)
+                return _decimals_to_float(pd.DataFrame(cur.fetchall(), columns=cols))
         return pd.read_sql_query(sql, self.raw)
 
     def close(self) -> None:

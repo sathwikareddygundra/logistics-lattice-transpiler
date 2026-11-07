@@ -23,7 +23,13 @@ from codegen.common import (
 
 OPERATORS = {"eq": "=", "ne": "<>", "gt": ">", "gte": ">=", "lt": "<", "lte": "<="}
 JOIN_KEYWORDS = {"inner": "INNER", "left": "LEFT", "right": "RIGHT", "outer": "FULL OUTER"}
-_RESERVED = {k for k in Tokenizer.KEYWORDS if k.isalpha()}
+_STANDARD_RESERVED = set(
+    "SELECT FROM WHERE ORDER GROUP BY TABLE USER LIMIT OFFSET INDEX KEY PRIMARY CHECK JOIN LEFT "
+    "RIGHT INNER ON AS AND OR NOT NULL TRUE FALSE IN IS LIKE BETWEEN CASE WHEN THEN ELSE END UNION "
+    "ALL DISTINCT HAVING VALUES DEFAULT COLUMN CONSTRAINT UNIQUE REFERENCES FOREIGN CREATE DROP "
+    "ALTER GRANT".split()
+)
+_RESERVED = {k for k in Tokenizer.KEYWORDS if k.isalpha()} | _STANDARD_RESERVED
 
 
 def quote(name: str, hints: CodegenHints) -> str:
