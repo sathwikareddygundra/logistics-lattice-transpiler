@@ -33,7 +33,7 @@ for row in sample:
         note = f"error: {str(exc)[:120]}"
     ms = (time.perf_counter() - start) * 1000
     results.append((row["query"], row["intent"], ok_intent, exact, ms, note))
-    time.sleep(0.5)
+    time.sleep(4)
 
 lat = sorted(r[4] for r in results)
 lines = [

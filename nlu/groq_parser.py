@@ -17,7 +17,7 @@ from nlu.intent import ParsedIntent
 
 MODEL = "openai/gpt-oss-20b"
 PROMPT_VERSION = "v1"
-EXAMPLES_PER_INTENT = 3
+EXAMPLES_PER_INTENT = 1
 _HERE = Path(__file__).parent
 
 
