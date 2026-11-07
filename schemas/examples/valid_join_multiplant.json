@@ -1,0 +1,16 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "17a1d5e4-2f3a-4a7a-8f0e-4b6c7d9a1c22",
+  "raw_query": "Give me dispatch by plant and vehicle type for YCW and VGU.",
+  "intent_type": "join",
+  "entities": [
+    { "entity_type": "table", "value": "dispatch", "normalized_value": "dispatch_records", "confidence": 0.96 },
+    { "entity_type": "plant", "value": "YCW", "normalized_value": "YCW", "confidence": 0.98 },
+    { "entity_type": "plant", "value": "VGU", "normalized_value": "VGU", "confidence": 0.98 },
+    { "entity_type": "vehicle_type", "value": "vehicle type", "normalized_value": null, "confidence": 0.85 }
+  ],
+  "confidence": {
+    "overall": 0.9,
+    "per_entity": [0.96, 0.98, 0.98, 0.85]
+  }
+}
