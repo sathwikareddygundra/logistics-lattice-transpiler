@@ -12,8 +12,8 @@
   },
   "T-3": {
    "title": "Branching and PR rules",
-   "state": "partial",
-   "note": "branch protection is a GitHub setting, not verified"
+   "state": "pending",
+   "note": "needs you: branch protection is a GitHub setting"
   },
   "T-4": {
    "title": "NLU compute decision",
@@ -473,67 +473,35 @@
   "T-95": {
    "title": "Load testing",
    "state": "pending",
-   "note": ""
+   "note": "handed to second agent: docs/agent-handoff-ops.md"
   },
   "T-96": {
    "title": "Staging + drift alert",
    "state": "pending",
-   "note": ""
+   "note": "handed to second agent: docs/agent-handoff-ops.md"
   },
   "T-97": {
    "title": "Rollout plan",
    "state": "pending",
-   "note": ""
+   "note": "handed to second agent: docs/agent-handoff-ops.md"
   },
   "T-98": {
    "title": "Dashboards",
    "state": "pending",
-   "note": ""
+   "note": "handed to second agent: docs/agent-handoff-ops.md"
   },
   "T-99": {
    "title": "Alert thresholds",
    "state": "pending",
-   "note": ""
+   "note": "handed to second agent: docs/agent-handoff-ops.md"
   },
   "T-100": {
    "title": "On-call runbook",
    "state": "pending",
-   "note": ""
+   "note": "handed to second agent: docs/agent-handoff-ops.md"
   }
  },
  "log": [
-  {
-   "t": 1794086293.873128,
-   "msg": "T-71 -> done"
-  },
-  {
-   "t": 1794086293.894055,
-   "msg": "T-72 -> done"
-  },
-  {
-   "t": 1794086293.914389,
-   "msg": "T-73 -> done"
-  },
-  {
-   "t": 1794086293.934415,
-   "msg": "T-74 -> done"
-  },
-  {
-   "t": 1794086293.954041,
-   "msg": "T-75 -> done"
-  },
-  {
-   "t": 1794086293.973611,
-   "msg": "T-76 -> done"
-  },
-  {
-   "t": 1794086293.993611,
-   "msg": "T-77 -> done"
-  },
-  {
-   "t": 1794086294.013464,
-   "msg": "T-78 -> done"
-  },
   {
    "t": 1794086294.033254,
    "msg": "T-79 -> done"
@@ -661,13 +629,45 @@
   {
    "t": 1794086785.686985,
    "msg": "T-94 -> done"
+  },
+  {
+   "t": 1794086817.770509,
+   "msg": "T-95 -> pending"
+  },
+  {
+   "t": 1794086817.792841,
+   "msg": "T-96 -> pending"
+  },
+  {
+   "t": 1794086817.812882,
+   "msg": "T-97 -> pending"
+  },
+  {
+   "t": 1794086817.831868,
+   "msg": "T-98 -> pending"
+  },
+  {
+   "t": 1794086817.850658,
+   "msg": "T-99 -> pending"
+  },
+  {
+   "t": 1794086817.869078,
+   "msg": "T-100 -> pending"
+  },
+  {
+   "t": 1794086817.887771,
+   "msg": "T-3 -> pending"
+  },
+  {
+   "t": 1794086817.906059,
+   "msg": "CI green on GitHub (incl. Postgres service). Opening PR into main."
   }
  ],
  "next": [
-  "Wait for your answers (keys/permissions)",
-  "Then: DAG joins, IR/AST/codegen rewrite on real CSV data",
-  "Federation across 3 plants, sandbox for DuckDB+SQLite"
+  "Waiting on second agent: T-95 load test, T-96..T-100 ops + docs",
+  "You: set branch protection on main (T-3)",
+  "Me: verify merged result after you report back"
  ],
  "started": 1794084381.329406,
- "updated": 1794086785.686986
+ "updated": 1794086817.924714
 }
