@@ -1,0 +1,6 @@
+ast v1.0.0 target=python
+df1 = select: dispatch[dispatch_date, carrier, freight_cost_usd]
+df2 = filter: dispatch.dispatch_date:datetime gte '2026-08-01'  <- n1
+df3 = filter: dispatch.dispatch_date:datetime lt '2026-09-01'  <- n2
+df4 = aggregate: sum(dispatch.freight_cost_usd:float) -> float by [dispatch.carrier:string]  <- n3
+df5 = output: dispatch.carrier:string, dispatch.freight_cost_usd:float  <- n4

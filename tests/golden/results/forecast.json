@@ -1,0 +1,35 @@
+{
+ "query": "forecast freight cost next 2 months",
+ "columns": [
+  "dispatch_date_month",
+  "sum_freight_cost_usd",
+  "kind"
+ ],
+ "rows": [
+  [
+   "2026-06",
+   8451951.45,
+   "actual"
+  ],
+  [
+   "2026-07",
+   8321224.5,
+   "actual"
+  ],
+  [
+   "2026-08",
+   8685218.33,
+   "actual"
+  ],
+  [
+   "2026-09",
+   8719398.3067,
+   "forecast"
+  ],
+  [
+   "2026-10",
+   8836031.7467,
+   "forecast"
+  ]
+ ]
+}

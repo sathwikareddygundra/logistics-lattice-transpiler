@@ -1,0 +1,6 @@
+ast v1.0.0 target=python
+df1 = select: dispatch[invoice_number, carrier]
+df2 = select: turnaround_time[invoice_number, total_tat_hours]
+df3 = join: dispatch.invoice_number:string = turnaround_time.invoice_number:string (inner)  <- n1[left], n2[right]
+df4 = aggregate: sum(turnaround_time.total_tat_hours:float) -> float by [dispatch.carrier:string]  <- n3
+df5 = output: dispatch.carrier:string, turnaround_time.total_tat_hours:float  <- n4

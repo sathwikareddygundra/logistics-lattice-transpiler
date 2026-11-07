@@ -27,6 +27,21 @@ _OP_FOR_NODE_TYPE = {
 }
 
 
+def _source_table(dag: Dag, join_id: str, role: EdgeRole) -> str:
+    """The table feeding one side of a join, looking through pushed-down filters."""
+    by_id = {n.id: n for n in dag.nodes}
+    edge = next(e for e in dag.edges if e.to_node == join_id and e.role is role)
+    node = by_id[edge.from_node]
+    while node.node_type is not NodeType.SOURCE:
+        if node.node_type is not NodeType.FILTER:
+            raise UnmappedNodeTypeError(
+                f"join {join_id!r}: {role.value} input must be a source or filtered source "
+                "(left-deep joins only)"
+            )
+        node = by_id[next(e.from_node for e in dag.edges if e.to_node == node.id)]
+    return str(node.params["source"])
+
+
 def dag_to_ir(dag: Dag) -> Ir:
     slices = needed_columns(dag)  # CAG: only the schema each source needs
     sources = [n for n in dag.nodes if n.node_type is NodeType.SOURCE]
@@ -72,16 +87,7 @@ def dag_to_ir(dag: Dag) -> Ir:
                     "value": {"value": p["value"], "type": col["type"]},
                 }
             case NodeType.JOIN:
-                by_id = {n.id: n for n in dag.nodes}
-                right_edge = next(
-                    e for e in dag.edges if e.to_node == node.id and e.role is EdgeRole.RIGHT
-                )
-                right_node = by_id[right_edge.from_node]
-                if right_node.node_type is not NodeType.SOURCE:
-                    raise UnmappedNodeTypeError(
-                        f"join {node.id!r}: right input must be a source (left-deep joins only)"
-                    )
-                right_table = right_node.params["source"]
+                right_table = _source_table(dag, node.id, EdgeRole.RIGHT)
                 params = {
                     "left_key": ref(p["on"]),
                     "right_key": ColumnRef(

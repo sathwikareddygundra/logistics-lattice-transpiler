@@ -1,0 +1,7 @@
+ast v1.0.0 target=sql
+df1 = select: dispatch[invoice_number, carrier]
+df2 = select: tracking[invoice_number, current_status]
+df3 = join: dispatch.invoice_number:string = tracking.invoice_number:string (inner)  <- n1[left], n2[right]
+df4 = filter: tracking.current_status:string eq 'Delayed'  <- n3
+df5 = aggregate: count(dispatch.invoice_number:string) -> integer by [dispatch.carrier:string]  <- n4
+df6 = output: dispatch.carrier:string, dispatch.invoice_number:string  <- n5

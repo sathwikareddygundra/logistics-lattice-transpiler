@@ -1,0 +1,8 @@
+ir v1.0.0
+n1 select: ycw_dispatch[invoice_number, dispatch_date, origin_warehouse, destination_city, carrier]
+n2 filter: dispatch.origin_warehouse:string eq 'Chicago_WH'  <- n1
+n3 filter: dispatch.dispatch_date:datetime gte '2026-07-01'  <- n2
+n4 filter: dispatch.dispatch_date:datetime lt '2026-08-01'  <- n3
+n5 sort: by dispatch.invoice_number:string asc  <- n4
+n6 limit: 20  <- n5
+n7 output: dispatch.invoice_number:string, dispatch.dispatch_date:datetime, dispatch.origin_warehouse:string, dispatch.destination_city:string, dispatch.carrier:string  <- n6

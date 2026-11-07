@@ -1,0 +1,100 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "role": null,
+      "to_node": "n2"
+    },
+    {
+      "from_node": "n2",
+      "role": null,
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n3",
+      "role": null,
+      "to_node": "n4"
+    },
+    {
+      "from_node": "n4",
+      "role": null,
+      "to_node": "n5"
+    },
+    {
+      "from_node": "n5",
+      "role": null,
+      "to_node": "n6"
+    },
+    {
+      "from_node": "n6",
+      "role": null,
+      "to_node": "n7"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "dispatch"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "filter",
+      "params": {
+        "column": "origin_warehouse",
+        "operator": "eq",
+        "value": "Chicago_WH"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "filter",
+      "params": {
+        "column": "dispatch_date",
+        "operator": "gte",
+        "value": "2026-07-01"
+      }
+    },
+    {
+      "id": "n4",
+      "node_type": "filter",
+      "params": {
+        "column": "dispatch_date",
+        "operator": "lt",
+        "value": "2026-08-01"
+      }
+    },
+    {
+      "id": "n5",
+      "node_type": "sort",
+      "params": {
+        "by": "invoice_number",
+        "direction": "asc"
+      }
+    },
+    {
+      "id": "n6",
+      "node_type": "limit",
+      "params": {
+        "count": 20
+      }
+    },
+    {
+      "id": "n7",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "invoice_number",
+          "dispatch_date",
+          "origin_warehouse",
+          "destination_city",
+          "carrier"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

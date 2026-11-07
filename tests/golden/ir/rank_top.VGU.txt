@@ -1,0 +1,4 @@
+ir v1.0.0
+n1 select: vgu_dispatch[destination_city, freight_cost_usd]
+n2 aggregate: sum(dispatch.freight_cost_usd:float) -> float by [dispatch.destination_city:string]  <- n1
+n3 output: dispatch.destination_city:string, dispatch.freight_cost_usd:float  <- n2

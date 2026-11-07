@@ -102,8 +102,8 @@
   },
   "T-21": {
    "title": "Confidence scoring",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "calibration doc + per-entity scores"
   },
   "T-22": {
    "title": "Prompt templates",
@@ -127,43 +127,43 @@
   },
   "T-26": {
    "title": "Latency benchmark + SLA",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "p95 0.13ms rule parser; SLA test"
   },
   "T-27": {
    "title": "Paraphrase template",
-   "state": "partial",
-   "note": "basic paraphrase in slice"
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-28": {
    "title": "Confirm Groq client",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-29": {
    "title": "Threshold routing",
-   "state": "partial",
-   "note": "threshold routing in slice"
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-30": {
    "title": "Yes/no hook",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-31": {
    "title": "Re-prompt loop",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-32": {
    "title": "Retry cap",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-33": {
    "title": "Log confirm data",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_confirm.py"
   },
   "T-34": {
    "title": "DAG data model",
@@ -577,6 +577,50 @@
   {
    "t": 1794085509.2634408,
    "msg": "Wrote docs/agent-handoff-ops.md for your second agent (README/docs, load test, ops package)"
+  },
+  {
+   "t": 1794085573.1719701,
+   "msg": "NLU gates + calibration/latency reports done; building Phase 4 confirm loop"
+  },
+  {
+   "t": 1794085573.1950998,
+   "msg": "T-21 -> done"
+  },
+  {
+   "t": 1794085573.2162461,
+   "msg": "T-26 -> done"
+  },
+  {
+   "t": 1794085648.813549,
+   "msg": "Phase 4 confirm loop done (17 tests). Starting graph optimization + golden tests."
+  },
+  {
+   "t": 1794085648.836184,
+   "msg": "T-27 -> done"
+  },
+  {
+   "t": 1794085648.856519,
+   "msg": "T-28 -> done"
+  },
+  {
+   "t": 1794085648.876791,
+   "msg": "T-29 -> done"
+  },
+  {
+   "t": 1794085648.8969548,
+   "msg": "T-30 -> done"
+  },
+  {
+   "t": 1794085648.9163158,
+   "msg": "T-31 -> done"
+  },
+  {
+   "t": 1794085648.9354408,
+   "msg": "T-32 -> done"
+  },
+  {
+   "t": 1794085648.954292,
+   "msg": "T-33 -> done"
   }
  ],
  "next": [
@@ -585,5 +629,5 @@
   "Federation across 3 plants, sandbox for DuckDB+SQLite"
  ],
  "started": 1794084381.329406,
- "updated": 1794085509.2634418
+ "updated": 1794085648.954293
 }

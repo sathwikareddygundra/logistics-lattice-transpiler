@@ -1,0 +1,6 @@
+ir v1.0.0
+n1 select: vgu_dispatch[dispatch_date, carrier, freight_cost_usd]
+n2 filter: dispatch.carrier:string eq 'DHL'  <- n1
+n3 window: dispatch.dispatch_date:datetime per week  <- n2
+n4 aggregate: sum(dispatch.freight_cost_usd:float) -> float by [dispatch.dispatch_date_week:string]  <- n3
+n5 output: dispatch.dispatch_date_week:string, dispatch.freight_cost_usd:float  <- n4

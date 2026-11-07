@@ -1,0 +1,173 @@
+{
+ "query": "show delayed shipments from Atlanta",
+ "columns": [
+  "invoice_number",
+  "dispatch_date",
+  "origin_warehouse",
+  "destination_city",
+  "carrier",
+  "current_status"
+ ],
+ "rows": [
+  [
+   "INV-2026-00006",
+   "2026-08-01 17:15:07",
+   "Atlanta_WH",
+   "Houston",
+   "DHL",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00044",
+   "2026-06-01 13:44:19",
+   "Atlanta_WH",
+   "Phoenix",
+   "XPO Logistics",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00045",
+   "2026-07-08 18:06:10",
+   "Atlanta_WH",
+   "Denver",
+   "XPO Logistics",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00073",
+   "2026-07-18 00:35:50",
+   "Atlanta_WH",
+   "Phoenix",
+   "JB Hunt",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00085",
+   "2026-08-12 11:36:33",
+   "Atlanta_WH",
+   "Boston",
+   "FedEx",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00145",
+   "2026-06-29 02:59:01",
+   "Atlanta_WH",
+   "Seattle",
+   "UPS",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00162",
+   "2026-08-13 09:24:01",
+   "Atlanta_WH",
+   "Phoenix",
+   "DHL",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00184",
+   "2026-06-30 22:40:33",
+   "Atlanta_WH",
+   "Phoenix",
+   "JB Hunt",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00226",
+   "2026-08-20 10:10:49",
+   "Atlanta_WH",
+   "Phoenix",
+   "JB Hunt",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00235",
+   "2026-06-02 08:08:27",
+   "Atlanta_WH",
+   "Houston",
+   "FedEx",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00306",
+   "2026-07-31 08:54:55",
+   "Atlanta_WH",
+   "Denver",
+   "FedEx",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00374",
+   "2026-07-30 11:52:35",
+   "Atlanta_WH",
+   "Houston",
+   "JB Hunt",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00384",
+   "2026-06-25 00:28:32",
+   "Atlanta_WH",
+   "Seattle",
+   "UPS",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00407",
+   "2026-07-20 00:01:09",
+   "Atlanta_WH",
+   "Denver",
+   "UPS",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00408",
+   "2026-08-20 05:04:50",
+   "Atlanta_WH",
+   "Miami",
+   "UPS",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00437",
+   "2026-06-25 06:44:02",
+   "Atlanta_WH",
+   "Denver",
+   "UPS",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00449",
+   "2026-06-12 01:15:31",
+   "Atlanta_WH",
+   "Phoenix",
+   "XPO Logistics",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00459",
+   "2026-06-14 17:51:04",
+   "Atlanta_WH",
+   "Miami",
+   "UPS",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00464",
+   "2026-08-16 22:29:52",
+   "Atlanta_WH",
+   "Miami",
+   "XPO Logistics",
+   "Delayed"
+  ],
+  [
+   "INV-2026-00478",
+   "2026-08-22 16:00:40",
+   "Atlanta_WH",
+   "Phoenix",
+   "UPS",
+   "Delayed"
+  ]
+ ]
+}

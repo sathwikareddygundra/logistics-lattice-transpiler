@@ -1,0 +1,57 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "role": null,
+      "to_node": "n2"
+    },
+    {
+      "from_node": "n2",
+      "role": null,
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n3",
+      "role": null,
+      "to_node": "n4"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "tracking"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "filter",
+      "params": {
+        "column": "current_status",
+        "operator": "eq",
+        "value": "Delayed"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "aggregate",
+      "params": {
+        "group_by": [],
+        "metric": "invoice_number",
+        "op": "count"
+      }
+    },
+    {
+      "id": "n4",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "invoice_number"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

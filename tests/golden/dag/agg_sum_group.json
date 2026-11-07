@@ -1,0 +1,74 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "role": null,
+      "to_node": "n2"
+    },
+    {
+      "from_node": "n2",
+      "role": null,
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n3",
+      "role": null,
+      "to_node": "n4"
+    },
+    {
+      "from_node": "n4",
+      "role": null,
+      "to_node": "n5"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "dispatch"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "filter",
+      "params": {
+        "column": "dispatch_date",
+        "operator": "gte",
+        "value": "2026-08-01"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "filter",
+      "params": {
+        "column": "dispatch_date",
+        "operator": "lt",
+        "value": "2026-09-01"
+      }
+    },
+    {
+      "id": "n4",
+      "node_type": "aggregate",
+      "params": {
+        "group_by": [
+          "carrier"
+        ],
+        "metric": "freight_cost_usd",
+        "op": "sum"
+      }
+    },
+    {
+      "id": "n5",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "carrier",
+          "freight_cost_usd"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

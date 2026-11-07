@@ -1,0 +1,5 @@
+ast v1.0.0 target=sql
+df1 = select: dispatch[dispatch_date, shipment_weight_kg]
+df2 = window: dispatch.dispatch_date:datetime per month  <- n1
+df3 = aggregate: sum(dispatch.shipment_weight_kg:float) -> float by [dispatch.dispatch_date_month:string]  <- n2
+df4 = output: dispatch.dispatch_date_month:string, dispatch.shipment_weight_kg:float  <- n3

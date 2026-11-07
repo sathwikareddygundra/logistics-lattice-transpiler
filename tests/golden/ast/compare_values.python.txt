@@ -1,0 +1,4 @@
+ast v1.0.0 target=python
+df1 = select: dispatch[carrier, freight_cost_usd]
+df2 = aggregate: sum(dispatch.freight_cost_usd:float) -> float by [dispatch.carrier:string]  <- n1
+df3 = output: dispatch.carrier:string, dispatch.freight_cost_usd:float  <- n2
