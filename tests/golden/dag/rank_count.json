@@ -2,23 +2,23 @@
   "edges": [
     {
       "from_node": "n1",
-      "role": "left",
-      "to_node": "n3"
-    },
-    {
-      "from_node": "n2",
       "role": "right",
       "to_node": "n3"
     },
     {
-      "from_node": "n3",
+      "from_node": "n2",
       "role": null,
       "to_node": "n4"
     },
     {
-      "from_node": "n4",
+      "from_node": "n3",
       "role": null,
       "to_node": "n5"
+    },
+    {
+      "from_node": "n4",
+      "role": "left",
+      "to_node": "n3"
     },
     {
       "from_node": "n5",

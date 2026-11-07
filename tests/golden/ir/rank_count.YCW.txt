@@ -1,7 +1,7 @@
 ir v1.0.0
 n1 select: ycw_dispatch[invoice_number, carrier]
 n2 select: ycw_tracking[invoice_number, current_status]
-n3 join: dispatch.invoice_number:string = tracking.invoice_number:string (inner)  <- n1[left], n2[right]
-n4 filter: tracking.current_status:string eq 'Delayed'  <- n3
-n5 aggregate: count(dispatch.invoice_number:string) -> integer by [dispatch.carrier:string]  <- n4
+n3 join: dispatch.invoice_number:string = dispatch.invoice_number:string (inner)  <- n1[right], n4[left]
+n4 filter: tracking.current_status:string eq 'Delayed'  <- n2
+n5 aggregate: count(dispatch.invoice_number:string) -> integer by [dispatch.carrier:string]  <- n3
 n6 output: dispatch.carrier:string, dispatch.invoice_number:string  <- n5

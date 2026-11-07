@@ -82,18 +82,18 @@
   },
   "T-17": {
    "title": "Intent taxonomy",
-   "state": "pending",
-   "note": "extending taxonomy + real-CSV catalog"
+   "state": "done",
+   "note": "taxonomy + 133 examples"
   },
   "T-18": {
    "title": "NLU approach ADR",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "adr + prompt files + tests"
   },
   "T-19": {
    "title": "Entity extraction",
    "state": "done",
-   "note": "entities + dates + aliases"
+   "note": "F1 gate in CI"
   },
   "T-20": {
    "title": "Slot filling",
@@ -107,13 +107,13 @@
   },
   "T-22": {
    "title": "Prompt templates",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "adr + prompt files + tests"
   },
   "T-23": {
    "title": "Few-shot examples",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "adr + prompt files + tests"
   },
   "T-24": {
    "title": "Out-of-scope fallback",
@@ -168,182 +168,182 @@
   "T-34": {
    "title": "DAG data model",
    "state": "done",
-   "note": ""
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-35": {
    "title": "Intent to DAG",
-   "state": "partial",
-   "note": "linear templates in slice"
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-36": {
    "title": "Dependency inference",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-37": {
    "title": "Acyclicity check",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-38": {
    "title": "DAG serialization",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-39": {
    "title": "Multi-plant branches",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-40": {
    "title": "DAG unit tests",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-41": {
    "title": "Optimization passes",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-42": {
    "title": "Topological sort",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-43": {
    "title": "Cost estimation",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-44": {
    "title": "Join order",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-45": {
    "title": "Predicate push-down",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-46": {
    "title": "Cross-plant optimization",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-47": {
    "title": "Semantic-equivalence tests",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_dag_graph.py + golden"
   },
   "T-48": {
    "title": "CAG boundaries ADR",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-49": {
    "title": "Schema-aware lookup",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-50": {
    "title": "Template library",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-51": {
    "title": "Template selection",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-52": {
    "title": "Context assembly",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-53": {
    "title": "Cache layer",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-54": {
    "title": "Template versioning",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-55": {
    "title": "CAG determinism proof",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_cag.py"
   },
   "T-56": {
    "title": "IR grammar",
    "state": "done",
-   "note": ""
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-57": {
    "title": "DAG+CAG to IR",
-   "state": "partial",
-   "note": "linear lowering in slice"
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-58": {
    "title": "IR type-checking",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-59": {
    "title": "IR vs registry",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-60": {
    "title": "Plant IR quirks",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-61": {
    "title": "IR pretty-printer",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-62": {
    "title": "IR golden tests",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-63": {
    "title": "Target AST",
    "state": "done",
-   "note": ""
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-64": {
    "title": "IR to AST",
-   "state": "partial",
-   "note": "linear lowering in slice"
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-65": {
    "title": "AST validation",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-66": {
    "title": "AST optimization",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-67": {
    "title": "AST pretty-printer",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-68": {
    "title": "AST golden tests",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_ir_ast.py + golden"
   },
   "T-69": {
    "title": "Python templates",
-   "state": "pending",
-   "note": ""
+   "state": "active",
+   "note": "Python codegen + formatting"
   },
   "T-70": {
    "title": "AST to Python",
@@ -503,124 +503,164 @@
  },
  "log": [
   {
-   "t": 1794084381.329407,
-   "msg": "Dashboard online. Merged old branches (130 tests green)."
+   "t": 1794085780.479672,
+   "msg": "T-42 -> done"
   },
   {
-   "t": 1794084429.197568,
-   "msg": "T-17 -> active"
+   "t": 1794085780.498704,
+   "msg": "T-43 -> done"
   },
   {
-   "t": 1794084482.3494809,
-   "msg": "Phase 3 start: migrating data layer to your real CSVs (10k invoices, 3 tables)"
+   "t": 1794085780.517558,
+   "msg": "T-44 -> done"
   },
   {
-   "t": 1794084634.8854668,
-   "msg": "T-19 -> active"
+   "t": 1794085780.536066,
+   "msg": "T-45 -> done"
   },
   {
-   "t": 1794084711.3671072,
-   "msg": "Parser covers all 7 intents + slots + confidence. Asking you for inputs before I go heads-down."
+   "t": 1794085780.554945,
+   "msg": "T-46 -> done"
   },
   {
-   "t": 1794084805.9527879,
-   "msg": "Got your answers: Groq key in .env, push+PR, Postgres via brew, no Modal."
+   "t": 1794085780.573798,
+   "msg": "T-47 -> done"
   },
   {
-   "t": 1794084870.103914,
+   "t": 1794085780.592563,
+   "msg": "Phases 5-6 done: optimizer, cost model, equivalence+mutation checks, 158 golden files. 329 tests green."
+  },
+  {
+   "t": 1794085780.61182,
+   "msg": "T-48 -> active"
+  },
+  {
+   "t": 1794085870.015079,
+   "msg": "T-18 -> done"
+  },
+  {
+   "t": 1794085870.036608,
+   "msg": "T-22 -> done"
+  },
+  {
+   "t": 1794085870.057282,
+   "msg": "T-23 -> done"
+  },
+  {
+   "t": 1794085870.077986,
+   "msg": "T-48 -> done"
+  },
+  {
+   "t": 1794085870.1312919,
+   "msg": "T-49 -> done"
+  },
+  {
+   "t": 1794085870.15152,
+   "msg": "T-50 -> done"
+  },
+  {
+   "t": 1794085870.1717849,
+   "msg": "T-51 -> done"
+  },
+  {
+   "t": 1794085870.1927612,
+   "msg": "T-52 -> done"
+  },
+  {
+   "t": 1794085870.213459,
+   "msg": "T-53 -> done"
+  },
+  {
+   "t": 1794085870.234066,
+   "msg": "T-54 -> done"
+  },
+  {
+   "t": 1794085870.2542531,
+   "msg": "T-55 -> done"
+  },
+  {
+   "t": 1794085870.275619,
+   "msg": "Phase 7 (CAG) done: lock file, 100-run determinism, no-LLM guard, cache invalidation."
+  },
+  {
+   "t": 1794085921.147094,
    "msg": "T-19 -> done"
   },
   {
-   "t": 1794084870.1276212,
-   "msg": "T-20 -> active"
+   "t": 1794085921.168258,
+   "msg": "T-17 -> done"
   },
   {
-   "t": 1794084928.5871649,
-   "msg": "Rewriting DAG builder, CAG templates, IR/AST/codegen for the real CSV schema"
+   "t": 1794085921.18968,
+   "msg": "T-58 -> active"
   },
   {
-   "t": 1794085029.087235,
-   "msg": "SQL codegen (CTE per node, dialect templates) works for SQLite+DuckDB"
+   "t": 1794085921.2113652,
+   "msg": "376 tests green. Starting IR type-check, registry validation, AST validation + optimizer."
   },
   {
-   "t": 1794085129.852869,
-   "msg": "Full pipeline answers all 7 intents across 3 plants on your real CSVs"
+   "t": 1794086027.35498,
+   "msg": "Optimizer + type-check + registry validation + AST checks now run inside the pipeline (376 tests green)"
   },
   {
-   "t": 1794085277.801125,
-   "msg": "T-20 -> done"
+   "t": 1794086053.1474051,
+   "msg": "T-56 -> done"
   },
   {
-   "t": 1794085277.822183,
-   "msg": "T-24 -> done"
+   "t": 1794086053.167476,
+   "msg": "T-57 -> done"
   },
   {
-   "t": 1794085277.843806,
-   "msg": "T-25 -> active"
+   "t": 1794086053.187138,
+   "msg": "T-58 -> done"
   },
   {
-   "t": 1794085277.865759,
-   "msg": "Committed core rewrite (121 tests green). Building labeled set + gates."
+   "t": 1794086053.207145,
+   "msg": "T-59 -> done"
   },
   {
-   "t": 1794085326.3732648,
-   "msg": "NLU scores 100% on my own labeled set (117 rows) - optimistic, I wrote both; adding held-out Groq check next"
+   "t": 1794086053.2275589,
+   "msg": "T-60 -> done"
   },
   {
-   "t": 1794085452.99208,
-   "msg": "T-25 -> done"
+   "t": 1794086053.247939,
+   "msg": "T-61 -> done"
   },
   {
-   "t": 1794085453.014963,
-   "msg": "Groq prototype hit free-tier 429s with a big prompt; rerunning with smaller prompt"
+   "t": 1794086053.2681248,
+   "msg": "T-62 -> done"
   },
   {
-   "t": 1794085509.2634408,
-   "msg": "Wrote docs/agent-handoff-ops.md for your second agent (README/docs, load test, ops package)"
+   "t": 1794086053.288486,
+   "msg": "T-63 -> done"
   },
   {
-   "t": 1794085573.1719701,
-   "msg": "NLU gates + calibration/latency reports done; building Phase 4 confirm loop"
+   "t": 1794086053.308748,
+   "msg": "T-64 -> done"
   },
   {
-   "t": 1794085573.1950998,
-   "msg": "T-21 -> done"
+   "t": 1794086053.32899,
+   "msg": "T-65 -> done"
   },
   {
-   "t": 1794085573.2162461,
-   "msg": "T-26 -> done"
+   "t": 1794086053.3491158,
+   "msg": "T-66 -> done"
   },
   {
-   "t": 1794085648.813549,
-   "msg": "Phase 4 confirm loop done (17 tests). Starting graph optimization + golden tests."
+   "t": 1794086053.369167,
+   "msg": "T-67 -> done"
   },
   {
-   "t": 1794085648.836184,
-   "msg": "T-27 -> done"
+   "t": 1794086053.389154,
+   "msg": "T-68 -> done"
   },
   {
-   "t": 1794085648.856519,
-   "msg": "T-28 -> done"
+   "t": 1794086053.410073,
+   "msg": "Phases 8-9 done (IR + AST): 397 tests green"
   },
   {
-   "t": 1794085648.876791,
-   "msg": "T-29 -> done"
-  },
-  {
-   "t": 1794085648.8969548,
-   "msg": "T-30 -> done"
-  },
-  {
-   "t": 1794085648.9163158,
-   "msg": "T-31 -> done"
-  },
-  {
-   "t": 1794085648.9354408,
-   "msg": "T-32 -> done"
-  },
-  {
-   "t": 1794085648.954292,
-   "msg": "T-33 -> done"
+   "t": 1794086053.429993,
+   "msg": "T-69 -> active"
   }
  ],
  "next": [
@@ -629,5 +669,5 @@
   "Federation across 3 plants, sandbox for DuckDB+SQLite"
  ],
  "started": 1794084381.329406,
- "updated": 1794085648.954293
+ "updated": 1794086053.4299939
 }

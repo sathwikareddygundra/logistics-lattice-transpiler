@@ -10,14 +10,21 @@ from pathlib import Path
 import pandas as pd
 
 from ast_.lowering import ir_to_ast
-from ast_.nodes import AstTarget
+from ast_.nodes import AstDocument, AstTarget
+from ast_.optimize import optimize_ast
+from ast_.validate import validate_ast
 from codegen.common import CodegenHints, GeneratedCode
 from codegen.python import generate_python
 from codegen.sql import generate_sql
 from confirm.router import CONFIDENCE_THRESHOLD, route
 from dag.builder import intent_to_dag
+from dag.model import Dag
+from graph_eng.optimize import optimize
 from ir.adapters import to_plant_ir
+from ir.grammar import Ir
 from ir.lowering import dag_to_ir
+from ir.registry_check import validate_against_database
+from ir.typecheck import assert_well_typed
 from logging_config import new_trace_id, stage_span
 from nlu.fallback import decline, log_fallback
 from nlu.intent import IntentType, ParsedIntent
@@ -52,19 +59,44 @@ class PipelineResult:
         return {f"{b.plant}/{b.variant}": b.code for b in self.branches if b.code}
 
 
+@dataclass
+class Lowered:
+    dag: Dag
+    ir: Ir
+    ast: AstDocument
+
+
+def lower(
+    intent: ParsedIntent,
+    plant: str,
+    target: AstTarget,
+    trace_id: str,
+    db: Path | str | None = None,
+) -> Lowered:
+    """Intent -> optimized DAG -> typed, plant-adapted IR -> validated, optimized AST.
+    Every check that can fail runs here, before any code is generated."""
+    with stage_span("dag", trace_id, plant=plant):
+        dag = optimize(intent_to_dag(intent, trace_id))
+    with stage_span("ir", trace_id, plant=plant):
+        ir = to_plant_ir(dag_to_ir(dag), plant)
+        assert_well_typed(ir)
+        if db is not None:
+            validate_against_database(ir, get_profile(plant), db)
+    with stage_span("ast", trace_id, plant=plant):
+        tree = optimize_ast(ir_to_ast(ir, target))
+        validate_ast(tree)
+    return Lowered(dag, ir, tree)
+
+
 def generate_branch_code(
     intent: ParsedIntent,
     plant: str,
     target: AstTarget,
     trace_id: str,
     hints: CodegenHints | None = None,
+    db: Path | str | None = None,
 ) -> GeneratedCode:
-    with stage_span("dag", trace_id, plant=plant):
-        dag = intent_to_dag(intent, trace_id)
-    with stage_span("ir", trace_id, plant=plant):
-        ir = to_plant_ir(dag_to_ir(dag), plant)
-    with stage_span("ast", trace_id, plant=plant):
-        tree = ir_to_ast(ir, target)
+    tree = lower(intent, plant, target, trace_id, db).ast
     with stage_span("codegen", trace_id, plant=plant):
         profile = get_profile(plant)
         if target is AstTarget.SQL:
@@ -75,7 +107,7 @@ def generate_branch_code(
 def run_branch(
     branch: Branch, db: Path | str, target: AstTarget, trace_id: str
 ) -> tuple[pd.DataFrame, GeneratedCode]:
-    code = generate_branch_code(branch.intent, branch.plant, target, trace_id)
+    code = generate_branch_code(branch.intent, branch.plant, target, trace_id, db=db)
     profile = get_profile(branch.plant)
     with stage_span("sandbox", trace_id, plant=branch.plant):
         if target is AstTarget.SQL:

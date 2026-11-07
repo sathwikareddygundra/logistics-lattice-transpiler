@@ -1,0 +1,146 @@
+{
+ "aggregate.sql": {
+  "hash": "73ffc86077482a1f",
+  "version": 1
+ },
+ "aggregate_group.py": {
+  "hash": "4b64deb27d5e6810",
+  "version": 1
+ },
+ "aggregate_scalar.py": {
+  "hash": "1fea10f0973fdfc3",
+  "version": 1
+ },
+ "bucket.python.day": {
+  "hash": "337b8d7cb96ea12e",
+  "version": 1
+ },
+ "bucket.python.month": {
+  "hash": "679f2abbcf340734",
+  "version": 1
+ },
+ "bucket.python.quarter": {
+  "hash": "45fe9e8054c1d865",
+  "version": 1
+ },
+ "bucket.python.week": {
+  "hash": "630ad49e80c6f89c",
+  "version": 1
+ },
+ "bucket.python.year": {
+  "hash": "cad6b23be18a9fd9",
+  "version": 1
+ },
+ "bucket.sql.duckdb.day": {
+  "hash": "42a697027b6071ed",
+  "version": 1
+ },
+ "bucket.sql.duckdb.month": {
+  "hash": "c21aece60ff6be33",
+  "version": 1
+ },
+ "bucket.sql.duckdb.quarter": {
+  "hash": "a018679b0906484d",
+  "version": 1
+ },
+ "bucket.sql.duckdb.week": {
+  "hash": "64b6886a7c0f2e4a",
+  "version": 1
+ },
+ "bucket.sql.duckdb.year": {
+  "hash": "072696cb1a21eb8d",
+  "version": 1
+ },
+ "bucket.sql.postgres.day": {
+  "hash": "047d6cf6ea7dc1cd",
+  "version": 1
+ },
+ "bucket.sql.postgres.month": {
+  "hash": "33f0a56cd2a043a5",
+  "version": 1
+ },
+ "bucket.sql.postgres.quarter": {
+  "hash": "757ec3d70cea636a",
+  "version": 1
+ },
+ "bucket.sql.postgres.week": {
+  "hash": "861b5f1d273e7036",
+  "version": 1
+ },
+ "bucket.sql.postgres.year": {
+  "hash": "0be66fa1e457793b",
+  "version": 1
+ },
+ "bucket.sql.sqlite.day": {
+  "hash": "b0804597f75f21a5",
+  "version": 1
+ },
+ "bucket.sql.sqlite.month": {
+  "hash": "7603153bf759cf2b",
+  "version": 1
+ },
+ "bucket.sql.sqlite.quarter": {
+  "hash": "a58d319c2fc36564",
+  "version": 1
+ },
+ "bucket.sql.sqlite.week": {
+  "hash": "bfc0886c329e8079",
+  "version": 1
+ },
+ "bucket.sql.sqlite.year": {
+  "hash": "323ae3ada3b3245a",
+  "version": 1
+ },
+ "filter.py": {
+  "hash": "b23c4d9c7de10c55",
+  "version": 1
+ },
+ "filter.sql": {
+  "hash": "0f5e84be25336c14",
+  "version": 1
+ },
+ "forecast.py": {
+  "hash": "eccf8de3cba91c72",
+  "version": 1
+ },
+ "join.py": {
+  "hash": "510933d6fc906e42",
+  "version": 1
+ },
+ "join.sql": {
+  "hash": "6f70c90d2a993840",
+  "version": 1
+ },
+ "limit.py": {
+  "hash": "4e2743b0517d542f",
+  "version": 1
+ },
+ "output.py": {
+  "hash": "0a3e6e9a71e6233c",
+  "version": 1
+ },
+ "output.sql": {
+  "hash": "76714bee1d449c16",
+  "version": 1
+ },
+ "select.py": {
+  "hash": "97d872dea3bc2d09",
+  "version": 1
+ },
+ "select.sql": {
+  "hash": "ddf8d5d50e827e5e",
+  "version": 1
+ },
+ "sort.py": {
+  "hash": "6438e3b946590752",
+  "version": 1
+ },
+ "window.py": {
+  "hash": "109e4c5e26633c1f",
+  "version": 1
+ },
+ "window.sql": {
+  "hash": "7a34bdb2a6d8b43e",
+  "version": 1
+ }
+}

@@ -8,14 +8,14 @@ def run(read_sql):
     )
     # n2 select
     df2 = read_sql("SELECT invoice_number, current_status FROM ycw_tracking")
-    # n3 join
-    df3 = df1.merge(df2[["invoice_number", "current_status"]], on="invoice_number", how="inner")
     # n4 filter
-    df4 = df3[df3["origin_warehouse"] == "Atlanta_WH"]
+    df4 = df1[df1["origin_warehouse"] == "Atlanta_WH"]
     # n5 filter
-    df5 = df4[df4["current_status"] == "Delayed"]
+    df5 = df2[df2["current_status"] == "Delayed"]
+    # n3 join
+    df3 = df4.merge(df5[["invoice_number", "current_status"]], on="invoice_number", how="inner")
     # n6 sort
-    df6 = df5.sort_values(by=["invoice_number"], ascending=True, kind="stable")
+    df6 = df3.sort_values(by=["invoice_number"], ascending=True, kind="stable")
     # n7 limit
     df7 = df6.head(20)
     # n8 output

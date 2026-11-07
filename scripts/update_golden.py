@@ -10,18 +10,14 @@ from pathlib import Path
 
 import structlog
 
-from ast_.lowering import ir_to_ast
 from ast_.nodes import AstTarget
 from ast_.pretty import render_ast
 from codegen.python import generate_python
 from codegen.sql import generate_sql
-from dag.builder import intent_to_dag
 from dag.serialization import to_json
-from ir.adapters import to_plant_ir
-from ir.lowering import dag_to_ir
 from ir.pretty import render_ir
 from nlu.parser import parse
-from pipeline import answer
+from pipeline import answer, lower
 from plan.federation import plan_branches
 from plantdb.plants import PROFILES, Plant, build_plant_databases
 from tests.golden_queries import GOLDEN_QUERIES, GOLDEN_TODAY
@@ -37,22 +33,17 @@ def golden_files() -> dict[str, str]:
     for gid, query in GOLDEN_QUERIES.items():
         intent = parse(query, today)
         branch = plan_branches(intent, [p.value for p in Plant])[0].intent
-        dag = intent_to_dag(branch, TRACE)
+        dag = lower(branch, "MCW", AstTarget.SQL, TRACE).dag
         out[f"dag/{gid}.json"] = to_json(dag)
-        base_ir = dag_to_ir(dag)
         for plant, profile in PROFILES.items():
-            ir = to_plant_ir(base_ir, plant.value)
+            ir = lower(branch, plant.value, AstTarget.SQL, TRACE).ir
             out[f"ir/{gid}.{plant.value}.txt"] = render_ir(ir)
-            sql_ast = ir_to_ast(ir, AstTarget.SQL)
+            sql_ast = lower(branch, plant.value, AstTarget.SQL, TRACE).ast
             out[f"sql/{gid}.{plant.value}.sql"] = generate_sql(sql_ast, query, profile.dialect).text
-            py_ast = ir_to_ast(ir, AstTarget.PYTHON)
+            py_ast = lower(branch, plant.value, AstTarget.PYTHON, TRACE).ast
             out[f"python/{gid}.{plant.value}.py"] = generate_python(py_ast, query).text
-        out[f"ast/{gid}.sql.txt"] = render_ast(
-            ir_to_ast(to_plant_ir(base_ir, "MCW"), AstTarget.SQL)
-        )
-        out[f"ast/{gid}.python.txt"] = render_ast(
-            ir_to_ast(to_plant_ir(base_ir, "MCW"), AstTarget.PYTHON)
-        )
+        out[f"ast/{gid}.sql.txt"] = render_ast(lower(branch, "MCW", AstTarget.SQL, TRACE).ast)
+        out[f"ast/{gid}.python.txt"] = render_ast(lower(branch, "MCW", AstTarget.PYTHON, TRACE).ast)
     return out
 
 

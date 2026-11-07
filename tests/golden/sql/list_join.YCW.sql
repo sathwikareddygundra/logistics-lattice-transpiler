@@ -12,25 +12,25 @@ WITH df1 AS (
     invoice_number,
     current_status
   FROM ycw_tracking
-), df3 AS (
-  SELECT
-    l.*,
-    r.current_status
-  FROM df1 AS l
-  INNER JOIN df2 AS r
-    ON l.invoice_number = r.invoice_number
 ), df4 AS (
   SELECT
     *
-  FROM df3
+  FROM df1
   WHERE
     origin_warehouse = 'Atlanta_WH'
 ), df5 AS (
   SELECT
     *
-  FROM df4
+  FROM df2
   WHERE
     current_status = 'Delayed'
+), df3 AS (
+  SELECT
+    l.*,
+    r.current_status
+  FROM df4 AS l
+  INNER JOIN df5 AS r
+    ON l.invoice_number = r.invoice_number
 )
 SELECT
   invoice_number,
@@ -39,7 +39,7 @@ SELECT
   destination_city,
   carrier,
   current_status
-FROM df5
+FROM df3
 ORDER BY
   invoice_number ASC
 LIMIT 20

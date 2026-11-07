@@ -6,6 +6,9 @@ Tables (all joined on invoice_number):
 - tracking: invoice_number, checkpoint_timestamp, current_status, last_known_location, driver_id
 - turnaround_time: invoice_number, promised_delivery_date, actual_delivery_date, loading_time_mins, unloading_time_mins, total_tat_hours, sla_status
 
+Valid values (use these exact spellings in filter values):
+{values}
+
 Plants: MCW, YCW, VGU (leave "plants" empty for all plants).
 
 Fields:

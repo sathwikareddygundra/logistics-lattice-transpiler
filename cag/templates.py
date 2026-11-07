@@ -216,3 +216,25 @@ def fingerprint() -> dict[str, dict[str, object]]:
 
 def write_lock() -> None:
     LOCK_PATH.write_text(json.dumps(fingerprint(), indent=1, sort_keys=True) + "\n")
+
+
+def check_lock() -> list[str]:
+    """Violations: a template body changed without a version bump, or the lock is out of date.
+
+    After a deliberate edit, bump the template's version and run
+    `uv run python -c "from cag.templates import write_lock; write_lock()"`.
+    """
+    lock = json.loads(LOCK_PATH.read_text())
+    problems = []
+    for tid, now in fingerprint().items():
+        old = lock.get(tid)
+        if old is None:
+            problems.append(f"{tid}: new template, not in the lock file")
+        elif now["hash"] != old["hash"] and now["version"] == old["version"]:
+            problems.append(f"{tid}: body changed but version is still {now['version']}")
+        elif now != old:
+            problems.append(f"{tid}: lock file is stale (version or hash changed)")
+    problems += [
+        f"{tid}: in the lock file but no longer defined" for tid in lock if tid not in TEMPLATES
+    ]
+    return problems
