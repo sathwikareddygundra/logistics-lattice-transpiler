@@ -1,0 +1,521 @@
+{
+ "tasks": {
+  "T-1": {
+   "title": "Monorepo",
+   "state": "done",
+   "note": ""
+  },
+  "T-2": {
+   "title": "Dependency manager",
+   "state": "done",
+   "note": ""
+  },
+  "T-3": {
+   "title": "Branching and PR rules",
+   "state": "partial",
+   "note": "branch protection is a GitHub setting, not verified"
+  },
+  "T-4": {
+   "title": "NLU compute decision",
+   "state": "done",
+   "note": ""
+  },
+  "T-5": {
+   "title": "Groq client",
+   "state": "done",
+   "note": ""
+  },
+  "T-6": {
+   "title": "Structured logging",
+   "state": "done",
+   "note": ""
+  },
+  "T-7": {
+   "title": "CI pipeline",
+   "state": "done",
+   "note": ""
+  },
+  "T-8": {
+   "title": "Environment configs",
+   "state": "done",
+   "note": ""
+  },
+  "T-9": {
+   "title": "Inventory source schemas",
+   "state": "done",
+   "note": ""
+  },
+  "T-10": {
+   "title": "Canonical schema",
+   "state": "done",
+   "note": ""
+  },
+  "T-11": {
+   "title": "Schema registry",
+   "state": "done",
+   "note": ""
+  },
+  "T-12": {
+   "title": "Intent JSON schema",
+   "state": "done",
+   "note": ""
+  },
+  "T-13": {
+   "title": "DAG JSON schema",
+   "state": "done",
+   "note": ""
+  },
+  "T-14": {
+   "title": "IR JSON schema",
+   "state": "done",
+   "note": ""
+  },
+  "T-15": {
+   "title": "AST JSON schema",
+   "state": "done",
+   "note": ""
+  },
+  "T-16": {
+   "title": "Schema versioning policy",
+   "state": "done",
+   "note": ""
+  },
+  "T-17": {
+   "title": "Intent taxonomy",
+   "state": "active",
+   "note": "extending taxonomy + real-CSV catalog"
+  },
+  "T-18": {
+   "title": "NLU approach ADR",
+   "state": "pending",
+   "note": ""
+  },
+  "T-19": {
+   "title": "Entity extraction",
+   "state": "partial",
+   "note": "rule-based entities in slice"
+  },
+  "T-20": {
+   "title": "Slot filling",
+   "state": "pending",
+   "note": ""
+  },
+  "T-21": {
+   "title": "Confidence scoring",
+   "state": "pending",
+   "note": ""
+  },
+  "T-22": {
+   "title": "Prompt templates",
+   "state": "pending",
+   "note": ""
+  },
+  "T-23": {
+   "title": "Few-shot examples",
+   "state": "pending",
+   "note": ""
+  },
+  "T-24": {
+   "title": "Out-of-scope fallback",
+   "state": "pending",
+   "note": ""
+  },
+  "T-25": {
+   "title": "Labeled dataset + gate",
+   "state": "pending",
+   "note": ""
+  },
+  "T-26": {
+   "title": "Latency benchmark + SLA",
+   "state": "pending",
+   "note": ""
+  },
+  "T-27": {
+   "title": "Paraphrase template",
+   "state": "partial",
+   "note": "basic paraphrase in slice"
+  },
+  "T-28": {
+   "title": "Confirm Groq client",
+   "state": "pending",
+   "note": ""
+  },
+  "T-29": {
+   "title": "Threshold routing",
+   "state": "partial",
+   "note": "threshold routing in slice"
+  },
+  "T-30": {
+   "title": "Yes/no hook",
+   "state": "pending",
+   "note": ""
+  },
+  "T-31": {
+   "title": "Re-prompt loop",
+   "state": "pending",
+   "note": ""
+  },
+  "T-32": {
+   "title": "Retry cap",
+   "state": "pending",
+   "note": ""
+  },
+  "T-33": {
+   "title": "Log confirm data",
+   "state": "pending",
+   "note": ""
+  },
+  "T-34": {
+   "title": "DAG data model",
+   "state": "done",
+   "note": ""
+  },
+  "T-35": {
+   "title": "Intent to DAG",
+   "state": "partial",
+   "note": "linear templates in slice"
+  },
+  "T-36": {
+   "title": "Dependency inference",
+   "state": "pending",
+   "note": ""
+  },
+  "T-37": {
+   "title": "Acyclicity check",
+   "state": "pending",
+   "note": ""
+  },
+  "T-38": {
+   "title": "DAG serialization",
+   "state": "pending",
+   "note": ""
+  },
+  "T-39": {
+   "title": "Multi-plant branches",
+   "state": "pending",
+   "note": ""
+  },
+  "T-40": {
+   "title": "DAG unit tests",
+   "state": "pending",
+   "note": ""
+  },
+  "T-41": {
+   "title": "Optimization passes",
+   "state": "pending",
+   "note": ""
+  },
+  "T-42": {
+   "title": "Topological sort",
+   "state": "pending",
+   "note": ""
+  },
+  "T-43": {
+   "title": "Cost estimation",
+   "state": "pending",
+   "note": ""
+  },
+  "T-44": {
+   "title": "Join order",
+   "state": "pending",
+   "note": ""
+  },
+  "T-45": {
+   "title": "Predicate push-down",
+   "state": "pending",
+   "note": ""
+  },
+  "T-46": {
+   "title": "Cross-plant optimization",
+   "state": "pending",
+   "note": ""
+  },
+  "T-47": {
+   "title": "Semantic-equivalence tests",
+   "state": "pending",
+   "note": ""
+  },
+  "T-48": {
+   "title": "CAG boundaries ADR",
+   "state": "pending",
+   "note": ""
+  },
+  "T-49": {
+   "title": "Schema-aware lookup",
+   "state": "pending",
+   "note": ""
+  },
+  "T-50": {
+   "title": "Template library",
+   "state": "pending",
+   "note": ""
+  },
+  "T-51": {
+   "title": "Template selection",
+   "state": "pending",
+   "note": ""
+  },
+  "T-52": {
+   "title": "Context assembly",
+   "state": "pending",
+   "note": ""
+  },
+  "T-53": {
+   "title": "Cache layer",
+   "state": "pending",
+   "note": ""
+  },
+  "T-54": {
+   "title": "Template versioning",
+   "state": "pending",
+   "note": ""
+  },
+  "T-55": {
+   "title": "CAG determinism proof",
+   "state": "pending",
+   "note": ""
+  },
+  "T-56": {
+   "title": "IR grammar",
+   "state": "done",
+   "note": ""
+  },
+  "T-57": {
+   "title": "DAG+CAG to IR",
+   "state": "partial",
+   "note": "linear lowering in slice"
+  },
+  "T-58": {
+   "title": "IR type-checking",
+   "state": "pending",
+   "note": ""
+  },
+  "T-59": {
+   "title": "IR vs registry",
+   "state": "pending",
+   "note": ""
+  },
+  "T-60": {
+   "title": "Plant IR quirks",
+   "state": "pending",
+   "note": ""
+  },
+  "T-61": {
+   "title": "IR pretty-printer",
+   "state": "pending",
+   "note": ""
+  },
+  "T-62": {
+   "title": "IR golden tests",
+   "state": "pending",
+   "note": ""
+  },
+  "T-63": {
+   "title": "Target AST",
+   "state": "done",
+   "note": ""
+  },
+  "T-64": {
+   "title": "IR to AST",
+   "state": "partial",
+   "note": "linear lowering in slice"
+  },
+  "T-65": {
+   "title": "AST validation",
+   "state": "pending",
+   "note": ""
+  },
+  "T-66": {
+   "title": "AST optimization",
+   "state": "pending",
+   "note": ""
+  },
+  "T-67": {
+   "title": "AST pretty-printer",
+   "state": "pending",
+   "note": ""
+  },
+  "T-68": {
+   "title": "AST golden tests",
+   "state": "pending",
+   "note": ""
+  },
+  "T-69": {
+   "title": "Python templates",
+   "state": "pending",
+   "note": ""
+  },
+  "T-70": {
+   "title": "AST to Python",
+   "state": "partial",
+   "note": "pandas generator in slice"
+  },
+  "T-71": {
+   "title": "Import injection",
+   "state": "pending",
+   "note": ""
+  },
+  "T-72": {
+   "title": "Auto-format Python",
+   "state": "pending",
+   "note": ""
+  },
+  "T-73": {
+   "title": "Query comments (py)",
+   "state": "pending",
+   "note": ""
+  },
+  "T-74": {
+   "title": "Python golden outputs",
+   "state": "pending",
+   "note": ""
+  },
+  "T-75": {
+   "title": "SQL dialects",
+   "state": "pending",
+   "note": ""
+  },
+  "T-76": {
+   "title": "AST to SQL",
+   "state": "partial",
+   "note": "SQLite generator in slice"
+  },
+  "T-77": {
+   "title": "Dialect quirks",
+   "state": "pending",
+   "note": ""
+  },
+  "T-78": {
+   "title": "Format SQL",
+   "state": "pending",
+   "note": ""
+  },
+  "T-79": {
+   "title": "Query comments (sql)",
+   "state": "pending",
+   "note": ""
+  },
+  "T-80": {
+   "title": "SQL golden outputs",
+   "state": "pending",
+   "note": ""
+  },
+  "T-81": {
+   "title": "Sandbox environment",
+   "state": "partial",
+   "note": "read-only connection in slice"
+  },
+  "T-82": {
+   "title": "Static validation",
+   "state": "pending",
+   "note": ""
+  },
+  "T-83": {
+   "title": "Timeout and row limits",
+   "state": "partial",
+   "note": "timeout/row cap in slice"
+  },
+  "T-84": {
+   "title": "Error diagnostics",
+   "state": "pending",
+   "note": ""
+  },
+  "T-85": {
+   "title": "Result schema check",
+   "state": "pending",
+   "note": ""
+  },
+  "T-86": {
+   "title": "Cost sanity check",
+   "state": "pending",
+   "note": ""
+  },
+  "T-87": {
+   "title": "Execution traces",
+   "state": "pending",
+   "note": ""
+  },
+  "T-88": {
+   "title": "Sandbox tests",
+   "state": "pending",
+   "note": ""
+  },
+  "T-89": {
+   "title": "Failure taxonomy",
+   "state": "pending",
+   "note": ""
+  },
+  "T-90": {
+   "title": "Route to codegen",
+   "state": "pending",
+   "note": ""
+  },
+  "T-91": {
+   "title": "Route to confirm",
+   "state": "pending",
+   "note": ""
+  },
+  "T-92": {
+   "title": "Shared retry budget",
+   "state": "pending",
+   "note": ""
+  },
+  "T-93": {
+   "title": "Log failures",
+   "state": "pending",
+   "note": ""
+  },
+  "T-94": {
+   "title": "End-to-end suite",
+   "state": "pending",
+   "note": ""
+  },
+  "T-95": {
+   "title": "Load testing",
+   "state": "pending",
+   "note": ""
+  },
+  "T-96": {
+   "title": "Staging + drift alert",
+   "state": "pending",
+   "note": ""
+  },
+  "T-97": {
+   "title": "Rollout plan",
+   "state": "pending",
+   "note": ""
+  },
+  "T-98": {
+   "title": "Dashboards",
+   "state": "pending",
+   "note": ""
+  },
+  "T-99": {
+   "title": "Alert thresholds",
+   "state": "pending",
+   "note": ""
+  },
+  "T-100": {
+   "title": "On-call runbook",
+   "state": "pending",
+   "note": ""
+  }
+ },
+ "log": [
+  {
+   "t": 1794084381.329407,
+   "msg": "Dashboard online. Merged old branches (130 tests green)."
+  },
+  {
+   "t": 1794084429.197568,
+   "msg": "T-17 -> active"
+  }
+ ],
+ "next": [
+  "Phase 3: taxonomy + real-CSV catalog",
+  "Entity extraction + slot filling",
+  "Labeled dataset + CI gate"
+ ],
+ "started": 1794084381.329406,
+ "updated": 1794084429.19757
+}

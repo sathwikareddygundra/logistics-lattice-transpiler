@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lattice Build Maze</title>
+<style>
+  :root {
+    --bg: #f6f5f1; --card: #ffffff; --ink: #1d1d1b; --muted: #6b6a64; --line: #e3e1d9;
+    --done: #2f9e6b; --active: #e8a317; --partial: #3b7dd8; --pending: #c9c6bb; --wall: #d7d4c8;
+    --bot: #f5c518;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #151513; --card: #1f1f1c; --ink: #efede6; --muted: #a09e94; --line: #34332e;
+      --done: #46c48c; --active: #f2b83a; --partial: #6a9fe8; --pending: #4a4942; --wall: #34332e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink);
+    font: 14px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 14px; }
+  header { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; }
+  h1 { font-size: 20px; margin: 0; }
+  .sub { color: var(--muted); font-size: 12px; }
+  .live { display: inline-flex; gap: 6px; align-items: center; font-size: 12px; color: var(--muted); }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--done); animation: pulse 1.6s infinite; }
+  .stale .dot { background: var(--pending); animation: none; }
+  @keyframes pulse { 50% { opacity: .3; } }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px; }
+  .card h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin: 0 0 10px; }
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat { flex: 1 1 90px; background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .stat b { font-size: 22px; display: block; }
+  .stat span { color: var(--muted); font-size: 12px; }
+  svg { width: 100%; height: auto; display: block; }
+  .grid2 { display: grid; gap: 14px; grid-template-columns: 1fr 1fr; }
+  @media (max-width: 720px) { .grid2 { grid-template-columns: 1fr; } }
+  .now-title { font-size: 18px; font-weight: 600; }
+  .now-note { color: var(--muted); margin-top: 4px; }
+  ul.clean { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+  ul.clean li { display: flex; gap: 8px; align-items: baseline; }
+  .tag { font-size: 11px; padding: 1px 7px; border-radius: 10px; color: #fff; white-space: nowrap; }
+  .bar { height: 8px; background: var(--line); border-radius: 4px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--done); transition: width .8s; }
+  .phase-row { display: grid; grid-template-columns: 110px 1fr 46px; gap: 8px; align-items: center; margin: 6px 0; font-size: 13px; }
+  .phase-row.cur { font-weight: 600; }
+  .tasks { display: grid; grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 4px; }
+  .cell { font-size: 10px; text-align: center; padding: 6px 0; border-radius: 6px; color: #fff; cursor: default; }
+  .legend { display: flex; flex-wrap: wrap; gap: 12px; font-size: 12px; color: var(--muted); margin-top: 10px; }
+  .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 4px; }
+  .log { max-height: 220px; overflow: auto; font-family: ui-monospace, Menlo, monospace; font-size: 12px; }
+  .log div { padding: 2px 0; border-bottom: 1px dashed var(--line); }
+  .log time { color: var(--muted); margin-right: 8px; }
+  /* maze + bot */
+  .wall { stroke: var(--wall); stroke-width: 6; stroke-linecap: round; }
+  .trail { stroke: var(--done); stroke-width: 6; stroke-linecap: round; fill: none; opacity: .85; }
+  .road { stroke: var(--line); stroke-width: 6; stroke-linecap: round; fill: none; stroke-dasharray: 2 10; }
+  .node text { font-size: 12px; text-anchor: middle; fill: var(--ink); }
+  .node .num { fill: #fff; font-weight: 700; }
+  .node.active circle { animation: ring 1.4s infinite; }
+  @keyframes ring { 50% { stroke-width: 9; } }
+  #bot { transition: transform 1.4s cubic-bezier(.5,0,.2,1); }
+  #bot .wob { animation: wob .9s ease-in-out infinite; transform-origin: 0 20px; }
+  @keyframes wob { 50% { transform: translateY(-4px) rotate(3deg); } }
+  #bot .blink { animation: blink 4s infinite; transform-origin: 0 -12px; }
+  @keyframes blink { 94%, 100% { transform: scaleY(1); } 97% { transform: scaleY(.1); } }
+  .bubble text { font-size: 12px; fill: var(--ink); }
+  .bubble rect { fill: var(--card); stroke: var(--line); }
+  .flag { font-size: 18px; }
+  @media (prefers-reduced-motion: reduce) { #bot, #bot .wob, .dot, .node.active circle { animation: none; transition: none; } }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>Lattice Build Maze</h1>
+      <div class="sub">NL → SQL/Python transpiler · 100 tasks · 14 phases</div>
+    </div>
+    <div class="live" id="live"><span class="dot"></span><span id="liveText">connecting…</span></div>
+  </header>
+
+  <div class="stats" id="stats"></div>
+
+  <section class="card">
+    <h2>The maze</h2>
+    <svg id="maze" viewBox="0 0 1000 470" role="img" aria-label="Progress maze with a bot walking through the 14 phases"></svg>
+    <div class="legend">
+      <span><i style="background:var(--done)"></i>done</span>
+      <span><i style="background:var(--active)"></i>working now</span>
+      <span><i style="background:var(--partial)"></i>partly done</span>
+      <span><i style="background:var(--pending)"></i>pending</span>
+    </div>
+  </section>
+
+  <div class="grid2">
+    <section class="card"><h2>Working on now</h2><div id="now"></div></section>
+    <section class="card"><h2>Next steps</h2><ul class="clean" id="next"></ul></section>
+  </div>
+
+  <div class="grid2">
+    <section class="card"><h2>Phases</h2><div id="phases"></div></section>
+    <section class="card"><h2>Live log</h2><div class="log" id="log"></div></section>
+  </div>
+
+  <section class="card"><h2>All 100 tasks</h2><div class="tasks" id="tasks"></div></section>
+</main>
+
+<script>
+const COLORS = { done: "var(--done)", active: "var(--active)", partial: "var(--partial)", pending: "var(--pending)", blocked: "#d6455d" };
+const SVGNS = "http://www.w3.org/2000/svg";
+let lastData = null, lastSeen = 0;
+
+function phasePos(i) {            // snake layout: 5 / 5 / 4
+  const row = i < 5 ? 0 : i < 10 ? 1 : 2, idx = i < 5 ? i : i < 10 ? i - 5 : i - 10;
+  const rtl = row === 1;
+  const xs = [110, 305, 500, 695, 890];
+  return { x: rtl ? xs[4 - idx] : xs[idx], y: [95, 245, 395][row] };
+}
+function taskNum(t) { return parseInt(t.slice(2), 10); }
+function summarize(s) {
+  const phases = s.phases.map(([n, name, a, b]) => {
+    const ids = []; for (let k = taskNum(a); k <= taskNum(b); k++) ids.push("T-" + k);
+    const ts = ids.map(id => s.tasks[id]);
+    const done = ts.filter(t => t.state === "done").length, part = ts.filter(t => t.state === "partial").length;
+    const active = ids.find(id => s.tasks[id].state === "active");
+    const state = active ? "active" : done === ids.length ? "done" : (done + part) > 0 ? "partial" : "pending";
+    return { n, name, ids, total: ids.length, done, pct: (done + part * 0.5) / ids.length, state, active };
+  });
+  let cur = phases.findIndex(p => p.active);
+  if (cur < 0) cur = phases.findIndex(p => p.state !== "done");
+  if (cur < 0) cur = phases.length - 1;
+  return { phases, cur };
+}
+function el(name, attrs, parent, text) {
+  const e = document.createElementNS(SVGNS, name);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  if (text != null) e.textContent = text;
+  if (parent) parent.appendChild(e);
+  return e;
+}
+function buildMaze(sum, activeTask) {
+  const svg = document.getElementById("maze"); svg.innerHTML = "";
+  // decorative walls between rows, gaps at the turns
+  [[40, 170, 780, 170], [220, 320, 960, 320], [60, 25, 940, 25], [60, 450, 940, 450]].forEach(w => el("line", { x1: w[0], y1: w[1], x2: w[2], y2: w[3], class: "wall" }, svg));
+  [[210, 60, 210, 130], [600, 60, 600, 130], [400, 210, 400, 280], [790, 210, 790, 280], [300, 360, 300, 430], [700, 360, 700, 430]].forEach(w => el("line", { x1: w[0], y1: w[1], x2: w[2], y2: w[3], class: "wall" }, svg));
+  const pts = sum.phases.map((_, i) => phasePos(i));
+  const turn = (a, b) => (a.y !== b.y) ? `Q ${a.x + (a.x > 500 ? 70 : -70)} ${(a.y + b.y) / 2} ${b.x} ${b.y}` : `L ${b.x} ${b.y}`;
+  let full = `M ${pts[0].x} ${pts[0].y}`, trail = full;
+  pts.slice(1).forEach((p, i) => { const seg = " " + turn(pts[i], p); full += seg; if (i + 1 <= sum.cur) trail += seg; });
+  el("path", { d: full, class: "road" }, svg);
+  el("path", { d: trail, class: "trail" }, svg);
+  sum.phases.forEach((p, i) => {
+    const g = el("g", { class: "node" + (i === sum.cur && p.state === "active" ? " active" : "") }, svg);
+    el("circle", { cx: pts[i].x, cy: pts[i].y, r: 24, fill: COLORS[p.state], stroke: "var(--card)", "stroke-width": 5 }, g);
+    el("text", { x: pts[i].x, y: pts[i].y + 5, class: "num" }, g, p.n);
+    el("text", { x: pts[i].x, y: pts[i].y + 46 }, g, p.name);
+  });
+  const last = pts[pts.length - 1];
+  el("text", { x: last.x + 52, y: last.y + 8, class: "flag" }, svg, "🏁");
+  // the bot
+  const bot = el("g", { id: "bot", transform: `translate(${pts[sum.cur].x} ${pts[sum.cur].y - 38})` }, svg);
+  const bub = el("g", { class: "bubble" }, bot);
+  const label = activeTask || "all clear";
+  const w = Math.max(70, label.length * 6.6 + 18);
+  el("rect", { x: -w / 2, y: -62, width: w, height: 24, rx: 12 }, bub);
+  el("text", { x: 0, y: -46, "text-anchor": "middle" }, bub, label);
+  const wob = el("g", { class: "wob" }, bot);
+  el("rect", { x: -13, y: -20, width: 26, height: 40, rx: 13, fill: "var(--bot)", stroke: "#8a6d00", "stroke-width": 1.5 }, wob);
+  el("rect", { x: -13, y: 4, width: 26, height: 16, rx: 6, fill: "#3b6fb6" }, wob);
+  el("rect", { x: -15, y: -12, width: 30, height: 7, fill: "#444" }, wob);
+  el("circle", { cx: 0, cy: -9, r: 8, fill: "#fff", stroke: "#444", "stroke-width": 2 }, wob);
+  const eye = el("g", { class: "blink" }, wob);
+  el("circle", { cx: 1, cy: -9, r: 3, fill: "#222" }, eye);
+  el("path", { d: "M -5 -1 Q 0 3 5 -1", stroke: "#8a6d00", "stroke-width": 1.5, fill: "none" }, wob);
+  el("line", { x1: -13, y1: 2, x2: -19, y2: 12, stroke: "#8a6d00", "stroke-width": 3, "stroke-linecap": "round" }, wob);
+  el("line", { x1: 13, y1: 2, x2: 19, y2: 12, stroke: "#8a6d00", "stroke-width": 3, "stroke-linecap": "round" }, wob);
+}
+function moveBot(sum, activeTask) {
+  const bot = document.getElementById("bot"); if (!bot) return;
+  const p = phasePos(sum.cur);
+  bot.setAttribute("transform", `translate(${p.x} ${p.y - 38})`);
+  const t = bot.querySelector(".bubble text"), r = bot.querySelector(".bubble rect");
+  const label = activeTask || "all clear";
+  if (t.textContent !== label) { t.textContent = label; const w = Math.max(70, label.length * 6.6 + 18); r.setAttribute("width", w); r.setAttribute("x", -w / 2); }
+}
+const fmt = ts => new Date(ts * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+function render(s) {
+  lastData = s; lastSeen = Date.now();
+  const sum = summarize(s), all = Object.entries(s.tasks);
+  const cnt = k => all.filter(([, t]) => t.state === k).length;
+  const pct = Math.round(100 * (cnt("done") + cnt("partial") * 0.5) / all.length);
+  document.getElementById("stats").innerHTML =
+    [[pct + "%", "overall"], [cnt("done"), "tasks done"], [cnt("partial"), "partly done"], [cnt("pending") + cnt("active"), "to go"], [sum.phases.filter(p => p.state === "done").length + "/14", "phases complete"]]
+      .map(([b, l]) => `<div class="stat"><b>${b}</b><span>${l}</span></div>`).join("");
+
+  const activeId = all.find(([, t]) => t.state === "active");
+  const activeLabel = activeId ? activeId[0] + " " + activeId[1].title : null;
+  const mazeSig = JSON.stringify(sum.phases.map(p => p.state)) + sum.cur;
+  if (render.sig !== mazeSig) { buildMaze(sum, activeLabel); render.sig = mazeSig; } else moveBot(sum, activeLabel);
+
+  const ph = sum.phases[sum.cur];
+  document.getElementById("now").innerHTML = activeId
+    ? `<div class="now-title">${activeId[0]} · ${activeId[1].title}</div><div class="now-note">Phase ${ph.n} · ${ph.name}${activeId[1].note ? " — " + activeId[1].note : ""}</div>`
+    : `<div class="now-title">Between tasks</div><div class="now-note">Phase ${ph.n} · ${ph.name}</div>`;
+
+  const upcoming = all.filter(([id, t]) => t.state === "pending" && (!activeId || taskNum(id) > taskNum(activeId[0]))).slice(0, 5);
+  const items = [...(s.next || []).map(x => [x, "plan", "var(--active)"]), ...upcoming.map(([id, t]) => [id + " " + t.title, "task", "var(--pending)"])].slice(0, 8);
+  document.getElementById("next").innerHTML = items.map(([x, k, c]) => `<li><span class="tag" style="background:${c}">${k}</span>${x}</li>`).join("") || "<li>Nothing queued</li>";
+
+  document.getElementById("phases").innerHTML = sum.phases.map((p, i) =>
+    `<div class="phase-row ${i === sum.cur ? "cur" : ""}"><span>${p.n}. ${p.name}</span><div class="bar"><i style="width:${Math.round(p.pct * 100)}%"></i></div><span>${p.done}/${p.total}</span></div>`).join("");
+
+  document.getElementById("log").innerHTML = [...s.log].reverse().map(l => `<div><time>${fmt(l.t)}</time>${l.msg}</div>`).join("");
+  document.getElementById("tasks").innerHTML = all.map(([id, t]) =>
+    `<div class="cell" style="background:${COLORS[t.state]}" title="${id} ${t.title} — ${t.state}${t.note ? " (" + t.note + ")" : ""}">${id.slice(2)}</div>`).join("");
+}
+function poll() {
+  const sc = document.createElement("script");
+  sc.src = "status.js?t=" + Date.now();
+  sc.onload = () => { if (window.__STATUS) render(window.__STATUS); sc.remove(); };
+  sc.onerror = () => sc.remove();
+  document.head.appendChild(sc);
+}
+setInterval(() => {
+  const live = document.getElementById("live"), age = (Date.now() - lastSeen) / 1000;
+  live.classList.toggle("stale", !lastSeen || age > 8);
+  document.getElementById("liveText").textContent = !lastSeen ? "connecting…" :
+    lastData && lastData.updated ? "updated " + fmt(lastData.updated) : "live";
+}, 1000);
+poll(); setInterval(poll, 2000);
+</script>
+</body>
+</html>
