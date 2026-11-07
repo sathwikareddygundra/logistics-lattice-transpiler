@@ -17,7 +17,7 @@ from ast_.pretty import render_ast
 from ast_.validate import AstValidationError, ast_violations, validate_ast
 from codegen.sql import generate_sql
 from dag.builder import intent_to_dag
-from dag.model import FilterOperator
+from dag.model import AggregateOp, FilterOperator
 from ir.adapters import to_plant_ir
 from ir.grammar import Edge, Ir, IrOp, Node
 from ir.lowering import dag_to_ir
@@ -224,20 +224,7 @@ def test_orphaned_subtree_is_named():
 
 def test_dangling_column_reference_is_named():
     doc = _ast("total freight cost by carrier")
-    nodes = [
-        n.model_copy(
-            update={
-                "params": {
-                    **n.params,
-                    "by": col("tracking", "driver_id", "string"),
-                    "direction": "asc",
-                }
-            }
-        )
-        if False
-        else n
-        for n in doc.nodes
-    ]
+    nodes = list(doc.nodes)
     sort = AstNode(
         id="n9", op=IrOp.SORT, var="df9",
         params={"by": col("tracking", "driver_id", "string"), "direction": "asc"},
@@ -267,7 +254,7 @@ def test_join_with_one_input_is_flagged():
 def _intent_with_redundant_filters() -> ParsedIntent:
     f = lambda c, o, v: IntentFilter(column=c, operator=o, value=v)  # noqa: E731
     return ParsedIntent(
-        query="q", intent_type=IntentType.AGGREGATION, metric="freight_cost_usd", agg="sum",
+        query="q", intent_type=IntentType.AGGREGATION, metric="freight_cost_usd", agg=AggregateOp.SUM,
         group_by=["carrier"], confidence=0.9,
         filters=[
             f("carrier", FilterOperator.EQ, "DHL"), f("carrier", FilterOperator.EQ, "DHL"),
@@ -311,7 +298,6 @@ def test_optimized_ast_returns_the_same_rows(databases):
     assert len(opt.nodes) < len(doc.nodes)
     out = []
     for d in (doc, opt):
-        ir_like = to_plant_ir  # noqa: F841
         sql = generate_sql(
             AstDocument(trace_id="t", target=d.target, nodes=[
                 AstNode(id=n.id, op=n.op, var=n.var, params=(
