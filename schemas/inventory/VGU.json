@@ -1,0 +1,188 @@
+{
+ "dialect": "sqlite",
+ "engine": "sqlite",
+ "known_gaps": [
+  "Dispatch_Date is stored in both dispatch and turnaround_time in the source CSVs; the canonical model owns it once (on dispatch).",
+  "tracking.last_known_location mixes hub codes (Hub_323) and city names in one column.",
+  "turnaround_time.total_tat_hours takes only about 22 distinct values: bucketed, not raw.",
+  "There are no dimension tables for drivers, warehouses or carriers.",
+  "Plants use different physical table names (dispatch vs ycw_dispatch vs vgu_dispatch); ir/adapters.py normalizes this once, at IR level.",
+  "Plants run different engines (SQLite, DuckDB, PostgreSQL-capable); timestamps are TEXT in SQLite but TIMESTAMP in DuckDB and PostgreSQL. Dialect handling: docs/dialects.md.",
+  "Each plant holds a disjoint third of the invoices (invoice sequence number mod 3), so plant-level totals only make sense summed across plants."
+ ],
+ "plant": "VGU",
+ "tables": {
+  "vgu_dispatch": {
+   "columns": [
+    {
+     "name": "invoice_number",
+     "type": "TEXT"
+    },
+    {
+     "name": "dispatch_date",
+     "type": "TEXT"
+    },
+    {
+     "name": "origin_warehouse",
+     "type": "TEXT"
+    },
+    {
+     "name": "destination_city",
+     "type": "TEXT"
+    },
+    {
+     "name": "carrier",
+     "type": "TEXT"
+    },
+    {
+     "name": "shipment_weight_kg",
+     "type": "REAL"
+    },
+    {
+     "name": "freight_cost_usd",
+     "type": "REAL"
+    }
+   ],
+   "rows": 3333,
+   "sample": [
+    [
+     "INV-2026-00002",
+     "2026-07-20 01:33:47",
+     "Columbus_WH",
+     "New York",
+     "JB Hunt",
+     "906.79",
+     "1232.75"
+    ],
+    [
+     "INV-2026-00005",
+     "2026-07-27 01:19:40",
+     "Dallas_WH",
+     "Denver",
+     "FedEx",
+     "220.52",
+     "203.57"
+    ],
+    [
+     "INV-2026-00008",
+     "2026-06-21 15:27:20",
+     "LA_WH",
+     "Seattle",
+     "XPO Logistics",
+     "655.78",
+     "435.51"
+    ]
+   ]
+  },
+  "vgu_tat": {
+   "columns": [
+    {
+     "name": "invoice_number",
+     "type": "TEXT"
+    },
+    {
+     "name": "promised_delivery_date",
+     "type": "TEXT"
+    },
+    {
+     "name": "actual_delivery_date",
+     "type": "TEXT"
+    },
+    {
+     "name": "loading_time_mins",
+     "type": "INTEGER"
+    },
+    {
+     "name": "unloading_time_mins",
+     "type": "INTEGER"
+    },
+    {
+     "name": "total_tat_hours",
+     "type": "REAL"
+    },
+    {
+     "name": "sla_status",
+     "type": "TEXT"
+    }
+   ],
+   "rows": 3333,
+   "sample": [
+    [
+     "INV-2026-00002",
+     "2026-07-25 01:33:47",
+     "2026-07-26 01:33:47",
+     "86",
+     "134",
+     "144.0",
+     "Delayed"
+    ],
+    [
+     "INV-2026-00005",
+     "2026-07-30 01:19:40",
+     "2026-07-30 01:19:40",
+     "89",
+     "45",
+     "72.0",
+     "On Time"
+    ],
+    [
+     "INV-2026-00008",
+     "2026-06-26 15:27:20",
+     "2026-06-26 19:27:20",
+     "179",
+     "129",
+     "124.0",
+     "Delayed"
+    ]
+   ]
+  },
+  "vgu_tracking": {
+   "columns": [
+    {
+     "name": "invoice_number",
+     "type": "TEXT"
+    },
+    {
+     "name": "checkpoint_timestamp",
+     "type": "TEXT"
+    },
+    {
+     "name": "current_status",
+     "type": "TEXT"
+    },
+    {
+     "name": "last_known_location",
+     "type": "TEXT"
+    },
+    {
+     "name": "driver_id",
+     "type": "TEXT"
+    }
+   ],
+   "rows": 3333,
+   "sample": [
+    [
+     "INV-2026-00002",
+     "2026-07-23 02:33:47",
+     "In Transit",
+     "Hub_877",
+     "DRV-3615"
+    ],
+    [
+     "INV-2026-00005",
+     "2026-07-29 03:19:40",
+     "Delivered",
+     "Denver",
+     "DRV-8428"
+    ],
+    [
+     "INV-2026-00008",
+     "2026-06-26 11:27:20",
+     "Customs Hold",
+     "Hub_508",
+     "DRV-6930"
+    ]
+   ]
+  }
+ }
+}

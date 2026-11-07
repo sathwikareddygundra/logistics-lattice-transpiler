@@ -12,12 +12,10 @@
     },
     {
       "from_node": "n3",
-      "role": null,
       "to_node": "n4"
     },
     {
       "from_node": "n4",
-      "role": null,
       "to_node": "n5"
     }
   ],

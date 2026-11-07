@@ -43,42 +43,42 @@
   "T-9": {
    "title": "Inventory source schemas",
    "state": "done",
-   "note": ""
+   "note": "plant inventory + canonical + registry"
   },
   "T-10": {
    "title": "Canonical schema",
    "state": "done",
-   "note": ""
+   "note": "plant inventory + canonical + registry"
   },
   "T-11": {
    "title": "Schema registry",
    "state": "done",
-   "note": ""
+   "note": "plant inventory + canonical + registry"
   },
   "T-12": {
    "title": "Intent JSON schema",
    "state": "done",
-   "note": ""
+   "note": "tests/test_contracts.py"
   },
   "T-13": {
    "title": "DAG JSON schema",
    "state": "done",
-   "note": ""
+   "note": "tests/test_contracts.py"
   },
   "T-14": {
    "title": "IR JSON schema",
    "state": "done",
-   "note": ""
+   "note": "tests/test_contracts.py"
   },
   "T-15": {
    "title": "AST JSON schema",
    "state": "done",
-   "note": ""
+   "note": "tests/test_contracts.py"
   },
   "T-16": {
    "title": "Schema versioning policy",
    "state": "done",
-   "note": ""
+   "note": "tests/test_contracts.py"
   },
   "T-17": {
    "title": "Intent taxonomy",
@@ -467,8 +467,8 @@
   },
   "T-94": {
    "title": "End-to-end suite",
-   "state": "active",
-   "note": "e2e across plants + schema checks"
+   "state": "done",
+   "note": "tests/test_inventory_and_e2e.py (CI gate)"
   },
   "T-95": {
    "title": "Load testing",
@@ -502,46 +502,6 @@
   }
  },
  "log": [
-  {
-   "t": 1794086053.3491158,
-   "msg": "T-66 -> done"
-  },
-  {
-   "t": 1794086053.369167,
-   "msg": "T-67 -> done"
-  },
-  {
-   "t": 1794086053.389154,
-   "msg": "T-68 -> done"
-  },
-  {
-   "t": 1794086053.410073,
-   "msg": "Phases 8-9 done (IR + AST): 397 tests green"
-  },
-  {
-   "t": 1794086053.429993,
-   "msg": "T-69 -> active"
-  },
-  {
-   "t": 1794086145.856643,
-   "msg": "PostgreSQL 16 running locally (port 5433); making VGU a real Postgres plant (opt-in via env)"
-  },
-  {
-   "t": 1794086204.446283,
-   "msg": "VGU now runs on REAL PostgreSQL in tests: totals match across 3 engines, 5 time-bucket granularities agree, read-only role + timeout verified"
-  },
-  {
-   "t": 1794086204.4674602,
-   "msg": "T-75 -> done"
-  },
-  {
-   "t": 1794086293.832905,
-   "msg": "T-69 -> done"
-  },
-  {
-   "t": 1794086293.852376,
-   "msg": "T-70 -> done"
-  },
   {
    "t": 1794086293.873128,
    "msg": "T-71 -> done"
@@ -661,6 +621,46 @@
   {
    "t": 1794086664.133246,
    "msg": "T-94 -> active"
+  },
+  {
+   "t": 1794086746.51969,
+   "msg": "Schema contracts verified against real pipeline output (650 tests). Writing plant inventory + all-plant e2e gate."
+  },
+  {
+   "t": 1794086746.544493,
+   "msg": "T-12 -> done"
+  },
+  {
+   "t": 1794086746.567916,
+   "msg": "T-13 -> done"
+  },
+  {
+   "t": 1794086746.589524,
+   "msg": "T-14 -> done"
+  },
+  {
+   "t": 1794086746.611029,
+   "msg": "T-15 -> done"
+  },
+  {
+   "t": 1794086746.633164,
+   "msg": "T-16 -> done"
+  },
+  {
+   "t": 1794086785.6290681,
+   "msg": "T-9 -> done"
+  },
+  {
+   "t": 1794086785.648436,
+   "msg": "T-10 -> done"
+  },
+  {
+   "t": 1794086785.6674361,
+   "msg": "T-11 -> done"
+  },
+  {
+   "t": 1794086785.686985,
+   "msg": "T-94 -> done"
   }
  ],
  "next": [
@@ -669,5 +669,5 @@
   "Federation across 3 plants, sandbox for DuckDB+SQLite"
  ],
  "started": 1794084381.329406,
- "updated": 1794086664.133247
+ "updated": 1794086785.686986
 }

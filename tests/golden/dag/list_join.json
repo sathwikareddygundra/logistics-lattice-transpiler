@@ -2,17 +2,14 @@
   "edges": [
     {
       "from_node": "n1",
-      "role": null,
       "to_node": "n4"
     },
     {
       "from_node": "n2",
-      "role": null,
       "to_node": "n5"
     },
     {
       "from_node": "n3",
-      "role": null,
       "to_node": "n6"
     },
     {
@@ -27,12 +24,10 @@
     },
     {
       "from_node": "n6",
-      "role": null,
       "to_node": "n7"
     },
     {
       "from_node": "n7",
-      "role": null,
       "to_node": "n8"
     }
   ],

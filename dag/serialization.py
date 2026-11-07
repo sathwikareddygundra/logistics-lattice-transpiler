@@ -8,7 +8,7 @@ from dag.model import Dag
 
 
 def to_json(dag: Dag) -> str:
-    data = dag.model_dump(mode="json")
+    data = dag.model_dump(mode="json", exclude_none=True)
     data["nodes"] = sorted(data["nodes"], key=lambda n: _natural(n["id"]))
     data["edges"] = sorted(
         data["edges"], key=lambda e: (_natural(e["from_node"]), _natural(e["to_node"]))
