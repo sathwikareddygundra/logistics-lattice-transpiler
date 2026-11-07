@@ -6,3 +6,6 @@ __pycache__/
 .env.dev
 .env.staging
 .env.prod
+.DS_Store
+.mypy_cache/
+.ruff_cache/
