@@ -402,73 +402,73 @@
   },
   "T-81": {
    "title": "Sandbox environment",
-   "state": "active",
-   "note": "sandbox hardening + diagnostics"
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-82": {
    "title": "Static validation",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-83": {
    "title": "Timeout and row limits",
-   "state": "partial",
-   "note": "timeout/row cap in slice"
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-84": {
    "title": "Error diagnostics",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-85": {
    "title": "Result schema check",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-86": {
    "title": "Cost sanity check",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-87": {
    "title": "Execution traces",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-88": {
    "title": "Sandbox tests",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_sandbox.py"
   },
   "T-89": {
    "title": "Failure taxonomy",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_feedback.py"
   },
   "T-90": {
    "title": "Route to codegen",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_feedback.py"
   },
   "T-91": {
    "title": "Route to confirm",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_feedback.py"
   },
   "T-92": {
    "title": "Shared retry budget",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_feedback.py"
   },
   "T-93": {
    "title": "Log failures",
-   "state": "pending",
-   "note": ""
+   "state": "done",
+   "note": "tests/test_feedback.py"
   },
   "T-94": {
    "title": "End-to-end suite",
-   "state": "pending",
-   "note": ""
+   "state": "active",
+   "note": "e2e across plants + schema checks"
   },
   "T-95": {
    "title": "Load testing",
@@ -502,78 +502,6 @@
   }
  },
  "log": [
-  {
-   "t": 1794085870.234066,
-   "msg": "T-54 -> done"
-  },
-  {
-   "t": 1794085870.2542531,
-   "msg": "T-55 -> done"
-  },
-  {
-   "t": 1794085870.275619,
-   "msg": "Phase 7 (CAG) done: lock file, 100-run determinism, no-LLM guard, cache invalidation."
-  },
-  {
-   "t": 1794085921.147094,
-   "msg": "T-19 -> done"
-  },
-  {
-   "t": 1794085921.168258,
-   "msg": "T-17 -> done"
-  },
-  {
-   "t": 1794085921.18968,
-   "msg": "T-58 -> active"
-  },
-  {
-   "t": 1794085921.2113652,
-   "msg": "376 tests green. Starting IR type-check, registry validation, AST validation + optimizer."
-  },
-  {
-   "t": 1794086027.35498,
-   "msg": "Optimizer + type-check + registry validation + AST checks now run inside the pipeline (376 tests green)"
-  },
-  {
-   "t": 1794086053.1474051,
-   "msg": "T-56 -> done"
-  },
-  {
-   "t": 1794086053.167476,
-   "msg": "T-57 -> done"
-  },
-  {
-   "t": 1794086053.187138,
-   "msg": "T-58 -> done"
-  },
-  {
-   "t": 1794086053.207145,
-   "msg": "T-59 -> done"
-  },
-  {
-   "t": 1794086053.2275589,
-   "msg": "T-60 -> done"
-  },
-  {
-   "t": 1794086053.247939,
-   "msg": "T-61 -> done"
-  },
-  {
-   "t": 1794086053.2681248,
-   "msg": "T-62 -> done"
-  },
-  {
-   "t": 1794086053.288486,
-   "msg": "T-63 -> done"
-  },
-  {
-   "t": 1794086053.308748,
-   "msg": "T-64 -> done"
-  },
-  {
-   "t": 1794086053.32899,
-   "msg": "T-65 -> done"
-  },
   {
    "t": 1794086053.3491158,
    "msg": "T-66 -> done"
@@ -661,6 +589,78 @@
   {
    "t": 1794086294.096361,
    "msg": "T-81 -> active"
+  },
+  {
+   "t": 1794086514.390518,
+   "msg": "Phase 12-13 code in place (retry router, diagnostics, shape+cost checks, traces). Writing their tests."
+  },
+  {
+   "t": 1794086612.0045922,
+   "msg": "T-81 -> done"
+  },
+  {
+   "t": 1794086612.028481,
+   "msg": "T-82 -> done"
+  },
+  {
+   "t": 1794086612.051129,
+   "msg": "T-83 -> done"
+  },
+  {
+   "t": 1794086612.071841,
+   "msg": "T-84 -> done"
+  },
+  {
+   "t": 1794086612.091707,
+   "msg": "T-85 -> done"
+  },
+  {
+   "t": 1794086612.1120808,
+   "msg": "T-86 -> done"
+  },
+  {
+   "t": 1794086612.132637,
+   "msg": "T-87 -> done"
+  },
+  {
+   "t": 1794086612.15259,
+   "msg": "T-88 -> done"
+  },
+  {
+   "t": 1794086612.172121,
+   "msg": "Phase 12 done: sandbox 41 tests (timeouts on 3 engines, isolated kill, shape+cost checks, traces)"
+  },
+  {
+   "t": 1794086612.191683,
+   "msg": "T-89 -> active"
+  },
+  {
+   "t": 1794086664.011039,
+   "msg": "T-89 -> done"
+  },
+  {
+   "t": 1794086664.033935,
+   "msg": "T-90 -> done"
+  },
+  {
+   "t": 1794086664.054345,
+   "msg": "T-91 -> done"
+  },
+  {
+   "t": 1794086664.074134,
+   "msg": "T-92 -> done"
+  },
+  {
+   "t": 1794086664.093676,
+   "msg": "T-93 -> done"
+  },
+  {
+   "t": 1794086664.112989,
+   "msg": "Phase 13 done: taxonomy (7 categories), retry router with ONE shared budget, failure log. 634 tests green."
+  },
+  {
+   "t": 1794086664.133246,
+   "msg": "T-94 -> active"
   }
  ],
  "next": [
@@ -669,5 +669,5 @@
   "Federation across 3 plants, sandbox for DuckDB+SQLite"
  ],
  "started": 1794084381.329406,
- "updated": 1794086294.0963619
+ "updated": 1794086664.133247
 }

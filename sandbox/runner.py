@@ -11,6 +11,7 @@
 from __future__ import annotations
 
 import ast
+import io
 import json
 import sqlite3
 import subprocess
@@ -237,10 +238,12 @@ def _run_isolated(
         raise SandboxError(
             "timeout", "generated code exceeded the time limit and was killed"
         ) from None
+    if done.returncode < 0:  # killed by a signal, e.g. SIGXCPU from the CPU-time limit
+        raise SandboxError("timeout", f"generated code was killed (signal {-done.returncode})")
     if done.returncode != 0:
         try:
             err = json.loads(done.stdout.strip().splitlines()[-1])
             raise SandboxError(err["stage"], err["message"])
         except (ValueError, KeyError, IndexError):
             raise SandboxError("execution", done.stderr.strip()[-500:] or "child failed") from None
-    return _check_rows(pd.read_json(done.stdout, orient="split"), max_rows)
+    return _check_rows(pd.read_json(io.StringIO(done.stdout), orient="split"), max_rows)
