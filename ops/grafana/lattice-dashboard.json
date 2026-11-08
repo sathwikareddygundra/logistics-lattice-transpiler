@@ -1,0 +1,205 @@
+{
+  "title": "Lattice Transpiler",
+  "uid": "lattice-transpiler",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "30s",
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "tags": [
+    "lattice"
+  ],
+  "panels": [
+    {
+      "id": 1,
+      "title": "Stage latency p50/p95/p99 (ms)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": {
+        "x": 0,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.5, sum by (le, stage) (rate(lattice_stage_latency_ms_bucket[5m])))",
+          "legendFormat": "p50 {{stage}}",
+          "refId": "A"
+        },
+        {
+          "expr": "histogram_quantile(0.95, sum by (le, stage) (rate(lattice_stage_latency_ms_bucket[5m])))",
+          "legendFormat": "p95 {{stage}}",
+          "refId": "B"
+        },
+        {
+          "expr": "histogram_quantile(0.99, sum by (le, stage) (rate(lattice_stage_latency_ms_bucket[5m])))",
+          "legendFormat": "p99 {{stage}}",
+          "refId": "C"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "title": "Confirm trigger rate",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": {
+        "x": 12,
+        "y": 0,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(lattice_confirm_triggered_total[5m]))",
+          "legendFormat": "confirm/s",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(lattice_queries_total[5m]))",
+          "legendFormat": "queries/s",
+          "refId": "B"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "title": "Failures by category",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": {
+        "x": 0,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"syntax_error\"}[5m]))",
+          "legendFormat": "syntax_error",
+          "refId": "A"
+        },
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"semantic_mismatch\"}[5m]))",
+          "legendFormat": "semantic_mismatch",
+          "refId": "B"
+        },
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"intent_mismatch\"}[5m]))",
+          "legendFormat": "intent_mismatch",
+          "refId": "C"
+        },
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"timeout\"}[5m]))",
+          "legendFormat": "timeout",
+          "refId": "D"
+        },
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"resource_limit\"}[5m]))",
+          "legendFormat": "resource_limit",
+          "refId": "E"
+        },
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"permission\"}[5m]))",
+          "legendFormat": "permission",
+          "refId": "F"
+        },
+        {
+          "expr": "sum(rate(lattice_failures_total{category=\"schema_drift\"}[5m]))",
+          "legendFormat": "schema_drift",
+          "refId": "G"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "title": "Rollout gate: failure rate (max 2%)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": {
+        "x": 12,
+        "y": 8,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum(rate(lattice_failures_total[15m])) / sum(rate(lattice_queries_total[15m]))",
+          "legendFormat": "failure rate",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "title": "Rollout gate: queries by status",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": {
+        "x": 0,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (status) (increase(lattice_queries_total[1h]))",
+          "legendFormat": "{{status}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "title": "Rollout gate: p95 latency (max 2000 ms)",
+      "type": "timeseries",
+      "datasource": "Prometheus",
+      "gridPos": {
+        "x": 12,
+        "y": 16,
+        "w": 12,
+        "h": 8
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        }
+      },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum by (le) (rate(lattice_stage_latency_ms_bucket[15m])))",
+          "legendFormat": "p95",
+          "refId": "A"
+        }
+      ]
+    }
+  ]
+}

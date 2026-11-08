@@ -472,72 +472,36 @@
   },
   "T-95": {
    "title": "Load testing",
-   "state": "pending",
-   "note": "handed to second agent: docs/agent-handoff-ops.md"
+   "state": "done",
+   "note": "loadtest/run_loadtest.py; c=4 p95 95ms, 0 exceptions at c=8"
   },
   "T-96": {
    "title": "Staging + drift alert",
-   "state": "pending",
-   "note": "handed to second agent: docs/agent-handoff-ops.md"
+   "state": "done",
+   "note": "ops/drift.py + tests"
   },
   "T-97": {
    "title": "Rollout plan",
-   "state": "pending",
-   "note": "handed to second agent: docs/agent-handoff-ops.md"
+   "state": "done",
+   "note": "docs/rollout-plan.md + ops/rollout.py"
   },
   "T-98": {
    "title": "Dashboards",
-   "state": "pending",
-   "note": "handed to second agent: docs/agent-handoff-ops.md"
+   "state": "done",
+   "note": "ops/metrics.py + grafana json"
   },
   "T-99": {
    "title": "Alert thresholds",
-   "state": "pending",
-   "note": "handed to second agent: docs/agent-handoff-ops.md"
+   "state": "done",
+   "note": "ops/alerts.py"
   },
   "T-100": {
    "title": "On-call runbook",
-   "state": "pending",
-   "note": "handed to second agent: docs/agent-handoff-ops.md"
+   "state": "done",
+   "note": "docs/runbook.md (no outsider drill yet)"
   }
  },
  "log": [
-  {
-   "t": 1794086294.033254,
-   "msg": "T-79 -> done"
-  },
-  {
-   "t": 1794086294.052863,
-   "msg": "T-80 -> done"
-  },
-  {
-   "t": 1794086294.072716,
-   "msg": "Phases 10-11 done: Python+SQL codegen verified on SQLite, DuckDB and real PostgreSQL (563 tests)"
-  },
-  {
-   "t": 1794086294.096361,
-   "msg": "T-81 -> active"
-  },
-  {
-   "t": 1794086514.390518,
-   "msg": "Phase 12-13 code in place (retry router, diagnostics, shape+cost checks, traces). Writing their tests."
-  },
-  {
-   "t": 1794086612.0045922,
-   "msg": "T-81 -> done"
-  },
-  {
-   "t": 1794086612.028481,
-   "msg": "T-82 -> done"
-  },
-  {
-   "t": 1794086612.051129,
-   "msg": "T-83 -> done"
-  },
-  {
-   "t": 1794086612.071841,
-   "msg": "T-84 -> done"
-  },
   {
    "t": 1794086612.091707,
    "msg": "T-85 -> done"
@@ -661,13 +625,48 @@
   {
    "t": 1794086817.906059,
    "msg": "CI green on GitHub (incl. Postgres service). Opening PR into main."
+  },
+  {
+   "t": 1794086856.176169,
+   "msg": "PR #16 open into main. Waiting on: second agent (T-95..T-100) and you (T-3)."
+  },
+  {
+   "t": 1794107311.140933,
+   "msg": "dashboard: data now embedded in index.html (fixes blank page)"
+  },
+  {
+   "t": 1794107627.308749,
+   "msg": "T-95 -> done"
+  },
+  {
+   "t": 1794107627.332366,
+   "msg": "T-96 -> done"
+  },
+  {
+   "t": 1794107627.353526,
+   "msg": "T-97 -> done"
+  },
+  {
+   "t": 1794107627.374787,
+   "msg": "T-98 -> done"
+  },
+  {
+   "t": 1794107627.395906,
+   "msg": "T-99 -> done"
+  },
+  {
+   "t": 1794107627.4168289,
+   "msg": "T-100 -> done"
+  },
+  {
+   "t": 1794107707.9799218,
+   "msg": "T-95..T-100 built here (no second-agent branch arrived); 687 tests green. Left: T-3 (you)."
   }
  ],
  "next": [
-  "Waiting on second agent: T-95 load test, T-96..T-100 ops + docs",
-  "You: set branch protection on main (T-3)",
-  "Me: verify merged result after you report back"
+  "Waiting on you: T-3 branch protection, rotate Groq key",
+  "Wire ops.metrics into pipeline.py"
  ],
  "started": 1794084381.329406,
- "updated": 1794086817.924714
+ "updated": 1794107707.979923
 }

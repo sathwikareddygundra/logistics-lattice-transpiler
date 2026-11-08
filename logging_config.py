@@ -9,6 +9,8 @@ from contextlib import contextmanager
 
 import structlog
 
+from ops import metrics
+
 
 def configure_logging(level=logging.INFO) -> None:
     structlog.configure(
@@ -94,6 +96,7 @@ def stage_span(stage_name: str, trace_id: str, **extra):
     else:
         ev = event(True)
         _record(trace_id, ev)
+        metrics.REGISTRY.observe_stage(stage_name, ev["duration_ms"])
         log.info(
             "stage_success",
             stage=stage_name,

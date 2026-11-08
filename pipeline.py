@@ -6,6 +6,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
+from typing import Any
 
 import pandas as pd
 
@@ -41,6 +42,7 @@ from nlu.fallback import decline, log_fallback
 from nlu.intent import IntentType, ParsedIntent
 from nlu.parser import parse
 from nlu.slots import next_question
+from ops import metrics
 from plan.federation import Branch, merge, plan_branches
 from plantdb.plants import Plant, get_profile
 from sandbox.cost_check import CostVerdict, check_cost
@@ -180,7 +182,16 @@ def run_branch(
     return frame
 
 
-def answer(
+def answer(*args: Any, **kwargs: Any) -> PipelineResult:
+    """Run the pipeline and record operational metrics (ops/metrics.py)."""
+    result = _answer(*args, **kwargs)
+    metrics.REGISTRY.record_query(result.status)
+    if result.status == "needs_confirmation":
+        metrics.REGISTRY.record_confirm()
+    return result
+
+
+def _answer(
     query: str,
     databases: dict[Plant, Path | str],
     today: date | None = None,
@@ -293,5 +304,6 @@ def _first_category(run: BranchRun):
 
 
 def _log_failure(path: Path | str | None, diag: Diagnostic, outcome: str, run: BranchRun) -> None:
+    metrics.REGISTRY.record_failure(diag.category.value)
     if path is not None:
         failure_log.record_failure(diag, outcome, len(run.attempts) or 1, path)

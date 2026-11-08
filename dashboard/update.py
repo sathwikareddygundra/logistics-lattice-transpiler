@@ -19,6 +19,7 @@ from pathlib import Path
 HERE = Path(__file__).parent
 STATE = HERE / "state.json"
 STATUS_JS = HERE / "status.js"
+INDEX_HTML = HERE / "index.html"
 
 PHASES = [
     (1, "Setup", "T-1", "T-8"),
@@ -96,7 +97,23 @@ def save(state: dict) -> None:
     state["updated"] = time.time()
     STATE.write_text(json.dumps(state, indent=1))
     payload = {**state, "phases": [list(p) for p in PHASES]}
-    STATUS_JS.write_text("window.__STATUS = " + json.dumps(payload) + ";\n")
+    script = "window.__STATUS = " + json.dumps(payload) + ";\n"
+    STATUS_JS.write_text(script)
+    embed_snapshot(script)
+
+
+def embed_snapshot(script: str) -> None:
+    """Also inline the latest status into index.html, so it renders in viewers that
+    cannot load the sibling status.js (static previews, restricted file:// origins)."""
+    html = INDEX_HTML.read_text()
+    start, end = "<!--snapshot:start-->", "<!--snapshot:end-->"
+    head, _, rest = html.partition(start)
+    _, _, tail = rest.partition(end)
+    if not rest:
+        return
+    INDEX_HTML.write_text(
+        head + start + "<script>" + script.replace("</", "<\\/") + "</script>" + end + tail
+    )
 
 
 def main(argv: list[str]) -> None:
