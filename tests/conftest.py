@@ -2,10 +2,19 @@ from datetime import date
 
 import pandas as pd
 import pytest
+import structlog
 
 from plantdb.plants import DEFAULT_SOURCE_DIR, build_plant_databases
 
 TODAY = date(2026, 9, 15)
+
+
+@pytest.fixture(autouse=True)
+def _reset_logging():
+    """A test that configures logging while pytest captures stdout would leave later tests
+    writing to a closed stream."""
+    yield
+    structlog.reset_defaults()
 
 
 @pytest.fixture(scope="session")
