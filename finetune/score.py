@@ -64,6 +64,7 @@ def score(rows: list[dict], preds: list[str] | None, dbs: dict) -> dict:
     """preds=None scores the rule parser instead of a model."""
     n = valid = intent_ok = ent_ok = exec_ok = exec_n = 0
     misses: list[str] = []
+    by_type: dict[str, list[int]] = {}  # n, intent ok, entities ok, same table
     for i, row in enumerate(rows):
         q = row["messages"][1]["content"]
         today = date.fromisoformat(row["meta"]["today"])
@@ -76,9 +77,10 @@ def score(rows: list[dict], preds: list[str] | None, dbs: dict) -> dict:
         )
         ok_intent = pred is not None and pred.intent_type.value == gold_type
         intent_ok += ok_intent
+        ent_this = exec_this = False
         if "gold" in row:
             gold_ents = set(row["gold"]["entities"] or [])
-            ent_ok += (
+            ent_this = bool(
                 pred is not None
                 and ok_intent
                 and (gold_type == "out_of_scope" or entity_set(pred) == gold_ents)
@@ -87,9 +89,16 @@ def score(rows: list[dict], preds: list[str] | None, dbs: dict) -> dict:
             gold = ParsedIntent.model_validate(
                 {**json.loads(row["messages"][2]["content"]), "query": q, "confidence": 1.0}
             )
-            ent_ok += pred is not None and entity_set(pred) == entity_set(gold)
+            ent_this = pred is not None and entity_set(pred) == entity_set(gold)
             exec_n += 1
-            exec_ok += same_table(frame(pred, q, today, dbs), frame(gold, q, today, dbs))
+            exec_this = same_table(frame(pred, q, today, dbs), frame(gold, q, today, dbs))
+        ent_ok += ent_this
+        exec_ok += exec_this
+        t = by_type.setdefault(gold_type, [0, 0, 0, 0])
+        t[0] += 1
+        t[1] += ok_intent
+        t[2] += ent_this
+        t[3] += exec_this
         if not ok_intent and len(misses) < 8:
             misses.append(
                 f"{q!r}: wanted {gold_type}, got {pred.intent_type.value if pred else 'invalid JSON'}"
@@ -98,6 +107,10 @@ def score(rows: list[dict], preds: list[str] | None, dbs: dict) -> dict:
         "n": n, "valid_json": valid / n, "intent_accuracy": intent_ok / n, "entity_exact": ent_ok / n,
         "examples_of_intent_misses": misses,
     }  # fmt: skip
+    out["by_type"] = {
+        k: {"n": v[0], "intent_ok": v[1], "entities_ok": v[2], "same_table": v[3]}
+        for k, v in sorted(by_type.items())
+    }
     if exec_n:
         out["execution_accuracy"] = exec_ok / exec_n
     return out

@@ -1,14 +1,14 @@
 """Convert expert-written questions (finetune/data/human_raw.jsonl) into eval_human.jsonl.
 
 Expert labels use CSV column names and "=" operators; this maps them to ParsedIntent fields.
-Questions whose label does not fit the intent taxonomy (a monthly breakdown is a `trend` here, with
-a granularity) are written to human_skipped.jsonl and left out, not silently relabelled.
+Questions whose label does not fit the intent taxonomy (see SKIP) are written to human_skipped.jsonl and left out, not silently relabelled.
 Run: uv run python finetune/build_human_eval.py   then score like any other split.
 """
 
 from __future__ import annotations
 
 import json
+import re
 import sys
 from datetime import date
 from pathlib import Path
@@ -20,22 +20,76 @@ from build_dataset import system_prompt  # noqa: E402
 
 DATA = Path(__file__).parent / "data"
 TODAY = date(2026, 9, 15)
-OPS = {"=": "eq", "!=": "ne", "gte": "gte", "lt": "lt", "lte": "lte", "gt": "gt", "in": "in"}
+OPS = {"=": "eq", "!=": "ne", "gte": "gte", "lt": "lt", "lte": "lte", "gt": "gt"}
+
+
+SELECT = [
+    "invoice_number",
+    "dispatch_date",
+    "origin_warehouse",
+    "destination_city",
+    "carrier",
+    "current_status",
+]
+# Expert labels our taxonomy cannot express (or that are wrong for this app): left out, not relabelled.
+SKIP = (
+    "percentage",  # no percentage measure
+    "shipments and total freight cost",  # two measures in one question
+    "actual delivery happened after promised",  # column-vs-column comparison
+    "checkpoint after dispatch",  # timestamp arithmetic
+    "compare dispatch performance for MCW",  # plants are supported here; the expert did not know
+)
+DATE_COLS = ("dispatch_date", "checkpoint_timestamp")
+
+
+def _granularity(q: str) -> str:
+    q = q.lower()
+    if re.search(r"\bdaily\b|\bday\b", q):
+        return "day"
+    return "week" if "week" in q else "month"
 
 
 def to_gold(r: dict) -> dict | None:
-    if r["intent_type"] == "aggregation" and any(g.lower().endswith("date") for g in r["group_by"]):
+    q, kind = r["query"], r["intent_type"]
+    if any(k in q for k in SKIP) or r.get("ambiguous"):
         return None
-    out: dict = {"intent_type": r["intent_type"]}
-    if r.get("metric_column"):
-        out["metric"] = r["metric_column"].lower()
-        out["agg"] = r["aggregation"]
-    if r["group_by"]:
-        out["group_by"] = [g.lower() for g in r["group_by"]]
-    out["filters"] = [
-        {"column": f["column"].lower(), "operator": OPS[f["op"]], "value": f["value"]}
-        for f in r["filters"]
-    ]
+    if kind == "aggregation" and any(g.lower().endswith("date") for g in r["group_by"]):
+        return None
+    if kind == "out_of_scope":
+        return {"intent_type": "out_of_scope"}
+    out: dict = {"intent_type": kind}
+    filters, keep = [], {}
+    for f in r["filters"]:
+        col = f["column"].lower()
+        if f["op"] == "in":
+            keep[col] = f["value"].split(",")
+        else:
+            filters.append({"column": col, "operator": OPS[f["op"]], "value": f["value"]})
+    out["filters"] = filters
+    if keep:
+        out["keep_values"] = keep
+    if kind == "join":
+        out.update(limit=20, select_columns=SELECT)
+        return out
+    out["metric"], out["agg"] = r["metric_column"].lower(), r["aggregation"]
+    group = [g.lower() for g in r["group_by"]]
+    if kind in ("trend", "forecast"):
+        out["time_column"] = next(g for g in group if g in DATE_COLS)
+        group = [g for g in group if g not in DATE_COLS]
+        out["granularity"] = "month" if kind == "forecast" else _granularity(q)
+        out["sort_direction"] = "asc"
+        if kind == "forecast":
+            out["horizon"] = 3
+    if group:
+        out["group_by"] = group
+    if kind == "rank":
+        low = re.search(r"bottom|fewest|shortest|lowest|least|cheapest", q.lower())
+        out["sort_direction"] = "asc" if low else "desc"
+        n = re.search(r"(?:top|bottom|show the)\s+(\d+)", q.lower())
+        if n:
+            out["limit"] = int(n.group(1))
+        elif re.match(r"(which|who)\b", q.lower()):
+            out["limit"] = 1
     return out
 
 
