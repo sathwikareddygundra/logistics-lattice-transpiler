@@ -43,6 +43,7 @@ select = ["E", "F", "I", "UP"]
 [tool.ruff.lint.per-file-ignores]
 "dashboard/update.py" = ["E501"]
 "tests/*" = ["E501"]
+"finetune/*" = ["E501"]
 
 [tool.mypy]
 exclude = ["tests/golden/"]

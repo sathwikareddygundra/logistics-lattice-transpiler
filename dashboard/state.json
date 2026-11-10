@@ -503,10 +503,6 @@
  },
  "log": [
   {
-   "t": 1794086612.1120808,
-   "msg": "T-86 -> done"
-  },
-  {
    "t": 1794086612.132637,
    "msg": "T-87 -> done"
   },
@@ -661,6 +657,10 @@
   {
    "t": 1794288840.267522,
    "msg": "Added local test UI: uv run python ui/server.py"
+  },
+  {
+   "t": 1794289552.2707431,
+   "msg": "Fine-tune data built: 6000 train / 600 val, all 6600 labels verified through the pipeline. Modal login done; waiting for model name."
   }
  ],
  "next": [
@@ -668,5 +668,5 @@
   "Wire ops.metrics into pipeline.py"
  ],
  "started": 1794084381.329406,
- "updated": 1794288840.267523
+ "updated": 1794289552.270744
 }

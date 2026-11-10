@@ -1,0 +1,29 @@
+{
+ "seed": 7,
+ "rows": {
+  "train": 6000,
+  "val": 600
+ },
+ "by_intent": {
+  "train": {
+   "trend": 889,
+   "aggregation": 1962,
+   "comparison": 783,
+   "rank": 1109,
+   "join": 380,
+   "forecast": 511,
+   "filter": 320,
+   "out_of_scope": 46
+  },
+  "val": {
+   "trend": 84,
+   "aggregation": 189,
+   "comparison": 87,
+   "out_of_scope": 5,
+   "forecast": 42,
+   "filter": 36,
+   "rank": 111,
+   "join": 46
+  }
+ }
+}
