@@ -503,10 +503,6 @@
  },
  "log": [
   {
-   "t": 1794086612.132637,
-   "msg": "T-87 -> done"
-  },
-  {
    "t": 1794086612.15259,
    "msg": "T-88 -> done"
   },
@@ -661,6 +657,10 @@
   {
    "t": 1794289552.2707431,
    "msg": "Fine-tune data built: 6000 train / 600 val, all 6600 labels verified through the pipeline. Modal login done; waiting for model name."
+  },
+  {
+   "t": 1794290167.958854,
+   "msg": "Modal smoke test OK (20 steps, 5.4 s/step on A10G). Full training started: ~750 steps, ~70 min."
   }
  ],
  "next": [
@@ -668,5 +668,5 @@
   "Wire ops.metrics into pipeline.py"
  ],
  "started": 1794084381.329406,
- "updated": 1794289552.270744
+ "updated": 1794290167.9588559
 }
