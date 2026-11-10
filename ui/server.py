@@ -1,6 +1,7 @@
 """Local test UI: a small web page that sends questions through pipeline.answer().
 
-Usage: uv run python ui/server.py [--port 8000]   then open http://127.0.0.1:8000
+Usage: uv run python ui/server.py [--port 8000]; add --tuned (with `uv run --with modal`)
+to use the fine-tuned model on Modal.   then open http://127.0.0.1:8000
 Standard library only; binds to localhost.
 """
 
@@ -19,6 +20,7 @@ import structlog
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from nlu.tuned import modal_generate, parse_tuned  # noqa: E402
 from ops import metrics  # noqa: E402
 from pipeline import answer  # noqa: E402
 from plantdb.plants import build_plant_databases  # noqa: E402
@@ -29,13 +31,18 @@ TODAY = date(2026, 9, 15)  # the data covers 2026-06-01 to 2026-08-30
 PAGE = Path(__file__).with_name("index.html")
 
 
-def run_query(query: str, databases: dict, confirmed: bool) -> dict:
-    res = answer(query, databases, today=TODAY, confirmed=confirmed)
+def run_query(query: str, databases: dict, confirmed: bool, generate=None) -> dict:
+    intent, source = None, "rules"
+    if generate is not None:
+        tuned = parse_tuned(query, generate, TODAY)
+        intent, source = tuned.intent, tuned.source
+    res = answer(query, databases, today=TODAY, confirmed=confirmed, intent=intent)
     out: dict = {
         "status": res.status,
         "message": res.message,
         "intent": res.intent.intent_type.value,
         "confidence": round(res.intent.confidence, 2),
+        "nlu": source,
         "trace_id": res.trace_id,
         "code": res.code,
         "branches": [
@@ -57,7 +64,7 @@ def run_query(query: str, databases: dict, confirmed: bool) -> dict:
     return out
 
 
-def make_handler(databases: dict) -> type[BaseHTTPRequestHandler]:
+def make_handler(databases: dict, generate=None) -> type[BaseHTTPRequestHandler]:
     class Handler(BaseHTTPRequestHandler):
         def _send(self, code: int, body: bytes, ctype: str) -> None:
             self.send_response(code)
@@ -85,7 +92,7 @@ def make_handler(databases: dict) -> type[BaseHTTPRequestHandler]:
                 query = str(body.get("query", "")).strip()
                 if not query:
                     raise ValueError("empty question")
-                result = run_query(query, databases, bool(body.get("confirmed")))
+                result = run_query(query, databases, bool(body.get("confirmed")), generate)
             except Exception as e:  # the UI should show the problem, not drop the connection
                 result = {"status": "error", "message": f"{type(e).__name__}: {e}"}
             self._send(200, json.dumps(result).encode(), "application/json")
@@ -99,10 +106,12 @@ def make_handler(databases: dict) -> type[BaseHTTPRequestHandler]:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--port", type=int, default=8000)
+    ap.add_argument("--tuned", action="store_true", help="use the fine-tuned model on Modal")
     args = ap.parse_args()
+    generate = modal_generate() if args.tuned else None
     structlog.configure(wrapper_class=structlog.make_filtering_bound_logger(50))
     databases = build_plant_databases(Path(tempfile.mkdtemp(prefix="lattice-ui-")))
-    server = ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(databases))
+    server = ThreadingHTTPServer(("127.0.0.1", args.port), make_handler(databases, generate))
     print(f"Lattice UI on http://127.0.0.1:{args.port}  (Ctrl+C to stop)")
     server.serve_forever()
 
