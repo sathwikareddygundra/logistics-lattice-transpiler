@@ -14,3 +14,4 @@ logs/
 
 # generated fine-tuning data (rebuild with: uv run python finetune/build_dataset.py)
 finetune/data/*.jsonl
+dashboard/training.json

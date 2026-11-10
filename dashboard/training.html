@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Training Progress</title>
+<style>
+  :root { --bg:#000; --panel:#0b0b0b; --line:#222; --text:#ededed; --dim:#8a8a8a; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; --acc:#7aa2ff; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 -apple-system,"Inter","Segoe UI",sans-serif; }
+  main { max-width:900px; margin:0 auto; padding:32px 16px 64px; }
+  h1 { font-size:20px; margin:0; font-weight:600; }
+  .sub { color:var(--dim); margin:2px 0 24px; font-size:14px; }
+  .row { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+  .badge { font-size:12px; border:1px solid currentColor; border-radius:999px; padding:2px 12px; }
+  .running { color:var(--acc); } .finished { color:var(--ok); } .failed { color:var(--bad); } .starting { color:var(--warn); }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:18px; margin-bottom:14px; }
+  .bar { height:14px; background:#161616; border-radius:7px; overflow:hidden; margin:12px 0 6px; }
+  .bar i { display:block; height:100%; width:0; background:var(--acc); transition:width .6s; }
+  .finished-bar i { background:var(--ok); }
+  .big { font-size:34px; font-weight:600; letter-spacing:-.02em; }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; }
+  .stat b { display:block; font-size:22px; font-weight:600; } .stat span { color:var(--dim); font-size:12px; }
+  h2 { font-size:12px; color:var(--dim); text-transform:uppercase; letter-spacing:.08em; margin:0 0 10px; font-weight:500; }
+  svg { width:100%; height:200px; display:block; } .axis { stroke:#222; } .lbl { fill:#8a8a8a; font-size:10px; }
+  .line { fill:none; stroke:var(--acc); stroke-width:2; } .dot { fill:var(--acc); }
+  ol { margin:0; padding-left:20px; color:var(--dim); } li.done { color:var(--ok); } li.now { color:var(--text); }
+  a { color:var(--acc); } .live { color:var(--dim); font-size:12px; }
+  .stale { color:var(--warn); }
+</style>
+</head>
+<body>
+<main>
+  <div class="row"><h1>Fine-tuning progress</h1><span id="badge" class="badge starting">connecting</span></div>
+  <div class="sub" id="sub">Qwen3-4B-Instruct-2507 · LoRA · Modal A10G</div>
+
+  <div class="card">
+    <div class="row"><div class="big" id="pct">0%</div><div class="live" id="live">connecting…</div></div>
+    <div class="bar" id="barwrap"><i id="bar"></i></div>
+    <div class="live" id="stepline">waiting for the first step</div>
+  </div>
+
+  <div class="card"><div class="stats" id="stats"></div></div>
+
+  <div class="card"><h2>Training loss (log scale, lower is better)</h2><svg id="chart" viewBox="0 0 800 200" preserveAspectRatio="none"></svg><div class="live" id="lossnote"></div></div>
+
+  <div class="card"><h2>What happens next</h2>
+    <ol id="next"></ol>
+  </div>
+  <div class="live">Job on Modal: <a href="https://modal.com/apps/hyderabadzindabadabrar/main" target="_blank" rel="noreferrer">open the app page</a></div>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+let last = 0;
+function chart(losses) {
+  const svg = $("chart"); svg.innerHTML = "";
+  if (!losses.length) return;
+  const W = 800, H = 200, pad = 28;
+  const xs = losses.map(l => l.step), ys = losses.map(l => Math.log10(Math.max(l.loss, 1e-4)));
+  const x0 = Math.min(...xs), x1 = Math.max(...xs, x0 + 1), y0 = Math.floor(Math.min(...ys)), y1 = Math.ceil(Math.max(...ys, y0 + 1));
+  const X = v => pad + (v - x0) / (x1 - x0) * (W - 2 * pad), Y = v => H - pad - (v - y0) / (y1 - y0) * (H - 2 * pad);
+  const ns = "http://www.w3.org/2000/svg", mk = (n, a, t) => { const e = document.createElementNS(ns, n); for (const k in a) e.setAttribute(k, a[k]); if (t) e.textContent = t; svg.appendChild(e); return e; };
+  for (let g = y0; g <= y1; g++) { mk("line", { x1: pad, x2: W - pad, y1: Y(g), y2: Y(g), class: "axis" }); mk("text", { x: 2, y: Y(g) + 3, class: "lbl" }, (10 ** g).toPrecision(1)); }
+  mk("path", { d: losses.map((l, i) => (i ? "L" : "M") + X(l.step) + " " + Y(Math.log10(Math.max(l.loss, 1e-4)))).join(" "), class: "line" });
+  const e = losses[losses.length - 1]; mk("circle", { cx: X(e.step), cy: Y(Math.log10(Math.max(e.loss, 1e-4))), r: 4, class: "dot" });
+  mk("text", { x: W - pad, y: H - 8, class: "lbl", "text-anchor": "end" }, "step " + e.step);
+}
+function render(s) {
+  last = Date.now();
+  const total = s.total || 750, step = s.step || 0, pct = Math.min(100, Math.round(100 * step / total));
+  $("badge").textContent = s.status; $("badge").className = "badge " + s.status;
+  $("pct").textContent = pct + "%"; $("bar").style.width = pct + "%";
+  $("barwrap").className = "bar" + (s.status === "finished" ? " finished-bar" : "");
+  $("stepline").textContent = step ? `step ${step} of ${total}` + (s.status === "running" ? ` · about ${s.eta} left` : "") : "waiting for the first step";
+  const losses = s.losses || [], cur = losses.length ? losses[losses.length - 1].loss : null;
+  const stats = [[step ? `${step}/${total}` : "–", "steps"], [s.elapsed || (s.train_seconds ? Math.round(s.train_seconds / 60) + " min" : "–"), "elapsed"],
+    [s.status === "finished" ? "done" : (s.eta || "–"), "time left"], [s.sec_per_step ? s.sec_per_step + " s" : "–", "per step"],
+    [cur != null ? cur.toFixed(4) : "–", "latest loss"], [losses.length ? (losses[0].loss).toFixed(2) : "–", "first loss"]];
+  $("stats").innerHTML = stats.map(([b, l]) => `<div class="stat"><b>${b}</b><span>${l}</span></div>`).join("");
+  chart(losses);
+  $("lossnote").textContent = losses.length ? "Loss falling toward zero is expected here: the model is learning a strict JSON format. Real quality is judged on the unseen questions afterwards." : "";
+  const fin = s.status === "finished";
+  const steps = [["Train the adapter on Modal", fin ? "done" : "now"], ["Generate answers for the 600 unseen validation questions", fin ? "now" : ""], ["Score against the rule parser (72% intent accuracy baseline)", ""], ["Plug the model into the NLU step if it wins", ""]];
+  $("next").innerHTML = steps.map(([t, c]) => `<li class="${c}">${t}</li>`).join("");
+}
+async function poll() {
+  try { render(await (await fetch("training.json?t=" + Date.now(), { cache: "no-store" })).json()); } catch (e) {}
+  const age = (Date.now() - last) / 1000;
+  $("live").textContent = last ? (age < 10 ? "live" : `no update for ${Math.round(age)}s`) : "connecting…";
+  $("live").className = "live" + (last && age >= 10 ? " stale" : "");
+}
+poll(); setInterval(poll, 3000);
+</script>
+</body>
+</html>
