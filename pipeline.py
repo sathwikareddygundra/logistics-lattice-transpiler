@@ -6,7 +6,7 @@ import time
 from dataclasses import dataclass, field
 from datetime import date
 from pathlib import Path
-from typing import Any
+from typing import Any, cast
 
 import pandas as pd
 
@@ -19,7 +19,7 @@ from codegen.python import generate_python
 from codegen.sql import generate_sql
 from confirm.router import CONFIDENCE_THRESHOLD, route
 from dag.builder import intent_to_dag
-from dag.model import Dag, NodeType
+from dag.model import AggregateOp, Dag, NodeType
 from feedback import log as failure_log
 from feedback.diagnostics import Diagnostic, diagnose
 from feedback.router import (
@@ -39,7 +39,7 @@ from ir.registry_check import validate_against_database
 from ir.typecheck import assert_well_typed
 from logging_config import new_trace_id, stage_span
 from nlu.fallback import decline, log_fallback
-from nlu.intent import IntentType, ParsedIntent
+from nlu.intent import IntentFilter, IntentHaving, IntentType, ParsedIntent
 from nlu.parser import parse
 from nlu.slots import next_question
 from ops import metrics
@@ -225,6 +225,12 @@ def _answer(
     if decision.needs_confirmation and not confirmed:
         return PipelineResult("needs_confirmation", trace_id, intent, decision.paraphrase)
 
+    notes: list[str] = []
+    if any(f.relative_to for f in intent.filters) or any(h.relative_to for h in intent.having):
+        intent, notes, problem = _resolve_relative(intent, databases, today, trace_id, budget)
+        if problem:
+            return PipelineResult("failed", trace_id, intent, problem, None, [], budget)
+
     plants = [p for p in (intent.plants or [p.value for p in databases]) if Plant(p) in databases]
     runs: list[BranchRun] = []
     frames: dict[tuple[str, str], pd.DataFrame] = {}
@@ -290,6 +296,8 @@ def _answer(
         )
     status = "partial" if failed_plants else "ok"
     msg = f"plants failed: {sorted(failed_plants)}" if failed_plants else decision.paraphrase
+    if notes:
+        msg += " (" + "; ".join(notes) + ")"
     return PipelineResult(status, trace_id, intent, msg, result, runs, budget)
 
 
@@ -301,6 +309,77 @@ def _first_category(run: BranchRun):
         if run.attempts[0].category
         else FailureCategory.SEMANTIC_MISMATCH
     )
+
+
+def _overall_average(
+    column: str,
+    base: ParsedIntent,
+    filters: list[IntentFilter],
+    databases: dict[Plant, Path | str],
+    today: date | None,
+    trace_id: str,
+    budget: RetryBudget,
+) -> float | None:
+    """Run the plain average of `column` over the same plants (the inner query of a nested
+    question) and return it, or None if that query fails."""
+    inner = ParsedIntent(
+        query=f"{base.query} [average {column}]",
+        intent_type=IntentType.AGGREGATION,
+        metric=column,
+        agg=AggregateOp.AVG,
+        filters=filters,
+        plants=base.plants,
+        confidence=1.0,
+    )
+    res = _answer(
+        inner.query,
+        databases,
+        today,
+        confirmed=True,
+        trace_id=trace_id,
+        intent=inner,
+        budget=budget,
+    )
+    if res.frame is None or res.frame.empty:
+        return None
+    return float(cast(float, res.frame.iloc[0, 0]))
+
+
+def _resolve_relative(
+    intent: ParsedIntent,
+    databases: dict[Plant, Path | str],
+    today: date | None,
+    trace_id: str,
+    budget: RetryBudget,
+) -> tuple[ParsedIntent, list[str], str | None]:
+    """Turn "more than the average" into a number by running the inner average first.
+
+    Returns the intent with literal thresholds, notes for the user, and an error message."""
+    notes: list[str] = []
+    filters: list[IntentFilter] = []
+    for f in intent.filters:
+        if f.relative_to != "avg":
+            filters.append(f)
+            continue
+        # the average over all shipments of the plants asked about, ignoring the other filters
+        avg = _overall_average(f.column, intent, [], databases, today, trace_id, budget)
+        if avg is None:
+            return intent, notes, f"could not work out the average {f.column} to compare against"
+        notes.append(f"average {f.column} = {avg:.2f}")
+        filters.append(f.model_copy(update={"value": avg, "relative_to": None}))
+    having: list[IntentHaving] = []
+    for h in intent.having:
+        if h.relative_to == "overall_avg" and h.value is None and intent.agg is AggregateOp.AVG:
+            assert intent.metric is not None
+            avg = _overall_average(
+                intent.metric, intent, list(filters), databases, today, trace_id, budget
+            )
+            if avg is None:
+                return intent, notes, f"could not work out the average {intent.metric}"
+            notes.append(f"average {intent.metric} = {avg:.2f}")
+            h = h.model_copy(update={"value": avg, "relative_to": None})
+        having.append(h)
+    return intent.model_copy(update={"filters": filters, "having": having}), notes, None
 
 
 def _log_failure(path: Path | str | None, diag: Diagnostic, outcome: str, run: BranchRun) -> None:

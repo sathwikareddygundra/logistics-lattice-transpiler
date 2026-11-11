@@ -58,6 +58,27 @@ def plan_branches(intent: ParsedIntent, plants: list[str]) -> list[Branch]:
     return branches
 
 
+_COMPARE = {
+    "gt": lambda a, b: a > b,
+    "gte": lambda a, b: a >= b,
+    "lt": lambda a, b: a < b,
+    "lte": lambda a, b: a <= b,
+    "eq": lambda a, b: a == b,
+    "ne": lambda a, b: a != b,
+}
+
+
+def apply_having(intent: ParsedIntent, df: pd.DataFrame, alias: str) -> pd.DataFrame:
+    """Filter groups on their final aggregated value. This must run after the plants are
+    merged: a group's total or average across plants is not its per-plant value."""
+    for h in intent.having:
+        threshold = h.value
+        if threshold is None:  # "above average" for a sum, count, min or max: mean of the groups
+            threshold = float(df[alias].mean())
+        df = df[_COMPARE[h.operator.value](df[alias], threshold)]
+    return df
+
+
 def _reduce(frames: list[pd.DataFrame], keys: list[str], col: str, how: str) -> pd.DataFrame:
     df = pd.concat(frames, ignore_index=True)
     if not keys:
@@ -103,6 +124,7 @@ def merge(intent: ParsedIntent, frames: dict[tuple[str, str], pd.DataFrame]) -> 
 
     for col, values in intent.keep_values.items():
         df = df[df[col].isin(values)]
+    df = apply_having(intent, df, alias)
 
     if intent.intent_type is IntentType.RANK:
         asc = intent.sort_direction is not None and intent.sort_direction.value == "asc"

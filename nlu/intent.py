@@ -2,19 +2,34 @@
 
 from __future__ import annotations
 
+from typing import Literal
+
 from pydantic import BaseModel, Field
 
 from dag.model import AggregateOp, FilterOperator, FilterValue, Granularity, SortDirection
 from nlu.taxonomy import IntentType, is_out_of_scope
 from plantdb.catalog import JOIN_KEY, tables_for_columns
 
-__all__ = ["IntentFilter", "IntentType", "ParsedIntent", "is_out_of_scope"]
+__all__ = ["IntentFilter", "IntentHaving", "IntentType", "ParsedIntent", "is_out_of_scope"]
 
 
 class IntentFilter(BaseModel):
     column: str = Field(min_length=1)
     operator: FilterOperator
     value: FilterValue
+    # "avg": compare against the average of this column ("cost more than the average");
+    # the pipeline replaces `value` with that number before planning.
+    relative_to: Literal["avg"] | None = None
+
+
+class IntentHaving(BaseModel):
+    """A condition on the aggregated result ("carriers with more than 500 shipments")."""
+
+    operator: FilterOperator
+    value: float | None = None
+    # "overall_avg": compare against the average ("charge more than the average");
+    # the pipeline fills `value` for averages, the merge step uses the mean of the groups otherwise.
+    relative_to: Literal["overall_avg"] | None = None
 
 
 class ParsedIntent(BaseModel):
@@ -33,6 +48,7 @@ class ParsedIntent(BaseModel):
     plants: list[str] = Field(default_factory=list)  # empty means every plant
     compare_by_plant: bool = False
     keep_values: dict[str, list[str]] = Field(default_factory=dict)  # post-merge row filter
+    having: list[IntentHaving] = Field(default_factory=list)  # post-merge condition on the result
     confidence: float = Field(ge=0.0, le=1.0)
     entity_confidence: dict[str, float] = Field(default_factory=dict)
     missing_slots: list[str] = Field(default_factory=list)

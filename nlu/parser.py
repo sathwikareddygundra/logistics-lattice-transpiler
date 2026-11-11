@@ -14,8 +14,8 @@ from collections import defaultdict
 from datetime import date
 
 from dag.model import AggregateOp, FilterOperator, Granularity, SortDirection
-from nlu.entities import DEFAULTED, EXACT, extract
-from nlu.intent import IntentFilter, IntentType, ParsedIntent
+from nlu.entities import DEFAULTED, DIMENSION_WORDS, EXACT, extract
+from nlu.intent import IntentFilter, IntentHaving, IntentType, ParsedIntent
 from plantdb.catalog import JOIN_KEY, tables_for_columns
 
 LISTING_LIMIT = 20
@@ -44,6 +44,41 @@ _RANK_WORDS = re.compile(
 )
 
 
+_GT = (
+    r"more than|greater than|higher than|larger than|bigger than|above|over|exceeds?|exceeding"
+    r"|at least"
+)
+_LT = r"less than|lower than|smaller than|fewer than|below|under|at most|cheaper than"
+_RELATIVE = re.compile(
+    rf"\b(?P<dir>(?P<gt>{_GT})|(?P<lt>{_LT}))\s+(?:the\s+|our\s+)?(?:overall\s+)?"
+    r"(?P<avg>average|avg|mean)\b"
+)
+_NUMERIC = re.compile(
+    rf"(?<!last )(?<!next )(?<!top )(?<!bottom )\b(?P<dir>(?P<gt>{_GT})|(?P<lt>{_LT}))\s+"
+    r"\$?(?P<num>\d+(?:\.\d+)?)\b"
+)
+_OPERATORS = {
+    "more than": FilterOperator.GT, "greater than": FilterOperator.GT,
+    "higher than": FilterOperator.GT, "larger than": FilterOperator.GT,
+    "bigger than": FilterOperator.GT, "above": FilterOperator.GT, "over": FilterOperator.GT,
+    "exceed": FilterOperator.GT, "exceeds": FilterOperator.GT, "exceeding": FilterOperator.GT,
+    "at least": FilterOperator.GTE, "less than": FilterOperator.LT,
+    "lower than": FilterOperator.LT, "smaller than": FilterOperator.LT,
+    "fewer than": FilterOperator.LT, "below": FilterOperator.LT, "under": FilterOperator.LT,
+    "at most": FilterOperator.LTE, "cheaper than": FilterOperator.LT,
+}  # fmt: skip
+_SUBJECT = re.compile(r"\b(" + "|".join(sorted(DIMENSION_WORDS, key=len, reverse=True)) + r")\b")
+
+
+def _threshold(t: str) -> tuple[FilterOperator, float | None, bool] | None:
+    """A "more than N" or "more than the average" condition: (operator, number, is_relative)."""
+    if m := _RELATIVE.search(t):
+        return _OPERATORS[m.group("dir")], None, True
+    if m := _NUMERIC.search(t):
+        return _OPERATORS[m.group("dir")], float(m.group("num")), False
+    return None
+
+
 def _tokens(query: str) -> str:
     return re.sub(r"\s+", " ", query.lower().replace("_", " ")).strip()
 
@@ -67,7 +102,20 @@ def _merge_same_column_filters(filters: list[IntentFilter]) -> tuple[list[Intent
 def parse(query: str, today: date | None = None) -> ParsedIntent:
     today = today or date.today()
     t = _tokens(query)
-    ent = extract(query, today)
+    cond = _threshold(t)
+    subject = next(
+        (DIMENSION_WORDS[w] for w in _SUBJECT.findall(t) if DIMENSION_WORDS[w] != "plant"), None
+    )
+    # row level ("shipments that cost more than the average cost"): the word "average"
+    # names the comparison there, not an aggregate to compute
+    row_level = cond is not None and subject is None
+    text = (
+        re.sub(r"\b(average|avg|mean)\b", "", query, flags=re.I)
+        if cond and row_level and cond[2]
+        else query
+    )
+    ent = extract(text, today)
+    row_level = row_level and ent.metric is not None and ent.agg is None
 
     def out_of_scope() -> ParsedIntent:
         return ParsedIntent(query=query, intent_type=IntentType.OUT_OF_SCOPE, confidence=0.0)
@@ -85,6 +133,8 @@ def parse(query: str, today: date | None = None) -> ParsedIntent:
     listing = bool(_LISTING.search(t)) and ent.agg is None and not rank and not trend
     if listing and re.search(r"\bhow many\b", t):
         listing = False
+    if row_level and not (forecast or trend or compare):
+        listing = True
 
     has_measure = ent.metric is not None or ent.count_requested or ent.agg == "count"
     if not (has_measure or listing or forecast or trend or rank or compare):
@@ -111,6 +161,31 @@ def parse(query: str, today: date | None = None) -> ParsedIntent:
         # durations are averaged by default, quantities and money are summed
         default = "count" if metric == JOIN_KEY else "avg" if metric in AVG_BY_DEFAULT else "sum"
         agg, agg_conf = default, DEFAULTED + 0.2
+    # a condition on the result: group level ("depots whose average load time is over 90") or
+    # row level ("shipments costing more than the average")
+    having: list[IntentHaving] = []
+    if cond and not (forecast or trend):
+        op, num, relative = cond
+        if row_level:
+            assert ent.metric is not None
+            filters.append(
+                IntentFilter(
+                    column=ent.metric,
+                    operator=op,
+                    value=num if num is not None else 0,
+                    relative_to="avg" if relative else None,
+                )
+            )
+        elif subject is not None and metric is not None:
+            if subject not in group_by:
+                group_by.append(subject)
+            if relative and ent.agg is None and metric != JOIN_KEY:
+                agg = "avg"  # "charge more than the average" means average charge
+            having.append(
+                IntentHaving(
+                    operator=op, value=num, relative_to="overall_avg" if relative else None
+                )
+            )
     # rank words like "highest" pick direction there, not the aggregate
     if rank and agg in ("max", "min") and not re.search(r"\b(maximum|minimum)\b", t):
         agg = "sum" if metric != JOIN_KEY else "count"
@@ -209,6 +284,7 @@ def parse(query: str, today: date | None = None) -> ParsedIntent:
         plants=ent.plants,
         compare_by_plant=compare_by_plant,
         keep_values=keep_values,
+        having=having,
         confidence=round(min(overall, 0.99), 3),
         entity_confidence={k: round(v, 3) for k, v in intent_conf.items()},
         missing_slots=missing,

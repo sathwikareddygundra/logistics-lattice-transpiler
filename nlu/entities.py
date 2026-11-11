@@ -38,13 +38,18 @@ STATUS_ALIASES = {"in transit": "In Transit", "delivered": "Delivered",
                   "out for delivery": "Out for Delivery"}  # fmt: skip
 
 METRIC_WORDS = [  # order matters: first match wins
-    (r"\bunloading\b", "unloading_time_mins"),
-    (r"\bloading\b", "loading_time_mins"),
+    (r"\b(unloading|unload|time to unload)\b", "unloading_time_mins"),
+    (r"\b(loading|dock time|time to load|load time)\b", "loading_time_mins"),
     (r"\b(tat|turnaround|turn around|transit time)\b", "total_tat_hours"),
     (r"\b(weight|tonnage|tons?|tonnes?|kgs?|kilograms?)\b", "shipment_weight_kg"),
-    (r"\b(freight|cost|costs|spend|charges|expense|expenses|revenue)\b", "freight_cost_usd"),
+    (
+        r"\b(freight|cost|costs|spend|charge|charges|haulage|fees?|expense|expenses|revenue)\b",
+        "freight_cost_usd",
+    ),
 ]
-COUNT_WORDS = r"\b(how many|count|number of|dispatches|shipments|invoices|deliveries)\b"
+COUNT_WORDS = (
+    r"\b(how many|count|number of|dispatches|shipments|invoices|deliveries|loads|consignments)\b"
+)
 AGG_WORDS = [
     (r"\b(average|avg|mean)\b", "avg"),
     (r"\b(maximum|max|highest|largest|longest|biggest)\b", "max"),
@@ -54,7 +59,10 @@ AGG_WORDS = [
 ]
 DIMENSION_WORDS = {
     "carrier": "carrier", "carriers": "carrier", "transporter": "carrier",
+    "transporters": "carrier", "courier": "carrier", "couriers": "carrier",
+    "provider": "carrier", "providers": "carrier", "hauler": "carrier", "haulers": "carrier",
     "warehouse": "origin_warehouse", "warehouses": "origin_warehouse",
+    "depot": "origin_warehouse", "depots": "origin_warehouse",
     "origin": "origin_warehouse", "city": "destination_city", "cities": "destination_city",
     "destination": "destination_city", "destinations": "destination_city",
     "status": "current_status", "statuses": "current_status",

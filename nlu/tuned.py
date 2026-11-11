@@ -39,6 +39,10 @@ def _messages(query: str, today: date) -> list[dict]:
 
 def parse_tuned(query: str, generate: Generate, today: date | None = None) -> TunedResult:
     today = today or date.today()
+    rules = parse(query, today)
+    if rules.having or any(f.relative_to for f in rules.filters):
+        # "more than 500 shipments" / "above the average": the model was not trained on these
+        return TunedResult(rules, "rules (condition on the result)")
     try:
         text = generate(_messages(query, today)).strip()
         if text.startswith("```"):
@@ -51,7 +55,7 @@ def parse_tuned(query: str, generate: Generate, today: date | None = None) -> Tu
             raise ValueError("tuned model returned an incomplete intent")
         return TunedResult(intent, "tuned")
     except Exception:  # unreachable endpoint, bad JSON, schema miss or incomplete: rules answer
-        return TunedResult(parse(query, today), "rules (tuned unavailable)")
+        return TunedResult(rules, "rules (tuned unavailable)")
 
 
 def modal_generate(app_name: str = "lattice-finetune-serve") -> Generate:

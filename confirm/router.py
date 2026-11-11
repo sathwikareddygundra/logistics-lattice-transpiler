@@ -22,6 +22,12 @@ _AGG = {"sum": "the total", "avg": "the average", "min": "the minimum", "max": "
         "count": "the count"}  # fmt: skip
 
 
+_OP_WORDS = {"eq": "is", "ne": "is not", "gt": "is more than", "gte": "is at least",
+             "lt": "is less than", "lte": "is at most"}  # fmt: skip
+_HAVING_WORDS = {"gt": "more than", "gte": "at least", "lt": "less than", "lte": "at most",
+                 "eq": "exactly", "ne": "not"}  # fmt: skip
+
+
 @dataclass(frozen=True)
 class ConfirmDecision:
     needs_confirmation: bool
@@ -42,7 +48,9 @@ def _conditions(intent: ParsedIntent) -> list[str]:
         if "gte" in ops and "lt" in ops:
             parts.append(f"{_name(col)} from {ops['gte']} up to (not including) {ops['lt']}")
         else:
-            parts += [f"{_name(f.column)} is {f.value}" for f in fs]
+            for f in fs:
+                value = "the average" if f.relative_to else f.value
+                parts.append(f"{_name(f.column)} {_OP_WORDS.get(f.operator.value, 'is')} {value}")
     return parts
 
 
@@ -79,6 +87,11 @@ def paraphrase(intent: ParsedIntent) -> str:
             text += f", forecast {intent.horizon} {unit}s ahead"
     if cond:
         text += ", where " + " and ".join(cond)
+    for h in intent.having:
+        target = "the average" if h.relative_to else f"{h.value:g}"
+        text += (
+            f", keeping only groups where the result is {_HAVING_WORDS[h.operator.value]} {target}"
+        )
     return f"{text}, across {scope}. Is that right?"
 
 
