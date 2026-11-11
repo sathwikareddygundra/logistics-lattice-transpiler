@@ -298,6 +298,8 @@ def _answer(
     msg = f"plants failed: {sorted(failed_plants)}" if failed_plants else decision.paraphrase
     if notes:
         msg += " (" + "; ".join(notes) + ")"
+    if result.empty:
+        msg += " No rows matched those conditions."
     return PipelineResult(status, trace_id, intent, msg, result, runs, budget)
 
 

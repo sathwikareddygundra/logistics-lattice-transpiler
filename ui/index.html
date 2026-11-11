@@ -71,6 +71,7 @@ function render(query, r) {
   if (r.table) {
     const { columns, data } = r.table;
     h += `<div class="tablewrap"><table><thead><tr>${columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${data.map(row => `<tr>${row.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    if (data.length === 0) h += `<div class="meta">0 rows: nothing matched this question's conditions.</div>`;
     if (r.total_rows > data.length) h += `<div class="meta">showing ${data.length} of ${r.total_rows} rows</div>`;
   }
   if (r.branches && r.branches.length) h += `<div class="meta">${r.branches.map(b => `${esc(b.plant)} ${b.ms}ms${b.error ? " ✗ " + esc(b.error) : ""}`).join(" · ")}</div>`;

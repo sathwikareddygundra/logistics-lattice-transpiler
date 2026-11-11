@@ -87,3 +87,10 @@ def test_confirm_text_names_the_condition(dbs):
     assert "more than 2000" in res.message
     res = answer("list all shipments with loading time over 150 minutes", dbs, today=TODAY)
     assert "more than 150" in res.message
+
+
+def test_threshold_nobody_meets_says_so(dbs):
+    res = answer("depots whose average dock time to load is over 500 minutes", dbs, today=TODAY)
+    assert res.status == "ok"
+    assert res.frame is not None and res.frame.empty
+    assert "No rows matched" in res.message
