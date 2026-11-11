@@ -50,23 +50,27 @@ EXAMPLES.forEach(t => { const b = document.createElement("button"); b.type = "bu
 
 const TONE = { ok: "ok", partial: "warn", needs_confirmation: "warn", needs_slot: "warn", needs_review: "warn", out_of_scope: "warn", failed: "bad", error: "bad" };
 
-async function ask(query, confirmed) {
+async function ask(query, confirmed, slot_answer = "") {
   if (!query.trim()) return;
   $("go").disabled = true;
   const card = document.createElement("div"); card.className = "card"; card.innerHTML = `<div class="q">${esc(query)}</div>…`;
   $("out").prepend(card);
   let r;
-  try { r = await (await fetch("/ask", { method: "POST", body: JSON.stringify({ query, confirmed }) })).json(); }
+  try { r = await (await fetch("/ask", { method: "POST", body: JSON.stringify({ query, confirmed, slot_answer }) })).json(); }
   catch (e) { r = { status: "error", message: "Could not reach the server." }; }
   card.innerHTML = render(query, r);
+  const next = r.query || query;
   const yes = card.querySelector("[data-confirm]");
-  if (yes) yes.onclick = () => { card.remove(); ask(query, true); };
+  if (yes) yes.onclick = () => { card.remove(); ask(next, true); };
+  const slot = card.querySelector("form[data-slot]");
+  if (slot) slot.onsubmit = e => { e.preventDefault(); const a = slot.querySelector("input").value; if (a.trim()) { card.remove(); ask(next, false, a); } };
   $("go").disabled = false;
 }
 
 function render(query, r) {
   let h = `<div class="q">${esc(query)}</div><span class="badge ${TONE[r.status] || "warn"}">${esc(r.status)}</span>${esc(r.message)}`;
   if (r.intent) h += `<div class="meta">intent: ${esc(r.intent)} · confidence ${r.confidence}${r.trace_id ? " · trace " + esc(r.trace_id.slice(0, 8)) : ""}</div>`;
+  if (r.status === "needs_slot") h += `<form data-slot class="actions"><input type="text" placeholder="Type your answer, e.g. carrier" autocomplete="off" style="flex:1"><button>Answer</button></form>`;
   if (r.status === "needs_confirmation") h += `<div class="actions"><button data-confirm>Yes, run it</button></div>`;
   if (r.table) {
     const { columns, data } = r.table;

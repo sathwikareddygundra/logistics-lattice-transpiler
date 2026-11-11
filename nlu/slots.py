@@ -44,6 +44,9 @@ def next_question(intent: ParsedIntent) -> str | None:
 def fill_slots(intent: ParsedIntent, answer: str, today: date | None = None) -> ParsedIntent:
     """Merge the user's answer into the original question. Everything already
     understood persists because the original text is re-parsed together with the answer."""
-    combined = f"{intent.query.rstrip('.?! ')}. {answer}"
+    base = intent.query.rstrip(".?! ")
+    # a bare "carrier" answers "group by what?" only once it reads as "by carrier"
+    needs_dimension = "dimension" in intent.missing_slots and "metric" not in intent.missing_slots
+    combined = f"{base} by {answer}" if needs_dimension else f"{base}. {answer}"
     filled = parse(combined, today)
     return filled.model_copy(update={"query": f"{intent.query} [{answer}]"})

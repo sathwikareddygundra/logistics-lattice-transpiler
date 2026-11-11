@@ -20,6 +20,8 @@ import structlog
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
+from nlu.parser import parse  # noqa: E402
+from nlu.slots import fill_slots  # noqa: E402
 from nlu.tuned import modal_generate, parse_tuned  # noqa: E402
 from ops import metrics  # noqa: E402
 from pipeline import answer  # noqa: E402
@@ -31,13 +33,19 @@ TODAY = date(2026, 9, 15)  # the data covers 2026-06-01 to 2026-08-30
 PAGE = Path(__file__).with_name("index.html")
 
 
-def run_query(query: str, databases: dict, confirmed: bool, generate=None) -> dict:
+def run_query(
+    query: str, databases: dict, confirmed: bool, generate=None, slot_answer: str = ""
+) -> dict:
     intent, source = None, "rules"
-    if generate is not None:
+    if slot_answer:  # the user answered a follow-up question: merge it into the original
+        intent = fill_slots(parse(query, TODAY), slot_answer, TODAY)
+        query = intent.query
+    elif generate is not None:
         tuned = parse_tuned(query, generate, TODAY)
         intent, source = tuned.intent, tuned.source
     res = answer(query, databases, today=TODAY, confirmed=confirmed, intent=intent)
     out: dict = {
+        "query": query,
         "status": res.status,
         "message": res.message,
         "intent": res.intent.intent_type.value,
@@ -92,7 +100,13 @@ def make_handler(databases: dict, generate=None) -> type[BaseHTTPRequestHandler]
                 query = str(body.get("query", "")).strip()
                 if not query:
                     raise ValueError("empty question")
-                result = run_query(query, databases, bool(body.get("confirmed")), generate)
+                result = run_query(
+                    query,
+                    databases,
+                    bool(body.get("confirmed")),
+                    generate,
+                    str(body.get("slot_answer", "")).strip(),
+                )
             except Exception as e:  # the UI should show the problem, not drop the connection
                 result = {"status": "error", "message": f"{type(e).__name__}: {e}"}
             self._send(200, json.dumps(result).encode(), "application/json")
