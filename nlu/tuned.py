@@ -12,6 +12,7 @@ from datetime import date
 from nlu.groq_parser import canonicalize
 from nlu.intent import ParsedIntent
 from nlu.parser import parse
+from nlu.slots import is_incomplete
 
 # The training targets omit confidence, so the wrapper sets it: a valid, schema-checked reply
 # from the tuned model is treated as confident (it scored 97.8% intent accuracy on held-out
@@ -45,8 +46,11 @@ def parse_tuned(query: str, generate: Generate, today: date | None = None) -> Tu
         data = json.loads(text)
         data["query"] = query
         data["confidence"] = TUNED_CONFIDENCE
-        return TunedResult(canonicalize(ParsedIntent.model_validate(data)), "tuned")
-    except Exception:  # unreachable endpoint, bad JSON or schema miss: rules still answer
+        intent = canonicalize(ParsedIntent.model_validate(data))
+        if is_incomplete(intent):  # e.g. an aggregation with no aggregation function
+            raise ValueError("tuned model returned an incomplete intent")
+        return TunedResult(intent, "tuned")
+    except Exception:  # unreachable endpoint, bad JSON, schema miss or incomplete: rules answer
         return TunedResult(parse(query, today), "rules (tuned unavailable)")
 
 

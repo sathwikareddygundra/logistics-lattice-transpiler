@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from nlu.intent import ParsedIntent
+from nlu.intent import IntentType, ParsedIntent
 from nlu.parser import parse
 
 QUESTIONS = {
@@ -23,8 +23,18 @@ QUESTIONS = {
 SLOT_ORDER = ["metric", "dimension", "filter"]
 
 
+def is_incomplete(intent: ParsedIntent) -> bool:
+    """A summary question (anything but a row listing or a decline) needs a measure and an
+    aggregation; the DAG cannot be built without them."""
+    if intent.intent_type is IntentType.OUT_OF_SCOPE or intent.is_row_listing:
+        return False
+    return intent.metric is None or intent.agg is None
+
+
 def next_question(intent: ParsedIntent) -> str | None:
     """Exactly one targeted question: the first missing required slot."""
+    if is_incomplete(intent) and "metric" not in intent.missing_slots:
+        return QUESTIONS["metric"]
     for slot in SLOT_ORDER:
         if slot in intent.missing_slots:
             return QUESTIONS[slot]
