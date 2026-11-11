@@ -1,0 +1,82 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "role": "right",
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n2",
+      "to_node": "n4"
+    },
+    {
+      "from_node": "n3",
+      "to_node": "n5"
+    },
+    {
+      "from_node": "n4",
+      "role": "left",
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n5",
+      "to_node": "n6"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "dispatch"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "source",
+      "params": {
+        "source": "tracking"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "join",
+      "params": {
+        "how": "inner",
+        "on": "invoice_number"
+      }
+    },
+    {
+      "id": "n4",
+      "node_type": "filter",
+      "params": {
+        "column": "current_status",
+        "operator": "eq",
+        "value": "Delayed"
+      }
+    },
+    {
+      "id": "n5",
+      "node_type": "aggregate",
+      "params": {
+        "group_by": [
+          "carrier"
+        ],
+        "metric": "invoice_number",
+        "op": "count"
+      }
+    },
+    {
+      "id": "n6",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "carrier",
+          "invoice_number"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

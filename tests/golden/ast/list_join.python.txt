@@ -1,0 +1,9 @@
+ast v1.0.0 target=python
+df1 = select: dispatch[invoice_number, dispatch_date, origin_warehouse, destination_city, carrier]
+df2 = select: tracking[invoice_number, current_status]
+df3 = join: dispatch.invoice_number:string = tracking.invoice_number:string (inner)  <- n4[left], n5[right]
+df4 = filter: dispatch.origin_warehouse:string eq 'Atlanta_WH'  <- n1
+df5 = filter: tracking.current_status:string eq 'Delayed'  <- n2
+df6 = sort: by dispatch.invoice_number:string asc  <- n3
+df7 = limit: 20  <- n6
+df8 = output: dispatch.invoice_number:string, dispatch.dispatch_date:datetime, dispatch.origin_warehouse:string, dispatch.destination_city:string, dispatch.carrier:string, tracking.current_status:string  <- n7

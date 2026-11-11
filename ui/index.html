@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lattice</title>
+<style>
+  :root { --bg:#000; --panel:#0b0b0b; --line:#222; --text:#ededed; --dim:#8a8a8a; --accent:#fff; --ok:#4ade80; --warn:#fbbf24; --bad:#f87171; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 -apple-system, "Inter", "Segoe UI", sans-serif; }
+  main { max-width:960px; margin:0 auto; padding:40px 16px 80px; }
+  h1 { font-size:20px; font-weight:600; letter-spacing:.02em; margin:0 0 4px; }
+  .sub { color:var(--dim); margin-bottom:28px; }
+  form { display:flex; gap:8px; }
+  input[type=text] { flex:1; background:var(--panel); color:var(--text); border:1px solid var(--line); border-radius:8px; padding:12px 14px; font:inherit; outline:none; }
+  input[type=text]:focus { border-color:#555; }
+  button { background:var(--accent); color:#000; border:0; border-radius:8px; padding:0 20px; font:inherit; font-weight:600; cursor:pointer; }
+  button.ghost { background:transparent; color:var(--text); border:1px solid var(--line); padding:8px 16px; }
+  button:disabled { opacity:.5; cursor:wait; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 28px; }
+  .chip { background:transparent; color:var(--dim); border:1px solid var(--line); border-radius:999px; padding:4px 12px; font-size:13px; cursor:pointer; }
+  .chip:hover { color:var(--text); border-color:#555; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:16px; margin-bottom:16px; }
+  .q { color:var(--dim); font-size:13px; margin-bottom:8px; }
+  .badge { display:inline-block; font-size:12px; border-radius:999px; padding:1px 10px; border:1px solid currentColor; margin-right:8px; }
+  .ok { color:var(--ok); } .warn { color:var(--warn); } .bad { color:var(--bad); }
+  .meta { color:var(--dim); font-size:13px; margin-top:6px; }
+  .tablewrap { overflow:auto; max-height:380px; margin-top:12px; border:1px solid var(--line); border-radius:8px; }
+  table { border-collapse:collapse; width:100%; font-size:13px; }
+  th, td { text-align:left; padding:7px 12px; border-bottom:1px solid var(--line); white-space:nowrap; }
+  th { position:sticky; top:0; background:#111; color:var(--dim); font-weight:500; }
+  details { margin-top:12px; } summary { cursor:pointer; color:var(--dim); font-size:13px; }
+  pre { background:#050505; border:1px solid var(--line); border-radius:8px; padding:12px; overflow:auto; font:12px/1.5 ui-monospace, Menlo, monospace; color:#cfcfcf; }
+  .actions { margin-top:12px; display:flex; gap:8px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Lattice</h1>
+  <div class="sub">Ask a question about dispatch, tracking and turnaround data.</div>
+  <form id="f"><input id="q" type="text" placeholder="e.g. how many invoices per plant in august" autocomplete="off" autofocus><button id="go">Ask</button></form>
+  <div class="chips" id="chips"></div>
+  <div id="out"></div>
+</main>
+<script>
+const EXAMPLES = ["how many invoices per plant in august", "top 5 carriers by freight cost", "monthly freight cost trend", "compare MCW and YCW freight cost", "forecast freight cost for the next 3 months", "show delayed shipments"];
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+EXAMPLES.forEach(t => { const b = document.createElement("button"); b.type = "button"; b.className = "chip"; b.textContent = t; b.onclick = () => { $("q").value = t; ask(t, false); }; $("chips").appendChild(b); });
+
+const TONE = { ok: "ok", partial: "warn", needs_confirmation: "warn", needs_slot: "warn", needs_review: "warn", out_of_scope: "warn", failed: "bad", error: "bad" };
+
+async function ask(query, confirmed, slot_answer = "") {
+  if (!query.trim()) return;
+  $("go").disabled = true;
+  const card = document.createElement("div"); card.className = "card"; card.innerHTML = `<div class="q">${esc(query)}</div>…`;
+  $("out").prepend(card);
+  let r;
+  try { r = await (await fetch("/ask", { method: "POST", body: JSON.stringify({ query, confirmed, slot_answer }) })).json(); }
+  catch (e) { r = { status: "error", message: "Could not reach the server." }; }
+  card.innerHTML = render(query, r);
+  const next = r.query || query;
+  const yes = card.querySelector("[data-confirm]");
+  if (yes) yes.onclick = () => { card.remove(); ask(next, true); };
+  const slot = card.querySelector("form[data-slot]");
+  if (slot) slot.onsubmit = e => { e.preventDefault(); const a = slot.querySelector("input").value; if (a.trim()) { card.remove(); ask(next, false, a); } };
+  $("go").disabled = false;
+}
+
+function render(query, r) {
+  let h = `<div class="q">${esc(query)}</div><span class="badge ${TONE[r.status] || "warn"}">${esc(r.status)}</span>${esc(r.message)}`;
+  if (r.intent) h += `<div class="meta">intent: ${esc(r.intent)} · confidence ${r.confidence}${r.trace_id ? " · trace " + esc(r.trace_id.slice(0, 8)) : ""}</div>`;
+  if (r.status === "needs_slot") h += `<form data-slot class="actions"><input type="text" placeholder="Type your answer, e.g. carrier" autocomplete="off" style="flex:1"><button>Answer</button></form>`;
+  if (r.status === "needs_confirmation") h += `<div class="actions"><button data-confirm>Yes, run it</button></div>`;
+  if (r.table) {
+    const { columns, data } = r.table;
+    h += `<div class="tablewrap"><table><thead><tr>${columns.map(c => `<th>${esc(c)}</th>`).join("")}</tr></thead><tbody>${data.map(row => `<tr>${row.map(v => `<td>${esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    if (data.length === 0) h += `<div class="meta">0 rows: nothing matched this question's conditions.</div>`;
+    if (r.total_rows > data.length) h += `<div class="meta">showing ${data.length} of ${r.total_rows} rows</div>`;
+  }
+  if (r.branches && r.branches.length) h += `<div class="meta">${r.branches.map(b => `${esc(b.plant)} ${b.ms}ms${b.error ? " ✗ " + esc(b.error) : ""}`).join(" · ")}</div>`;
+  if (r.code && Object.keys(r.code).length) h += `<details><summary>Generated code</summary>${Object.entries(r.code).map(([k, v]) => `<div class="meta">${esc(k)}</div><pre>${esc(v)}</pre>`).join("")}</details>`;
+  return h;
+}
+$("f").onsubmit = e => { e.preventDefault(); ask($("q").value, false); };
+</script>
+</body>
+</html>

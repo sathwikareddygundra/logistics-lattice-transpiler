@@ -1,0 +1,6 @@
+ir v1.0.0
+n1 select: dispatch[invoice_number, carrier]
+n2 select: turnaround_time[invoice_number, total_tat_hours]
+n3 join: dispatch.invoice_number:string = turnaround_time.invoice_number:string (inner)  <- n1[left], n2[right]
+n4 aggregate: sum(turnaround_time.total_tat_hours:float) -> float by [dispatch.carrier:string]  <- n3
+n5 output: dispatch.carrier:string, turnaround_time.total_tat_hours:float  <- n4

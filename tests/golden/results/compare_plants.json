@@ -1,0 +1,17 @@
+{
+ "query": "compare MCW and YCW freight cost",
+ "columns": [
+  "plant",
+  "sum_freight_cost_usd"
+ ],
+ "rows": [
+  [
+   "MCW",
+   8527275.72
+  ],
+  [
+   "YCW",
+   8579449.8
+  ]
+ ]
+}

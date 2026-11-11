@@ -1,0 +1,233 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://logistics-lattice-transpiler.local/schemas/dag.schema.json",
+  "title": "Dag",
+  "description": "T-13: the contract for 'what a DAG looks like', shared between the DAG stage (Phase 5, produces this) and graph_eng (Phase 5, consumes it). node_type values, and each node_type's params shape, must exactly match dag.model (T-34) -- see tests/test_dag_schema.py::test_node_type_enum_matches_model. This schema covers per-object shape only; graph-level invariants (unique node ids, edges referencing real nodes, acyclicity, join edge arity) are enforced by schemas/validate_dag.py on top of it, backed by dag.model.Dag.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "trace_id", "nodes", "edges"],
+  "properties": {
+    "schema_version": {
+      "description": "Contract version for this document shape. Bump policy is formalized in T-16.",
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "trace_id": {
+      "description": "The T-6 trace_id this query is carrying end to end.",
+      "type": "string",
+      "format": "uuid"
+    },
+    "nodes": {
+      "description": "The operations that make up this query plan (T-35 compiles one ParsedIntent into these).",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/node" }
+    },
+    "edges": {
+      "description": "Directed data-flow dependencies between nodes.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    }
+  },
+  "$defs": {
+    "node": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "node_type", "params"],
+      "properties": {
+        "id": {
+          "description": "Unique within the dag's nodes array.",
+          "type": "string",
+          "minLength": 1
+        },
+        "node_type": {
+          "type": "string",
+          "enum": [
+            "source",
+            "filter",
+            "join",
+            "aggregate",
+            "window",
+            "sort",
+            "limit",
+            "forecast",
+            "output"
+          ]
+        },
+        "params": {
+          "description": "Shape depends on node_type -- see the if/then branches below.",
+          "type": "object"
+        }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "node_type": { "const": "source" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/source_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "filter" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/filter_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "join" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/join_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "aggregate" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/aggregate_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "window" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/window_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "sort" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/sort_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "limit" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/limit_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "forecast" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/forecast_params" } } }
+        },
+        {
+          "if": { "properties": { "node_type": { "const": "output" } }, "required": ["node_type"] },
+          "then": { "properties": { "params": { "$ref": "#/$defs/output_params" } } }
+        }
+      ]
+    },
+    "edge": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["from_node", "to_node"],
+      "properties": {
+        "from_node": { "type": "string", "minLength": 1 },
+        "to_node": { "type": "string", "minLength": 1 },
+        "role": {
+          "description": "Only meaningful for multi-input nodes (currently: join).",
+          "type": "string",
+          "enum": ["left", "right"]
+        }
+      }
+    },
+    "source_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source"],
+      "properties": {
+        "source": {
+          "description": "A schemas.registry.Source value: dispatch, tracking, or turnaround_time.",
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "filter_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["column", "operator", "value"],
+      "properties": {
+        "column": { "type": "string", "minLength": 1 },
+        "operator": {
+          "type": "string",
+          "enum": ["eq", "ne", "gt", "gte", "lt", "lte", "in", "between"]
+        },
+        "value": {
+          "description": "Scalar or list operand for operator, e.g. a single value for eq, a list for in/between.",
+          "type": ["string", "number", "boolean", "array"]
+        }
+      }
+    },
+    "join_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["on"],
+      "properties": {
+        "on": {
+          "description": "Join key column, e.g. invoice_number.",
+          "type": "string",
+          "minLength": 1
+        },
+        "how": {
+          "type": "string",
+          "enum": ["inner", "left", "right", "outer"],
+          "default": "inner"
+        }
+      }
+    },
+    "aggregate_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "op"],
+      "properties": {
+        "group_by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        },
+        "metric": { "type": "string", "minLength": 1 },
+        "op": {
+          "type": "string",
+          "enum": ["sum", "count", "avg", "min", "max"]
+        }
+      }
+    },
+    "window_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["column", "granularity"],
+      "properties": {
+        "column": { "type": "string", "minLength": 1 },
+        "granularity": {
+          "type": "string",
+          "enum": ["day", "week", "month", "quarter", "year"]
+        }
+      }
+    },
+    "sort_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["by"],
+      "properties": {
+        "by": { "type": "string", "minLength": 1 },
+        "direction": {
+          "type": "string",
+          "enum": ["asc", "desc"],
+          "default": "asc"
+        }
+      }
+    },
+    "limit_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "forecast_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["metric", "horizon"],
+      "properties": {
+        "metric": { "type": "string", "minLength": 1 },
+        "horizon": { "type": "integer", "minimum": 1 },
+        "method": { "type": "string", "default": "linear" }
+      }
+    },
+    "output_params": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [],
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "default": []
+        }
+      }
+    }
+  }
+}

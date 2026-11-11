@@ -1,0 +1,4 @@
+ast v1.0.0 target=sql
+df1 = select: dispatch[freight_cost_usd]
+df2 = aggregate: sum(dispatch.freight_cost_usd:float) -> float by [-]  <- n1
+df3 = output: dispatch.freight_cost_usd:float  <- n2

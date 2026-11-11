@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "e5e5e5e5-5555-4555-8555-555555555555",
+  "nodes": [
+    { "id": "n1", "node_type": "source", "params": { "source": "dispatch" } },
+    { "id": "n2", "node_type": "output", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "does-not-exist" }
+  ]
+}

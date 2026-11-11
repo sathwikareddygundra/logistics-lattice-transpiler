@@ -1,0 +1,6 @@
+ast v1.0.0 target=python
+df1 = select: dispatch[dispatch_date, carrier, freight_cost_usd]
+df2 = filter: dispatch.carrier:string eq 'DHL'  <- n1
+df3 = window: dispatch.dispatch_date:datetime per week  <- n2
+df4 = aggregate: sum(dispatch.freight_cost_usd:float) -> float by [dispatch.dispatch_date_week:string]  <- n3
+df5 = output: dispatch.dispatch_date_week:string, dispatch.freight_cost_usd:float  <- n4

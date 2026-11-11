@@ -1,0 +1,21 @@
+{
+ "query": "monthly weight trend",
+ "columns": [
+  "dispatch_date_month",
+  "sum_shipment_weight_kg"
+ ],
+ "rows": [
+  [
+   "2026-06",
+   7460459.51
+  ],
+  [
+   "2026-07",
+   7496467.41
+  ],
+  [
+   "2026-08",
+   7654098.34
+  ]
+ ]
+}

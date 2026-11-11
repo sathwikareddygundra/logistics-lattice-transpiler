@@ -1,0 +1,53 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "a2a2a2a2-2222-4222-8222-222222222222",
+  "target": "sql",
+  "nodes": [
+    {
+      "id": "n1",
+      "op": "select",
+      "var": "t1",
+      "params": {
+        "table": "dispatch",
+        "columns": [
+          { "table": "dispatch", "column": "origin_warehouse", "type": "string" },
+          { "table": "dispatch", "column": "freight_cost_usd", "type": "float" }
+        ]
+      }
+    },
+    {
+      "id": "n2",
+      "op": "filter",
+      "var": "t2",
+      "params": {
+        "column": { "table": "dispatch", "column": "origin_warehouse", "type": "string" },
+        "operator": "eq",
+        "value": { "value": "MCW", "type": "string" }
+      }
+    },
+    {
+      "id": "n3",
+      "op": "aggregate",
+      "var": "t3",
+      "params": {
+        "group_by": [],
+        "metric": { "table": "dispatch", "column": "freight_cost_usd", "type": "float" },
+        "op": "sum",
+        "result_type": "float"
+      }
+    },
+    {
+      "id": "n4",
+      "op": "output",
+      "var": "result",
+      "params": {
+        "columns": [{ "table": "dispatch", "column": "freight_cost_usd", "type": "float" }]
+      }
+    }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "n3" },
+    { "from_node": "n3", "to_node": "n4" }
+  ]
+}

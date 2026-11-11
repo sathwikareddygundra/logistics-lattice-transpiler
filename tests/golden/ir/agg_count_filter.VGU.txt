@@ -1,0 +1,5 @@
+ir v1.0.0
+n1 select: vgu_tracking[invoice_number, current_status]
+n2 filter: tracking.current_status:string eq 'Delayed'  <- n1
+n3 aggregate: count(tracking.invoice_number:string) -> integer by [-]  <- n2
+n4 output: tracking.invoice_number:string  <- n3

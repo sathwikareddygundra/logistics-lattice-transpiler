@@ -1,0 +1,107 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "to_node": "n4"
+    },
+    {
+      "from_node": "n2",
+      "to_node": "n5"
+    },
+    {
+      "from_node": "n3",
+      "to_node": "n6"
+    },
+    {
+      "from_node": "n4",
+      "role": "left",
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n5",
+      "role": "right",
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n6",
+      "to_node": "n7"
+    },
+    {
+      "from_node": "n7",
+      "to_node": "n8"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "dispatch"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "source",
+      "params": {
+        "source": "tracking"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "join",
+      "params": {
+        "how": "inner",
+        "on": "invoice_number"
+      }
+    },
+    {
+      "id": "n4",
+      "node_type": "filter",
+      "params": {
+        "column": "origin_warehouse",
+        "operator": "eq",
+        "value": "Atlanta_WH"
+      }
+    },
+    {
+      "id": "n5",
+      "node_type": "filter",
+      "params": {
+        "column": "current_status",
+        "operator": "eq",
+        "value": "Delayed"
+      }
+    },
+    {
+      "id": "n6",
+      "node_type": "sort",
+      "params": {
+        "by": "invoice_number",
+        "direction": "asc"
+      }
+    },
+    {
+      "id": "n7",
+      "node_type": "limit",
+      "params": {
+        "count": 20
+      }
+    },
+    {
+      "id": "n8",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "invoice_number",
+          "dispatch_date",
+          "origin_warehouse",
+          "destination_city",
+          "carrier",
+          "current_status"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

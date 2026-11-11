@@ -1,0 +1,133 @@
+{"query": "What is the total freight cost in July 2026?", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-07-01..2026-08-01", "metric:freight_cost_usd"]}
+{"query": "Total shipment weight for August 2026", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-08-01..2026-09-01", "metric:shipment_weight_kg"]}
+{"query": "average turnaround time by carrier", "intent": "aggregation", "entities": ["agg:avg", "group:carrier", "metric:total_tat_hours"]}
+{"query": "How many shipments were dispatched in June 2026?", "intent": "aggregation", "entities": ["agg:count", "date:dispatch_date:2026-06-01..2026-07-01", "metric:invoice_number"]}
+{"query": "total freight cost by carrier", "intent": "aggregation", "entities": ["agg:sum", "group:carrier", "metric:freight_cost_usd"]}
+{"query": "What's the average loading time?", "intent": "aggregation", "entities": ["agg:avg", "metric:loading_time_mins"]}
+{"query": "average unloading time by origin warehouse", "intent": "aggregation", "entities": ["agg:avg", "group:origin_warehouse", "metric:unloading_time_mins"]}
+{"query": "maximum freight cost by destination city", "intent": "aggregation", "entities": ["agg:max", "group:destination_city", "metric:freight_cost_usd"]}
+{"query": "minimum shipment weight by carrier", "intent": "aggregation", "entities": ["agg:min", "group:carrier", "metric:shipment_weight_kg"]}
+{"query": "how many delayed shipments are there", "intent": "aggregation", "entities": ["agg:count", "filter:current_status=Delayed", "metric:invoice_number"]}
+{"query": "How many shipments are on time?", "intent": "aggregation", "entities": ["agg:count", "filter:sla_status=On Time", "metric:invoice_number"]}
+{"query": "total freight cost for DHL", "intent": "aggregation", "entities": ["agg:sum", "filter:carrier=DHL", "metric:freight_cost_usd"]}
+{"query": "average TAT for FedEx in August", "intent": "aggregation", "entities": ["agg:avg", "date:dispatch_date:2026-08-01..2026-09-01", "filter:carrier=FedEx", "metric:total_tat_hours"]}
+{"query": "total weight shipped from Chicago", "intent": "aggregation", "entities": ["agg:sum", "filter:origin_warehouse=Chicago_WH", "metric:shipment_weight_kg"]}
+{"query": "number of shipments to Boston", "intent": "aggregation", "entities": ["agg:count", "filter:destination_city=Boston", "metric:invoice_number"]}
+{"query": "total freight cost to Seattle last month", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-08-01..2026-09-01", "filter:destination_city=Seattle", "metric:freight_cost_usd"]}
+{"query": "total weight by status", "intent": "aggregation", "entities": ["agg:sum", "group:current_status", "metric:shipment_weight_kg"]}
+{"query": "count of shipments by sla status", "intent": "aggregation", "entities": ["agg:count", "group:sla_status", "metric:invoice_number"]}
+{"query": "average TAT for delayed shipments by carrier", "intent": "aggregation", "entities": ["agg:avg", "filter:current_status=Delayed", "group:carrier", "metric:total_tat_hours"]}
+{"query": "total freight cost for MCW", "intent": "aggregation", "entities": ["agg:sum", "metric:freight_cost_usd", "plant:MCW"]}
+{"query": "average TAT at YCW by carrier", "intent": "aggregation", "entities": ["agg:avg", "group:carrier", "metric:total_tat_hours", "plant:YCW"]}
+{"query": "total weight for VGU in July", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-07-01..2026-08-01", "metric:shipment_weight_kg", "plant:VGU"]}
+{"query": "how many shipments did UPS handle in July 2026", "intent": "aggregation", "entities": ["agg:count", "date:dispatch_date:2026-07-01..2026-08-01", "filter:carrier=UPS", "metric:invoice_number"]}
+{"query": "sum of freight cost by origin warehouse in Q3 2026", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-07-01..2026-10-01", "group:origin_warehouse", "metric:freight_cost_usd"]}
+{"query": "total freight cost for the last 30 days", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-08-16..2026-09-16", "metric:freight_cost_usd"]}
+{"query": "average loading time for Dallas", "intent": "aggregation", "entities": ["agg:avg", "filter:origin_warehouse=Dallas_WH", "metric:loading_time_mins"]}
+{"query": "highest freight cost by carrier", "intent": "aggregation", "entities": ["agg:max", "group:carrier", "metric:freight_cost_usd"]}
+{"query": "overall shipment weight", "intent": "aggregation", "entities": ["agg:sum", "metric:shipment_weight_kg"]}
+{"query": "total freight spend for UPS in August 2026", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-08-01..2026-09-01", "filter:carrier=UPS", "metric:freight_cost_usd"]}
+{"query": "average unloading time to Phoenix", "intent": "aggregation", "entities": ["agg:avg", "filter:destination_city=Phoenix", "metric:unloading_time_mins"]}
+{"query": "how many shipments from Atlanta to Houston", "intent": "aggregation", "entities": ["agg:count", "filter:destination_city=Houston", "filter:origin_warehouse=Atlanta_WH", "metric:invoice_number"]}
+{"query": "total weight of customs hold shipments", "intent": "aggregation", "entities": ["agg:sum", "filter:current_status=Customs Hold", "metric:shipment_weight_kg"]}
+{"query": "number of shipments out for delivery", "intent": "aggregation", "entities": ["agg:count", "filter:current_status=Out for Delivery", "metric:invoice_number"]}
+{"query": "total freight cost for JB Hunt", "intent": "aggregation", "entities": ["agg:sum", "filter:carrier=JB Hunt", "metric:freight_cost_usd"]}
+{"query": "avg tat by destination city", "intent": "aggregation", "entities": ["agg:avg", "group:destination_city", "metric:total_tat_hours"]}
+{"query": "total cost by warehouse in June", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-06-01..2026-07-01", "group:origin_warehouse", "metric:freight_cost_usd"]}
+{"query": "average weight by carrier for Chicago in July 2026", "intent": "aggregation", "entities": ["agg:avg", "date:dispatch_date:2026-07-01..2026-08-01", "filter:origin_warehouse=Chicago_WH", "group:carrier", "metric:shipment_weight_kg"]}
+{"query": "count shipments by carrier in Q2 2026", "intent": "aggregation", "entities": ["agg:count", "date:dispatch_date:2026-04-01..2026-07-01", "group:carrier", "metric:invoice_number"]}
+{"query": "How many XPO shipments were delayed?", "intent": "aggregation", "entities": ["agg:count", "filter:carrier=XPO Logistics", "filter:current_status=Delayed", "metric:invoice_number"]}
+{"query": "total freight cost for FY26", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2025-04-01..2026-04-01", "metric:freight_cost_usd"]}
+{"query": "mean freight cost by carrier", "intent": "aggregation", "entities": ["agg:avg", "group:carrier", "metric:freight_cost_usd"]}
+{"query": "total weight from Columbus in August", "intent": "aggregation", "entities": ["agg:sum", "date:dispatch_date:2026-08-01..2026-09-01", "filter:origin_warehouse=Columbus_WH", "metric:shipment_weight_kg"]}
+{"query": "average TAT by sla status", "intent": "aggregation", "entities": ["agg:avg", "group:sla_status", "metric:total_tat_hours"]}
+{"query": "total frieght cost for Dalas", "intent": "aggregation", "entities": ["agg:sum", "filter:origin_warehouse=Dallas_WH", "metric:freight_cost_usd"]}
+{"query": "avg loading time for fedx", "intent": "aggregation", "entities": ["agg:avg", "filter:carrier=FedEx", "metric:loading_time_mins"]}
+{"query": "how many shipments from Atlanta were late", "intent": "aggregation", "entities": ["agg:count", "filter:current_status=Delayed", "filter:origin_warehouse=Atlanta_WH", "metric:invoice_number"]}
+{"query": "top 5 carriers by freight cost", "intent": "rank", "entities": ["agg:sum", "group:carrier", "limit:5", "metric:freight_cost_usd"]}
+{"query": "top 3 destination cities by shipment weight", "intent": "rank", "entities": ["agg:sum", "group:destination_city", "limit:3", "metric:shipment_weight_kg"]}
+{"query": "which carrier has the most delayed shipments", "intent": "rank", "entities": ["agg:count", "filter:current_status=Delayed", "group:carrier", "limit:1", "metric:invoice_number"]}
+{"query": "bottom 2 warehouses by average TAT", "intent": "rank", "entities": ["agg:avg", "group:origin_warehouse", "limit:2", "metric:total_tat_hours"]}
+{"query": "top 3 cities by number of shipments", "intent": "rank", "entities": ["agg:count", "group:destination_city", "limit:3", "metric:invoice_number"]}
+{"query": "which warehouse has the highest freight cost", "intent": "rank", "entities": ["agg:sum", "group:origin_warehouse", "limit:1", "metric:freight_cost_usd"]}
+{"query": "which carrier has the lowest average TAT", "intent": "rank", "entities": ["agg:avg", "group:carrier", "limit:1", "metric:total_tat_hours"]}
+{"query": "top 3 carriers by total weight in August", "intent": "rank", "entities": ["agg:sum", "date:dispatch_date:2026-08-01..2026-09-01", "group:carrier", "limit:3", "metric:shipment_weight_kg"]}
+{"query": "top 10 destinations by freight cost in July 2026", "intent": "rank", "entities": ["agg:sum", "date:dispatch_date:2026-07-01..2026-08-01", "group:destination_city", "limit:10", "metric:freight_cost_usd"]}
+{"query": "which destination city has the most shipments", "intent": "rank", "entities": ["agg:count", "group:destination_city", "limit:1", "metric:invoice_number"]}
+{"query": "bottom 3 carriers by freight cost", "intent": "rank", "entities": ["agg:sum", "group:carrier", "limit:3", "metric:freight_cost_usd"]}
+{"query": "top 2 warehouses by weight for MCW", "intent": "rank", "entities": ["agg:sum", "group:origin_warehouse", "limit:2", "metric:shipment_weight_kg", "plant:MCW"]}
+{"query": "monthly freight cost trend", "intent": "trend", "entities": ["agg:sum", "gran:month", "metric:freight_cost_usd"]}
+{"query": "weight trend over time", "intent": "trend", "entities": ["agg:sum", "gran:month", "metric:shipment_weight_kg"]}
+{"query": "daily shipments in August 2026", "intent": "trend", "entities": ["agg:count", "date:dispatch_date:2026-08-01..2026-09-01", "gran:day", "metric:invoice_number"]}
+{"query": "weekly freight cost for DHL", "intent": "trend", "entities": ["agg:sum", "filter:carrier=DHL", "gran:week", "metric:freight_cost_usd"]}
+{"query": "month over month average TAT", "intent": "trend", "entities": ["agg:avg", "gran:month", "metric:total_tat_hours"]}
+{"query": "quarterly freight cost", "intent": "trend", "entities": ["agg:sum", "gran:quarter", "metric:freight_cost_usd"]}
+{"query": "freight cost per month by carrier", "intent": "trend", "entities": ["agg:sum", "gran:month", "group:carrier", "metric:freight_cost_usd"]}
+{"query": "monthly number of delayed shipments", "intent": "trend", "entities": ["agg:count", "filter:current_status=Delayed", "gran:month", "metric:invoice_number"]}
+{"query": "trend of average loading time by month", "intent": "trend", "entities": ["agg:avg", "gran:month", "metric:loading_time_mins"]}
+{"query": "monthly weight for Chicago", "intent": "trend", "entities": ["agg:sum", "filter:origin_warehouse=Chicago_WH", "gran:month", "metric:shipment_weight_kg"]}
+{"query": "freight cost by month for MCW", "intent": "trend", "entities": ["agg:sum", "gran:month", "metric:freight_cost_usd", "plant:MCW"]}
+{"query": "weekly average unloading time in July", "intent": "trend", "entities": ["agg:avg", "date:dispatch_date:2026-07-01..2026-08-01", "gran:week", "metric:unloading_time_mins"]}
+{"query": "forecast freight cost for the next 3 months", "intent": "forecast", "entities": ["agg:sum", "gran:month", "horizon:3", "metric:freight_cost_usd"]}
+{"query": "predict shipment weight next 2 months", "intent": "forecast", "entities": ["agg:sum", "gran:month", "horizon:2", "metric:shipment_weight_kg"]}
+{"query": "forecast number of shipments next 3 months", "intent": "forecast", "entities": ["agg:count", "gran:month", "horizon:3", "metric:invoice_number"]}
+{"query": "forecast freight cost for DHL next 2 months", "intent": "forecast", "entities": ["agg:sum", "filter:carrier=DHL", "gran:month", "horizon:2", "metric:freight_cost_usd"]}
+{"query": "projected weight for the next 6 months", "intent": "forecast", "entities": ["agg:sum", "gran:month", "horizon:6", "metric:shipment_weight_kg"]}
+{"query": "forecast average TAT next 3 months", "intent": "forecast", "entities": ["agg:avg", "gran:month", "horizon:3", "metric:total_tat_hours"]}
+{"query": "forecast freight cost for MCW", "intent": "forecast", "entities": ["agg:sum", "gran:month", "horizon:3", "metric:freight_cost_usd", "plant:MCW"]}
+{"query": "predict shipments for the next 4 months", "intent": "forecast", "entities": ["agg:count", "gran:month", "horizon:4", "metric:invoice_number"]}
+{"query": "forecast loading time next 3 months", "intent": "forecast", "entities": ["agg:avg", "gran:month", "horizon:3", "metric:loading_time_mins"]}
+{"query": "predict freight cost for UPS next 3 months", "intent": "forecast", "entities": ["agg:sum", "filter:carrier=UPS", "gran:month", "horizon:3", "metric:freight_cost_usd"]}
+{"query": "forecast weight for Chicago next 2 months", "intent": "forecast", "entities": ["agg:sum", "filter:origin_warehouse=Chicago_WH", "gran:month", "horizon:2", "metric:shipment_weight_kg"]}
+{"query": "compare MCW and YCW freight cost", "intent": "comparison", "entities": ["agg:sum", "compare_plants", "metric:freight_cost_usd", "plant:MCW", "plant:YCW"]}
+{"query": "compare freight cost across plants", "intent": "comparison", "entities": ["agg:sum", "compare_plants", "metric:freight_cost_usd"]}
+{"query": "compare DHL and FedEx freight cost", "intent": "comparison", "entities": ["agg:sum", "group:carrier", "keep:carrier=DHL", "keep:carrier=FedEx", "metric:freight_cost_usd"]}
+{"query": "compare average TAT between MCW and VGU", "intent": "comparison", "entities": ["agg:avg", "compare_plants", "metric:total_tat_hours", "plant:MCW", "plant:VGU"]}
+{"query": "DHL versus UPS shipments", "intent": "comparison", "entities": ["agg:count", "group:carrier", "keep:carrier=DHL", "keep:carrier=UPS", "metric:invoice_number"]}
+{"query": "compare Chicago and Dallas weight", "intent": "comparison", "entities": ["agg:sum", "group:origin_warehouse", "keep:origin_warehouse=Chicago_WH", "keep:origin_warehouse=Dallas_WH", "metric:shipment_weight_kg"]}
+{"query": "compare carriers by freight cost", "intent": "comparison", "entities": ["agg:sum", "group:carrier", "metric:freight_cost_usd"]}
+{"query": "compare MCW, YCW and VGU total weight", "intent": "comparison", "entities": ["agg:sum", "compare_plants", "metric:shipment_weight_kg", "plant:MCW", "plant:VGU", "plant:YCW"]}
+{"query": "compare UPS and DHL freight cost", "intent": "comparison", "entities": ["agg:sum", "group:carrier", "keep:carrier=DHL", "keep:carrier=UPS", "metric:freight_cost_usd"]}
+{"query": "compare weight between MCW and YCW", "intent": "comparison", "entities": ["agg:sum", "compare_plants", "metric:shipment_weight_kg", "plant:MCW", "plant:YCW"]}
+{"query": "freight cost by plant", "intent": "aggregation", "entities": ["agg:sum", "compare_plants", "metric:freight_cost_usd"]}
+{"query": "list shipments from Chicago in July 2026", "intent": "filter", "entities": ["date:dispatch_date:2026-07-01..2026-08-01", "filter:origin_warehouse=Chicago_WH"]}
+{"query": "show FedEx shipments in August", "intent": "filter", "entities": ["date:dispatch_date:2026-08-01..2026-09-01", "filter:carrier=FedEx"]}
+{"query": "display shipments from Dallas to Miami", "intent": "filter", "entities": ["filter:destination_city=Miami", "filter:origin_warehouse=Dallas_WH"]}
+{"query": "show me shipments handled by UPS in June", "intent": "filter", "entities": ["date:dispatch_date:2026-06-01..2026-07-01", "filter:carrier=UPS"]}
+{"query": "show DHL shipments for MCW", "intent": "filter", "entities": ["filter:carrier=DHL", "plant:MCW"]}
+{"query": "show delayed shipments", "intent": "join", "entities": ["filter:current_status=Delayed"]}
+{"query": "show shipments to Boston with driver id", "intent": "join", "entities": ["filter:destination_city=Boston"]}
+{"query": "list DHL shipments with their sla status", "intent": "join", "entities": ["filter:carrier=DHL"]}
+{"query": "show customs hold shipments", "intent": "join", "entities": ["filter:current_status=Customs Hold"]}
+{"query": "list late shipments", "intent": "join", "entities": ["filter:current_status=Delayed"]}
+{"query": "show on time shipments from Atlanta", "intent": "join", "entities": ["filter:origin_warehouse=Atlanta_WH", "filter:sla_status=On Time"]}
+{"query": "list shipments in transit", "intent": "join", "entities": ["filter:current_status=In Transit"]}
+{"query": "list shipments from Atlanta", "intent": "filter", "entities": ["filter:origin_warehouse=Atlanta_WH"]}
+{"query": "show shipments to Seattle in August", "intent": "filter", "entities": ["date:dispatch_date:2026-08-01..2026-09-01", "filter:destination_city=Seattle"]}
+{"query": "list UPS shipments in July", "intent": "filter", "entities": ["date:dispatch_date:2026-07-01..2026-08-01", "filter:carrier=UPS"]}
+{"query": "show JB Hunt shipments from Dallas", "intent": "filter", "entities": ["filter:carrier=JB Hunt", "filter:origin_warehouse=Dallas_WH"]}
+{"query": "display XPO shipments in June 2026", "intent": "filter", "entities": ["date:dispatch_date:2026-06-01..2026-07-01", "filter:carrier=XPO Logistics"]}
+{"query": "list shipments from Columbus to Denver", "intent": "filter", "entities": ["filter:destination_city=Denver", "filter:origin_warehouse=Columbus_WH"]}
+{"query": "show shipments delayed in August", "intent": "join", "entities": ["date:dispatch_date:2026-08-01..2026-09-01", "filter:current_status=Delayed"]}
+{"query": "list out for delivery shipments", "intent": "join", "entities": ["filter:current_status=Out for Delivery"]}
+{"query": "show DHL shipments in transit", "intent": "join", "entities": ["filter:carrier=DHL", "filter:current_status=In Transit"]}
+{"query": "list on time shipments from Dallas", "intent": "join", "entities": ["filter:origin_warehouse=Dallas_WH", "filter:sla_status=On Time"]}
+{"query": "show delayed UPS shipments", "intent": "join", "entities": ["filter:carrier=UPS", "filter:current_status=Delayed"]}
+{"query": "optimise my delivery routes", "intent": "out_of_scope", "entities": []}
+{"query": "what is the HSN code for ball bearings", "intent": "out_of_scope", "entities": []}
+{"query": "calculate customs duty for 8482", "intent": "out_of_scope", "entities": []}
+{"query": "simulate a 7 day port shutdown", "intent": "out_of_scope", "entities": []}
+{"query": "what's the weather in Pune", "intent": "out_of_scope", "entities": []}
+{"query": "calculate EOQ for SKU ABC", "intent": "out_of_scope", "entities": []}
+{"query": "generate an eway bill", "intent": "out_of_scope", "entities": []}
+{"query": "how do I make cement", "intent": "out_of_scope", "entities": []}
+{"query": "tell me a joke", "intent": "out_of_scope", "entities": []}
+{"query": "who is the CEO", "intent": "out_of_scope", "entities": []}
+{"query": "plan routes for 35 dealers using VRP", "intent": "out_of_scope", "entities": []}
+{"query": "reorder point for SKU F001", "intent": "out_of_scope", "entities": []}
+{"query": "bin packing for 500 cartons", "intent": "out_of_scope", "entities": []}
+{"query": "run a monte carlo on lead time", "intent": "out_of_scope", "entities": []}
+{"query": "what is GST on freight", "intent": "out_of_scope", "entities": []}
+{"query": "hello", "intent": "out_of_scope", "entities": []}
+{"query": "send an email to the logistics team", "intent": "out_of_scope", "entities": []}
+{"query": "track truck TN09AB1234", "intent": "out_of_scope", "entities": []}

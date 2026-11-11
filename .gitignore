@@ -6,3 +6,12 @@ __pycache__/
 .env.dev
 .env.staging
 .env.prod
+.DS_Store
+.mypy_cache/
+.ruff_cache/
+.local/
+logs/
+
+# generated fine-tuning data (rebuild with: uv run python finetune/build_dataset.py)
+finetune/data/*.jsonl
+dashboard/training.json

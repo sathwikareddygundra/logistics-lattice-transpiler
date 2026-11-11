@@ -1,0 +1,29 @@
+{
+ "query": "average TAT by carrier",
+ "columns": [
+  "carrier",
+  "avg_total_tat_hours"
+ ],
+ "rows": [
+  [
+   "DHL",
+   81.8419
+  ],
+  [
+   "FedEx",
+   82.1911
+  ],
+  [
+   "JB Hunt",
+   81.7856
+  ],
+  [
+   "UPS",
+   82.6256
+  ],
+  [
+   "XPO Logistics",
+   83.7641
+  ]
+ ]
+}

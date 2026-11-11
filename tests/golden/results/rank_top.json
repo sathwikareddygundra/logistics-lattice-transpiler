@@ -1,0 +1,21 @@
+{
+ "query": "top 3 destinations by freight cost",
+ "columns": [
+  "destination_city",
+  "sum_freight_cost_usd"
+ ],
+ "rows": [
+  [
+   "Seattle",
+   3796290.32
+  ],
+  [
+   "Boston",
+   3754445.04
+  ],
+  [
+   "Phoenix",
+   3667936.56
+  ]
+ ]
+}

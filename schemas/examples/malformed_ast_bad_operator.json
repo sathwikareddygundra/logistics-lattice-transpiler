@@ -1,0 +1,31 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "d4d4d4d4-4444-4444-8444-444444444444",
+  "target": "python",
+  "nodes": [
+    {
+      "id": "n1",
+      "op": "select",
+      "var": "t1",
+      "params": {
+        "table": "dispatch",
+        "columns": [{ "table": "dispatch", "column": "origin_warehouse", "type": "string" }]
+      }
+    },
+    {
+      "id": "n2",
+      "op": "filter",
+      "var": "t2",
+      "params": {
+        "column": { "table": "dispatch", "column": "origin_warehouse", "type": "string" },
+        "operator": "before",
+        "value": { "value": "MCW", "type": "string" }
+      }
+    },
+    { "id": "n3", "op": "output", "var": "result", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "n3" }
+  ]
+}

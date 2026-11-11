@@ -1,0 +1,44 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "to_node": "n2"
+    },
+    {
+      "from_node": "n2",
+      "to_node": "n3"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "dispatch"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "aggregate",
+      "params": {
+        "group_by": [
+          "destination_city"
+        ],
+        "metric": "freight_cost_usd",
+        "op": "sum"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "destination_city",
+          "freight_cost_usd"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

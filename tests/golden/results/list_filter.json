@@ -1,0 +1,152 @@
+{
+ "query": "list shipments from Chicago in July 2026",
+ "columns": [
+  "invoice_number",
+  "dispatch_date",
+  "origin_warehouse",
+  "destination_city",
+  "carrier"
+ ],
+ "rows": [
+  [
+   "INV-2026-00049",
+   "2026-07-27 04:25:59",
+   "Chicago_WH",
+   "Phoenix",
+   "JB Hunt"
+  ],
+  [
+   "INV-2026-00061",
+   "2026-07-30 04:32:34",
+   "Chicago_WH",
+   "Boston",
+   "UPS"
+  ],
+  [
+   "INV-2026-00063",
+   "2026-07-12 06:38:44",
+   "Chicago_WH",
+   "Miami",
+   "UPS"
+  ],
+  [
+   "INV-2026-00064",
+   "2026-07-13 15:18:06",
+   "Chicago_WH",
+   "Seattle",
+   "DHL"
+  ],
+  [
+   "INV-2026-00068",
+   "2026-07-02 09:16:57",
+   "Chicago_WH",
+   "Boston",
+   "XPO Logistics"
+  ],
+  [
+   "INV-2026-00083",
+   "2026-07-31 23:55:27",
+   "Chicago_WH",
+   "Denver",
+   "FedEx"
+  ],
+  [
+   "INV-2026-00086",
+   "2026-07-23 02:18:14",
+   "Chicago_WH",
+   "Seattle",
+   "DHL"
+  ],
+  [
+   "INV-2026-00095",
+   "2026-07-12 09:17:22",
+   "Chicago_WH",
+   "Seattle",
+   "XPO Logistics"
+  ],
+  [
+   "INV-2026-00104",
+   "2026-07-12 17:46:16",
+   "Chicago_WH",
+   "Phoenix",
+   "JB Hunt"
+  ],
+  [
+   "INV-2026-00111",
+   "2026-07-13 16:43:17",
+   "Chicago_WH",
+   "Seattle",
+   "XPO Logistics"
+  ],
+  [
+   "INV-2026-00112",
+   "2026-07-14 21:02:08",
+   "Chicago_WH",
+   "New York",
+   "DHL"
+  ],
+  [
+   "INV-2026-00125",
+   "2026-07-12 02:15:18",
+   "Chicago_WH",
+   "Boston",
+   "DHL"
+  ],
+  [
+   "INV-2026-00141",
+   "2026-07-01 18:43:40",
+   "Chicago_WH",
+   "Seattle",
+   "XPO Logistics"
+  ],
+  [
+   "INV-2026-00176",
+   "2026-07-30 16:52:29",
+   "Chicago_WH",
+   "Houston",
+   "UPS"
+  ],
+  [
+   "INV-2026-00209",
+   "2026-07-17 20:56:17",
+   "Chicago_WH",
+   "Phoenix",
+   "XPO Logistics"
+  ],
+  [
+   "INV-2026-00212",
+   "2026-07-09 09:46:25",
+   "Chicago_WH",
+   "Denver",
+   "JB Hunt"
+  ],
+  [
+   "INV-2026-00213",
+   "2026-07-27 01:19:05",
+   "Chicago_WH",
+   "Boston",
+   "JB Hunt"
+  ],
+  [
+   "INV-2026-00234",
+   "2026-07-22 06:59:48",
+   "Chicago_WH",
+   "Phoenix",
+   "DHL"
+  ],
+  [
+   "INV-2026-00249",
+   "2026-07-10 11:14:34",
+   "Chicago_WH",
+   "Miami",
+   "DHL"
+  ],
+  [
+   "INV-2026-00260",
+   "2026-07-18 14:47:58",
+   "Chicago_WH",
+   "New York",
+   "FedEx"
+  ]
+ ]
+}

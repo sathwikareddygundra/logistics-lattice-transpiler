@@ -1,0 +1,13 @@
+{
+ "query": "which carrier has the most delayed shipments",
+ "columns": [
+  "carrier",
+  "count_invoice_number"
+ ],
+ "rows": [
+  [
+   "UPS",
+   415
+  ]
+ ]
+}

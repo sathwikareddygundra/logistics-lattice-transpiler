@@ -1,0 +1,56 @@
+{
+  "edges": [
+    {
+      "from_node": "n1",
+      "to_node": "n2"
+    },
+    {
+      "from_node": "n2",
+      "to_node": "n3"
+    },
+    {
+      "from_node": "n3",
+      "to_node": "n4"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "node_type": "source",
+      "params": {
+        "source": "dispatch"
+      }
+    },
+    {
+      "id": "n2",
+      "node_type": "window",
+      "params": {
+        "column": "dispatch_date",
+        "granularity": "month"
+      }
+    },
+    {
+      "id": "n3",
+      "node_type": "aggregate",
+      "params": {
+        "group_by": [
+          "dispatch_date_month"
+        ],
+        "metric": "freight_cost_usd",
+        "op": "sum"
+      }
+    },
+    {
+      "id": "n4",
+      "node_type": "output",
+      "params": {
+        "columns": [
+          "dispatch_date_month",
+          "freight_cost_usd"
+        ]
+      }
+    }
+  ],
+  "schema_version": "1.0.0",
+  "trace_id": "golden-trace"
+}

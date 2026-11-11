@@ -1,0 +1,5 @@
+ir v1.0.0
+n1 select: ycw_dispatch[dispatch_date, freight_cost_usd]
+n2 window: dispatch.dispatch_date:datetime per month  <- n1
+n3 aggregate: sum(dispatch.freight_cost_usd:float) -> float by [dispatch.dispatch_date_month:string]  <- n2
+n4 output: dispatch.dispatch_date_month:string, dispatch.freight_cost_usd:float  <- n3

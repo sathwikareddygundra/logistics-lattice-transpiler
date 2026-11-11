@@ -1,0 +1,4 @@
+ir v1.0.0
+n1 select: ycw_dispatch[freight_cost_usd]
+n2 aggregate: sum(dispatch.freight_cost_usd:float) -> float by [-]  <- n1
+n3 output: dispatch.freight_cost_usd:float  <- n2

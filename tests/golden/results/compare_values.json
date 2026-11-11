@@ -1,0 +1,17 @@
+{
+ "query": "compare DHL and FedEx freight cost",
+ "columns": [
+  "carrier",
+  "sum_freight_cost_usd"
+ ],
+ "rows": [
+  [
+   "DHL",
+   5168895.28
+  ],
+  [
+   "FedEx",
+   4793172.18
+  ]
+ ]
+}

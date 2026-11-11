@@ -1,0 +1,11 @@
+{
+ "query": "how many delayed shipments",
+ "columns": [
+  "count_invoice_number"
+ ],
+ "rows": [
+  [
+   1941
+  ]
+ ]
+}

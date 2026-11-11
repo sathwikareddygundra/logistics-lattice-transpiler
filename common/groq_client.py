@@ -45,7 +45,12 @@ class GroqClient:
     loudly instead of silently using a stale or leaked value.
     """
 
-    def __init__(self, api_key: str | None = None) -> None:
+    def __init__(
+        self,
+        api_key: str | None = None,
+        timeout: float = REQUEST_TIMEOUT_SECONDS,
+        max_retries: int = MAX_RETRIES,
+    ) -> None:
         self._api_key = api_key or os.environ.get("GROQ_API_KEY")
         if not self._api_key:
             raise GroqClientError(
@@ -54,18 +59,21 @@ class GroqClient:
             )
         self._client = httpx.Client(
             base_url=GROQ_API_BASE_URL,
-            timeout=REQUEST_TIMEOUT_SECONDS,
+            timeout=timeout,
         )
+        self._max_retries = max_retries
 
-    def chat_completion(self, model: str, messages: list[dict]) -> ChatCompletionResult:
+    def chat_completion(
+        self, model: str, messages: list[dict], extra: dict | None = None
+    ) -> ChatCompletionResult:
         last_error: Exception | None = None
 
-        for attempt in range(MAX_RETRIES + 1):
+        for attempt in range(self._max_retries + 1):
             try:
                 response = self._client.post(
                     "/chat/completions",
                     headers={"Authorization": f"Bearer {self._api_key}"},
-                    json={"model": model, "messages": messages},
+                    json={"model": model, "messages": messages, **(extra or {})},
                 )
             except httpx.TimeoutException as exc:
                 last_error = exc
@@ -77,10 +85,10 @@ class GroqClient:
                 content = data["choices"][0]["message"]["content"]
                 return ChatCompletionResult(content=content, raw_response=data)
 
-            if response.status_code in RETRYABLE_STATUS_CODES and attempt < MAX_RETRIES:
+            if response.status_code in RETRYABLE_STATUS_CODES and attempt < self._max_retries:
                 last_error = GroqClientError(
                     f"Groq API returned {response.status_code}, retrying "
-                    f"(attempt {attempt + 1}/{MAX_RETRIES})"
+                    f"(attempt {attempt + 1}/{self._max_retries})"
                 )
                 self._sleep_backoff(attempt)
                 continue
@@ -89,11 +97,13 @@ class GroqClient:
                 f"Groq API call failed with status {response.status_code}: {response.text}"
             )
 
-        raise GroqClientError(f"Groq API call failed after {MAX_RETRIES} retries: {last_error}")
+        raise GroqClientError(
+            f"Groq API call failed after {self._max_retries} retries: {last_error}"
+        )
 
     @staticmethod
     def _sleep_backoff(attempt: int) -> None:
-        delay = BACKOFF_BASE_SECONDS * (2 ** attempt) + random.uniform(0, BACKOFF_JITTER_SECONDS)
+        delay = BACKOFF_BASE_SECONDS * (2**attempt) + random.uniform(0, BACKOFF_JITTER_SECONDS)
         time.sleep(delay)
 
     def close(self) -> None:

@@ -1,0 +1,29 @@
+{
+ "query": "total freight cost by carrier in August 2026",
+ "columns": [
+  "carrier",
+  "sum_freight_cost_usd"
+ ],
+ "rows": [
+  [
+   "DHL",
+   1728201.92
+  ],
+  [
+   "FedEx",
+   1676858.67
+  ],
+  [
+   "JB Hunt",
+   1712515.32
+  ],
+  [
+   "UPS",
+   1786462.99
+  ],
+  [
+   "XPO Logistics",
+   1781179.43
+  ]
+ ]
+}

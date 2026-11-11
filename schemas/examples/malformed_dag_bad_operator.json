@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0.0",
+  "trace_id": "d4d4d4d4-4444-4444-8444-444444444444",
+  "nodes": [
+    { "id": "n1", "node_type": "source", "params": { "source": "dispatch" } },
+    {
+      "id": "n2",
+      "node_type": "filter",
+      "params": { "column": "origin_warehouse", "operator": "before", "value": "MCW" }
+    },
+    { "id": "n3", "node_type": "output", "params": { "columns": [] } }
+  ],
+  "edges": [
+    { "from_node": "n1", "to_node": "n2" },
+    { "from_node": "n2", "to_node": "n3" }
+  ]
+}
