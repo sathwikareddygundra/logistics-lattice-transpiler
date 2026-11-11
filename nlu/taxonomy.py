@@ -59,9 +59,9 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
             "set of grouped summary numbers (sum, count, avg, min, max)."
         ),
         example_queries=(
-            "What was the total dispatch tonnage from MCW last month?",
-            "How many rakes did YCW load in August 2026?",
-            "What's the average lead distance for VGU dispatches this quarter?",
+            "What was the total freight cost from MCW in August?",
+            "How many invoices did YCW dispatch in August?",
+            "What's the average turnaround time for VGU shipments to Boston?",
         ),
     ),
     IntentType.JOIN: IntentDefinition(
@@ -71,9 +71,9 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
             "into one result, without necessarily aggregating it."
         ),
         example_queries=(
-            "Show dispatch records along with the vehicle type used, for MCW.",
-            "List rakes with their assigned driver and destination for last week.",
-            "Give me dispatch by plant and vehicle type for YCW and VGU.",
+            "Show delayed shipments with their carrier and destination.",
+            "List shipments that are in transit with their driver and destination.",
+            "Show delivered shipments from Chicago with their carrier.",
         ),
     ),
     IntentType.FILTER: IntentDefinition(
@@ -83,9 +83,9 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
             "with no aggregation or cross-table combination required."
         ),
         example_queries=(
-            "Show me all dispatches from MCW on 3rd September 2026.",
-            "List rakes destined for Hyderabad this week.",
-            "Which dispatches from YCW exceeded 30 tonnes?",
+            "Show all shipments dispatched from Dallas in July.",
+            "List shipments going to Miami.",
+            "List UPS shipments going to Denver.",
         ),
     ),
     IntentType.FORECAST: IntentDefinition(
@@ -95,9 +95,9 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
             "implies a model or extrapolation step downstream."
         ),
         example_queries=(
-            "What will MCW's dispatch volume be next month?",
-            "Forecast rake availability for YCW over the next two weeks.",
-            "Predict lead distance trends for VGU through year end.",
+            "Forecast the number of shipments for the next 2 months.",
+            "Forecast freight cost for the next 3 months.",
+            "Predict average loading time for the next quarter.",
         ),
     ),
     IntentType.COMPARISON: IntentDefinition(
@@ -107,9 +107,9 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
             "(plants, periods, vehicle types) side by side."
         ),
         example_queries=(
-            "Compare dispatch tonnage between MCW and YCW for August 2026.",
-            "How does VGU's lead distance compare to MCW's this quarter?",
-            "Compare rake turnaround time across all three plants.",
+            "Compare freight cost between MCW and YCW for August.",
+            "Compare freight cost across carriers.",
+            "Compare average turnaround time by destination city.",
         ),
     ),
     IntentType.TREND: IntentDefinition(
@@ -119,18 +119,18 @@ TAXONOMY: dict[IntentType, IntentDefinition] = {
             "series of values across periods rather than one number."
         ),
         example_queries=(
-            "Show me MCW's dispatch trend over the last six months.",
-            "How has YCW's average lead distance changed this year?",
-            "What's the weekly rake utilization trend for VGU?",
+            "Show monthly freight cost trend for MCW.",
+            "How has average turnaround time changed by week?",
+            "What's the daily shipment count trend for VGU in July?",
         ),
     ),
     IntentType.RANK: IntentDefinition(
         intent_type=IntentType.RANK,
         description=("Orders entities by a metric and typically returns a top/bottom N slice."),
         example_queries=(
-            "Which vehicle type had the highest dispatch tonnage at MCW last month?",
-            "Top 5 destinations by dispatch volume for YCW this year.",
-            "Which plant had the lowest average lead distance in Q3?",
+            "Which carrier had the highest freight cost at MCW?",
+            "Top 5 destinations by number of shipments for YCW.",
+            "Which plant had the lowest average turnaround time?",
         ),
     ),
     IntentType.OUT_OF_SCOPE: IntentDefinition(
